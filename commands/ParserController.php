@@ -8,6 +8,7 @@
 namespace app\commands;
 
 use app\components\DezrezFeedParser;
+use app\components\WebFlowWorker;
 use Yii;
 use app\components\DezrezClient;
 use app\components\WebFlowClient;
@@ -35,7 +36,7 @@ class ParserController extends Controller
         $data = $client->getProperties(
             Yii::$app->params['dezrez_test_api_key'],
             [
-                'PageSize' => 2,
+                'PageSize' => 100,
                 'PageNumber' => $page
             ]
         );
@@ -43,47 +44,15 @@ class ParserController extends Controller
         $parser = new DezrezFeedParser();
         $parser->parse($data);
 
-//        var_dump($parser->getProperties());
-
-
-        $webFlow = new WebFlowClient();
-/*
-        $data = $client->getCollectionItems(
-            Yii::$app->params['webflow_api_key'],
-            Yii::$app->params['webflow_collection_id']
-        );
-*/
         $properties = $parser->getProperties();
+
+        $webFlowWorker = new WebFlowWorker();
+
         foreach($properties as $property){
 //            var_dump($property);
             if($property instanceof Property) {
-                $item = [
-                    "_archived" => false,
-                    "_draft"=> false,
-                    'name' => (string)$property->id,
-                    'propertyid-2' => (string)$property->id,
-                    'property-status' => $property->getWebflowMarketStatus(),
-                    'rent-or-sale-price' => $property->price,
-                    'number-of-rooms' => $property->numberOfRooms,
-                    'number-of-baths' => $property->numberOfBath,
-                    'property-description' => $property->fullDescription,
-                    'short-description' => $property->shortDescription,
-//                    'floorplan' => $property->florPlanImageUrl,
-                ];
-/*
-                $i = 0;
-                foreach($property->images as $image) {
-                    $i++;
-                    if ($i > 8) break;
 
-                    $item['image-'.$i] = $image;
-                }
-*/
-                $result = $webFlow->addCollectionItem(
-                    Yii::$app->params['webflow_api_key'],
-                    Yii::$app->params['webflow_collection_id'],
-                    $item
-                );
+                $webFlowProperty = $webFlowWorker->storeProperty($property);
 
 //                echo Json::encode( $result) . "\n";
             }
