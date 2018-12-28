@@ -59,6 +59,8 @@ class DezrezFeedParser extends Component
                 $this->_properties[] = $property;
             }
         }
+
+        return $this->_properties;
     }
 
     public function getAllPropCount()
@@ -140,23 +142,28 @@ class DezrezFeedParser extends Component
     protected function getMarketStatus(Property $property, $dezrezProperty){
         $roleStatus = $dezrezProperty['RoleStatus']['SystemName'];
         $roleFlags = [];
-//        foreach($dezrezProperty['Flags'] as $flag){
-//            if($flag['SystemName'] == self::ON_MARKET_STATUS || $flag['SystemName'] == )
-//        }
+        foreach($dezrezProperty['Flags'] as $flag){
+            if($flag['SystemName'] == self::UNDER_OFFER_MARKET_STATUS || $flag['SystemName'] == self::OFFER_ACCEPTED_MARKET_STATUS)
+                $roleFlags[] = $flag['SystemName'];
+        }
 
         if($property->roleType == Property::ROLE_TYPE_SALE && $roleStatus == self::SALE_ROLE_STATUS)
             return Property::STATUS_FOR_SALE;
 
+        if($property->roleType == Property::ROLE_TYPE_SALE && in_array(self::UNDER_OFFER_MARKET_STATUS, $roleFlags))
+            return Property::STATUS_SSTC;
+
         if($property->roleType == Property::ROLE_TYPE_SALE && $roleStatus == self::OFFER_ACCEPTED_ROLE_STATUS)
             return Property::STATUS_SOLD;
 
+        // if status is 'Instruction to Let' and property doesn't have flag 'Offer Accepted' we set status 'To Let’;
         if($property->roleType == Property::ROLE_TYPE_LET && $roleStatus == self::LET_ROLE_STATUS)
             return Property::STATUS_TO_LET;
 
+        // if status is 'Instruction to Let' and property has flag 'Offer Accepted' we set status 'Let Agreed';
         if($property->roleType == Property::ROLE_TYPE_LET && $roleStatus == self::OFFER_ACCEPTED_ROLE_STATUS)
             return Property::STATUS_LET_AGREED;
 
         return false;
     }
-
 }

@@ -66,6 +66,8 @@ class WebFlowWorker extends Component
             $offset += $this->_itemsPerPage;
         } while ($response['total']>0 && $response['total'] > $response['offset'] + $response['count']);
 
+        echo "WebFlow properties count before update: " . count($this->_wfItems) . "\r\n";
+
         return true;
     }
 
@@ -73,9 +75,10 @@ class WebFlowWorker extends Component
     {
         $dezrezPropertyId = (string)$property->id;
         $item = [
-            "_archived" => false,
-            "_draft"=> false,
+            '_archived' => false,
+            '_draft'=> false,
             'name' => $dezrezPropertyId,
+            'slug' => $dezrezPropertyId,
             'propertyid-2' => $dezrezPropertyId,
             'property-status' => $property->getWebflowMarketStatus(),
             'rent-or-sale-price' => $property->price,
@@ -101,22 +104,24 @@ class WebFlowWorker extends Component
         //try to update/insert WebFlow item
         //if fault then try again
         for($i=1; $i<=$this->_attemptCount; $i++) {
+            echo "----------store property-------------".$dezrezPropertyId." (attempt $i)\r\n";
             // need to update item or insert a new one
             if (array_key_exists($dezrezPropertyId, $this->_wfItems)) {
-                $wfItem = $this->updateProperty($this->_wfItems[$dezrezPropertyId], $item);
-                $this->_wfItems[$dezrezPropertyId] = [
-                    'flagUpdated' => true,
-                ];
+                echo "----------update property-------------".$dezrezPropertyId."\r\n";
+//                var_dump($this->_wfItems[$dezrezPropertyId]);
+                $wfItem = $this->updateProperty($this->_wfItems[$dezrezPropertyId]['id'], $item);
+                $this->_wfItems[$dezrezPropertyId]['flagUpdated'] = true;
             } else {
+                echo "----------insert property-------------".$dezrezPropertyId."\r\n";
                 $wfItem = $this->insertProperty($item);
                 $this->_wfItems[$dezrezPropertyId] = [
-                    'id' => $item['_id'],
+                    'id' => $wfItem['_id'],
                     'flagUpdated' => true,
                 ];
             }
 
             // if all images were saved then continue
-            if($success = $this->ifAllImagesExists($wfItem, $imagesToUpload))
+            if($success = $this->ifAllImagesExists($wfItem, $item, $imagesToUpload))
                 break;
         }
 
@@ -128,15 +133,16 @@ class WebFlowWorker extends Component
         return $success;
     }
 
-    protected function ifAllImagesExists(array $wfItem, $imagesCount){
+    protected function ifAllImagesExists(array $wfItem, array $item, $imagesCount){
+        $isError = false;
         for($i=1; $i<=$imagesCount; $i++){
             if(!array_key_exists('image-'.$i, $wfItem)){
-                echo 'WebFlow: image-'.$i.' didn\'t stored for `' . $wfItem['name'] . '` property';
-                return false;
+                echo 'WebFlow: image-'.$i.' (' . $item['image-'.$i] .') didn\'t stored for `' . $wfItem['name'] . '` property' . "\r\n";
+                $isError = true;
             }
         }
 
-        return true;
+        return !$isError;
     }
 
     protected function insertProperty($item)
@@ -161,12 +167,19 @@ class WebFlowWorker extends Component
     }
 
     public function deleteOldProperties(){
-        foreach($this->_wfItems as $wfItemId=>$wfItemData){
-            if(!$wfItemData['flagUpdated'])
-                if(!$this->deleteProperty($wfItemData['id'])){
-                    echo 'WebFlow: Couldn\'t delete item ID-' . $wfItemData['id'] . ' with name `' . $wfItemId . '`';
+        $deleted = 0;
+
+        foreach($this->_wfItems as $wfItemId=>$wfItemData) {
+            if (!$wfItemData['flagUpdated']){
+                if (!$this->deleteProperty($wfItemData['id'])) {
+                    echo 'WebFlow: Couldn\'t delete item ID-' . $wfItemData['id'] . ' with name `' . $wfItemId . '`' . "\r\n";
+                }else {
+                    $deleted++;
                 }
+            }
         }
+
+        echo 'WebFlow: Deleted - ' . $deleted . "\r\n";
     }
 
     protected function deleteProperty($itemId)

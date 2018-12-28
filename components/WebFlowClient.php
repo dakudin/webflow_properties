@@ -49,9 +49,9 @@ class WebFlowClient extends Component
      */
     protected function sendRequest($request)
     {
-var_dump($request);
+//var_dump($request);
         $response = $request->send();
-var_dump($response);
+//var_dump($response);
         if (!$response->getIsOk()) {
             throw new InvalidResponseException($response, 'Request failed with code: ' . $response->getStatusCode() . ', message: ' . $response->getContent());
         }

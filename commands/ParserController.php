@@ -11,11 +11,9 @@ use app\components\DezrezFeedParser;
 use app\components\WebFlowWorker;
 use Yii;
 use app\components\DezrezClient;
-use app\components\WebFlowClient;
 use yii\console\Controller;
 use app\models\Property;
 use yii\console\ExitCode;
-use yii\helpers\Json;
 
 /**
  * This command parse remote feed and store data to webflow web server by its api.
@@ -24,7 +22,7 @@ use yii\helpers\Json;
  */
 class ParserController extends Controller
 {
-    private $propertiesPerPage = 10;
+    private $propertiesPerPage = 20;
 
     protected $webFlowWorker;
 
@@ -53,17 +51,14 @@ class ParserController extends Controller
 
     protected function refreshFeed()
     {
-
-    }
-
-    protected function getDezrezProperties()
-    {
-        $pageNumber = 1;
+        $pageNumber = 0;
 
         $client = new DezrezClient();
         $parser = new DezrezFeedParser();
 
         do {
+            $pageNumber++;
+
             $data = $client->getProperties(
                 Yii::$app->params['dezrez_test_api_key'],
                 [
@@ -72,29 +67,20 @@ class ParserController extends Controller
                 ]
             );
 
-            $parser->parse($data);
+            $properties = $parser->parse($data);
 
-            $properties = $parser->getProperties();
+            echo "Dezrez: Page - " . $pageNumber . "; Total properties - " . $parser->getAllPropCount() . "; Properties on page - " . $parser->getCurPropCount() . "\r\n";
 
             $this->storePropsInWebFlow($properties);
 
-            $pageNumber++;
-
-            echo "Dezrez: Page-" . $pageNumber . "; Properties on page - " . $parser->getCurPropCount() . "\r\n";
-
-        } while($parser->getAllPropCount()>0 && $parser->getAllPropCount() > $parser->getPageNumber() * $this->propertiesPerPage);
+        } while($parser->getAllPropCount()>0 && $parser->getAllPropCount() >= $pageNumber * $this->propertiesPerPage);
     }
 
-    private function storePropsInWebFlow(Property $properties)
+    private function storePropsInWebFlow(array $properties)
     {
-
         foreach($properties as $property){
-//            var_dump($property);
             if($property instanceof Property) {
-
-                $webFlowProperty = $this->webFlowWorker->storeProperty($property);
-
-//                echo Json::encode( $result) . "\n";
+               $webFlowProperty = $this->webFlowWorker->storeProperty($property);
             }
         }
     }
