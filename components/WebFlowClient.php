@@ -16,7 +16,7 @@ class WebFlowClient extends Component
 
     const BASE_URL = 'https://api.webflow.com';
 
-    const PROPERTY_COLLECTION_ID = '5c08e1d27fe16683b8309d92';
+//    const PROPERTY_COLLECTION_ID = '5c08e1d27fe16683b8309d92';
 
     /**
      * @var array cURL request options. Option values from this field will overwrite corresponding
@@ -56,6 +56,9 @@ var_dump($response);
             throw new InvalidResponseException($response, 'Request failed with code: ' . $response->getStatusCode() . ', message: ' . $response->getContent());
         }
 
+        //need some waiting for API (rate limit 60 requests per minute)
+        sleep(2);
+
         return $response->getData();
     }
 
@@ -85,21 +88,29 @@ var_dump($response);
     /**
      * Get all items for a collection
      * @see https://developers.webflow.com/?shell#get-all-items-for-a-collection
-     * @param string $collectionId
      * @param string $apiKey api key.
+     * @param string $collectionId
+     * @param integer $limit maximum number of items to be returned.
+     * @param integer $offset used for pagination if collection has more than $limit items.
      * @param array $params additional request params.
      * @return array $response list of properties.
      */
-    public function getCollectionItems($apiKey, $collectionId, $params = [])
+    public function getCollectionItems($apiKey, $collectionId, $limit = 100, $offset = 0, $params = [])
     {
         $defaultParams = [
             'limit' => 100,
 //            'offset' => 0
         ];
 
+        $url = self::BASE_URL . '/collections/' . $collectionId . '/items?limit=' . $limit;
+
+        if($offset > 0)
+            $url .= '&offset=' . $offset;
+
+
         $request = $this->createRequest($apiKey)
             ->setMethod('GET')
-            ->setUrl(self::BASE_URL . '/collections/' . $collectionId . '/items')
+            ->setUrl($url)
             ->setData(array_merge($defaultParams, $params));
 
         $response = $this->sendRequest($request);
@@ -112,23 +123,82 @@ var_dump($response);
      * @see https://developers.webflow.com/#create-new-collection-item
      * @param string $apiKey api key.
      * @param string $collectionId
+     * @param boolean $needToPublish
      * @param array $params array with item fields.
      * @return array $response inserted item.
      */
-    public function addCollectionItem($apiKey, $collectionId, $params = [])
+    public function addCollectionItem($apiKey, $collectionId, $needToPublish = false, $params = [])
     {
         $defaultParams = [
             'fields' => []
         ];
 
+        $url = self::BASE_URL . '/collections/' . $collectionId . '/items';
+
+        if($needToPublish)
+            $url .= '?live=true';
+
         $request = $this->createRequest($apiKey)
             ->setMethod('POST')
-            ->setUrl(self::BASE_URL . '/collections/' . $collectionId . '/items')
+            ->setUrl($url)
             ->setData(array_merge($defaultParams, ['fields' => $params]));
 
         $response = $this->sendRequest($request);
 
         return $response;
+    }
+
+    /**
+     * Update existing collection item
+     * @see https://developers.webflow.com/#update-live-collection-item
+     * @param string $apiKey api key.
+     * @param string $collectionId
+     * @param string $itemId
+     * @param boolean $needToPublish
+     * @param array $params array with item fields.
+     * @return array $response updated item.
+     */
+    public function updateCollectionItem($apiKey, $collectionId, $itemId, $needToPublish = false, $params = [])
+    {
+        $defaultParams = [
+            'fields' => []
+        ];
+
+        $url = self::BASE_URL . '/collections/' . $collectionId . '/items/' . $itemId;
+
+        if($needToPublish)
+            $url .= '?live=true';
+
+        $request = $this->createRequest($apiKey)
+            ->setMethod('PUT')
+            ->setUrl($url)
+            ->setData(array_merge($defaultParams, ['fields' => $params]));
+
+        $response = $this->sendRequest($request);
+
+        return $response;
+    }
+
+    /**
+     * Delete collection item
+     * @see https://developers.webflow.com/?shell#remove-collection-item
+     * @param string $apiKey api key.
+     * @param string $collectionId
+     * @param string $itemId
+     * @return boolean If item was deleted or not.
+     */
+    public function deleteCollectionItem($apiKey, $collectionId, $itemId)
+    {
+        $request = $this->createRequest($apiKey)
+            ->setMethod('DELETE')
+            ->setUrl(self::BASE_URL . '/collections/' . $collectionId . '/items/' . $itemId);
+
+        $response = $this->sendRequest($request);
+
+        if(!empty($response['deleted']) && $response['deleted']==1)
+            return true;
+
+        return false;
     }
 
     /**

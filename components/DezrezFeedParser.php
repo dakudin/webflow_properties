@@ -61,6 +61,21 @@ class DezrezFeedParser extends Component
         }
     }
 
+    public function getAllPropCount()
+    {
+        return $this->_allPropCount;
+    }
+
+    public function getCurPropCount()
+    {
+        return $this->_curPropCount;
+    }
+
+    public function getPageNumber()
+    {
+        return $this->_pageNumber;
+    }
+
     public function getProperties()
     {
         return $this->_properties;
