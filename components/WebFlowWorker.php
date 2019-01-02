@@ -30,7 +30,7 @@ class WebFlowWorker extends Component
     protected $_publishToLiveSite = false;
 
     // count attempts for update/insert new property
-    protected $_attemptCount = 3;
+    protected $_attemptCount = 2;
 
     public function __construct($apiKey, $collectionId)
     {
@@ -121,8 +121,11 @@ class WebFlowWorker extends Component
             }
 
             // if all images were saved then continue
-            if($success = $this->ifAllImagesExists($wfItem, $item, $imagesToUpload))
+            $checkedItem = $this->checkForAllImagesExists($wfItem, $item, $imagesToUpload);
+            if($success = $checkedItem['allSaved'])
                 break;
+
+            $item = $checkedItem['item'];
         }
 
         if($success)
@@ -133,16 +136,23 @@ class WebFlowWorker extends Component
         return $success;
     }
 
-    protected function ifAllImagesExists(array $wfItem, array $item, $imagesCount){
-        $isError = false;
+    protected function checkForAllImagesExists(array $wfItem, array $item, $imagesCount){
+        $result = [
+            'item' => $item,
+            'allSaved' => true
+        ];
+
         for($i=1; $i<=$imagesCount; $i++){
             if(!array_key_exists('image-'.$i, $wfItem)){
                 echo 'WebFlow: image-'.$i.' (' . $item['image-'.$i] .') didn\'t stored for `' . $wfItem['name'] . '` property' . "\r\n";
-                $isError = true;
+
+                //resize image
+                $result['item']['image-'.$i] = $item['image-'.$i] . '?width=1000';
+                $result['allSaved'] = false;
             }
         }
 
-        return !$isError;
+        return $result;
     }
 
     protected function insertProperty($item)
