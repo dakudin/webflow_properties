@@ -12,31 +12,66 @@ use yii\base\Component;
 use app\models\Property;
 
 
+/**
+ * Class for parsing Dezrez feed.
+ *
+ * @author Kudin Dmitry <dakudin@gmail.com>
+ */
 class DezrezFeedParser extends Component
 {
+    /**
+     * Role statuses
+     */
     const SALE_ROLE_STATUS = 'InstructionToSell';
     const LET_ROLE_STATUS = 'InstructionToLet';
     const OFFER_ACCEPTED_ROLE_STATUS = 'OfferAccepted';
 
+    /**
+     * Property Flags
+     */
     const ON_MARKET_STATUS = 'OnMarket';
     const FEATURED_MARKET_STATUS = 'Featured';
     const OFFER_ACCEPTED_MARKET_STATUS = 'OfferAccepted';
     const UNDER_OFFER_MARKET_STATUS = 'UnderOffer';
 
+    /**
+     * field name for detecting full description
+     */
     const FULL_DESCRIPTION_FIELD_NAME = 'Main Marketing';
 
+    /**
+     * field name for detecting floor plan image url
+     */
     const FLOOR_PLAN_FIELD_NAME = 'Floorplan';
 
+    /**
+     * @var int Total properties which we can get via API
+     */
     private $_allPropCount;
 
+    /**
+     * @var int Number of properties which we receive in response
+     */
     private $_curPropCount;
 
+    /**
+     * @var int Page number which Dezrez API return in response
+     */
     private $_pageNumber;
 
+    /**
+     * @var int Number properties in response
+     */
     private $_pageSize;
 
+    /**
+     * @var array of Property objects
+     */
     private $_properties;
 
+    /**
+     * @var array of item collection
+     */
     private $_collection;
 
     public function parse($data)
@@ -83,6 +118,11 @@ class DezrezFeedParser extends Component
         return $this->_properties;
     }
 
+    /**
+     * Parse Dezrez property and return property as an object if model validation passed or false otherwise
+     * @param $dezrezProperty
+     * @return Property|bool
+     */
     protected function getProperty($dezrezProperty)
     {
         $property = new Property();
@@ -106,6 +146,11 @@ class DezrezFeedParser extends Component
         return false;
     }
 
+    /**
+     * Parse and return floor plan url
+     * @param array $documents
+     * @return string
+     */
     protected function getFloorPlanUrl(array $documents)
     {
         foreach($documents as $document){
@@ -118,6 +163,11 @@ class DezrezFeedParser extends Component
         return '';
     }
 
+    /**
+     * Parse and return array with property images
+     * @param array $images
+     * @return array
+     */
     protected function getImages(array $images)
     {
         $result = [];
@@ -129,6 +179,11 @@ class DezrezFeedParser extends Component
         return $result;
     }
 
+    /**
+     * Get full description of property
+     * @param array $descriptions
+     * @return string
+     */
     protected function getFullDescription(array $descriptions)
     {
         foreach($descriptions as $description){
@@ -139,9 +194,16 @@ class DezrezFeedParser extends Component
         return '';
     }
 
+    /**
+     * Analize Dezrez property market status, role type and flags and return market status for WebFlow property
+     * @param Property $property
+     * @param array $dezrezProperty
+     * @return bool|string
+     */
     protected function getMarketStatus(Property $property, $dezrezProperty){
         $roleStatus = $dezrezProperty['RoleStatus']['SystemName'];
         $roleFlags = [];
+
         foreach($dezrezProperty['Flags'] as $flag){
             if($flag['SystemName'] == self::UNDER_OFFER_MARKET_STATUS || $flag['SystemName'] == self::OFFER_ACCEPTED_MARKET_STATUS)
                 $roleFlags[] = $flag['SystemName'];

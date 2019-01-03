@@ -3,6 +3,9 @@
  * Created by Kudin Dmitry
  * Date: 15.12.2018
  * Time: 0:28
+ * See Dezrez guide
+ * https://developer.dezrez.com/rezi-webguide/feed-details
+ * https://developer.dezrez.com/rezi-webguide/making-requests
  */
 
 namespace app\components;
@@ -10,8 +13,12 @@ namespace app\components;
 use Yii;
 use yii\base\Component;
 use yii\httpclient\Client;
-//use yii\helpers\Json;
 
+/**
+ * Client provide interface for Dezrez API.
+ *
+ * @author Kudin Dmitry <dakudin@gmail.com>
+ */
 class DezrezClient extends Component
 {
     const BASE_URL = 'https://api.dezrez.com/api';
@@ -31,7 +38,6 @@ class DezrezClient extends Component
      * values from [[defaultRequestOptions()]].
      */
     private $_requestOptions = [];
-
 
     /**
      * @param string $key api key.
@@ -92,7 +98,7 @@ class DezrezClient extends Component
      * @see https://developer.dezrez.com/rezi-webguide/making-requests
      * @param array $apiKey api key.
      * @param array $params additional request params.
-     * @return Data list of properties.
+     * @return array Data list of properties.
      */
     public function getProperties($apiKey, $params = [])
     {
@@ -110,12 +116,7 @@ class DezrezClient extends Component
             ->setUrl(self::BASE_URL . '/' . self::SEARCH_RESULT_URL . '?APIKey=' . $apiKey)
             ->setData(array_merge($defaultParams, $params));
 
-//        $this->applyClientCredentialsToRequest($request);
-
         $response = $this->sendRequest($request);
-
-//        $token = $this->createToken(['params' => $response]);
-//        $this->setAccessToken($token);
 
         return $response;
     }
@@ -127,7 +128,6 @@ class DezrezClient extends Component
     public function createRequest()
     {
         $client = new Client([
-//            'baseUrl' => self::BASE_URL,
             'requestConfig' => [
                 'format' => Client::FORMAT_JSON
             ],
@@ -142,7 +142,6 @@ class DezrezClient extends Component
                 'Rezi-Api-Version' => '1.0',
                 'Content-Type' => 'application/json',
             ])
-//            ->setFormat(Client::FORMAT_JSON)
             ->addOptions($this->defaultRequestOptions())
             ->addOptions($this->getRequestOptions());
     }
@@ -160,4 +159,3 @@ class DezrezClient extends Component
     }
 
 }
-

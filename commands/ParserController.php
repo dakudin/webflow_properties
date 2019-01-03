@@ -22,12 +22,18 @@ use yii\console\ExitCode;
  */
 class ParserController extends Controller
 {
+    /**
+     * @var int Number of properties for getting from Dezrez API
+     */
     private $propertiesPerPage = 20;
 
+    /**
+     * @var WebFlowWorker worker for manipulate WebFlow API.
+     */
     protected $webFlowWorker;
 
     /**
-     * This command echoes what you have entered as the message.
+     * This command parse properties from Dezred feed and store to WebFlow site via API
      * @return int Exit code
      */
     public function actionIndex()
@@ -49,6 +55,9 @@ class ParserController extends Controller
         return ExitCode::OK;
     }
 
+    /**
+     * Get all properties from Dezrez feed and store their to WebFlow
+     */
     protected function refreshFeed()
     {
         $pageNumber = 0;
@@ -76,11 +85,15 @@ class ParserController extends Controller
         } while($parser->getAllPropCount()>0 && $parser->getAllPropCount() >= $pageNumber * $this->propertiesPerPage);
     }
 
+    /**
+     * Get pack of parsed properties and store their to WebFlow
+     * @param array $properties
+     */
     private function storePropsInWebFlow(array $properties)
     {
         foreach($properties as $property){
             if($property instanceof Property) {
-               $webFlowProperty = $this->webFlowWorker->storeProperty($property);
+               $this->webFlowWorker->storeProperty($property);
             }
         }
     }

@@ -3,6 +3,8 @@
  * Created by Kudin Dmitry
  * Date: 17.12.2018
  * Time: 14:15
+ * See https://github.com/yiisoft/yii2-httpclient
+ * https://github.com/yiisoft/yii2-httpclient/blob/master/docs/guide/basic-usage.md
  */
 
 namespace app\components;
@@ -11,12 +13,15 @@ use Yii;
 use yii\base\Component;
 use yii\httpclient\Client;
 
+/**
+ * Client provide interface for WebFlow API.
+ *
+ * @author Kudin Dmitry <dakudin@gmail.com>
+ */
 class WebFlowClient extends Component
 {
 
     const BASE_URL = 'https://api.webflow.com';
-
-//    const PROPERTY_COLLECTION_ID = '5c08e1d27fe16683b8309d92';
 
     /**
      * @var array cURL request options. Option values from this field will overwrite corresponding
@@ -49,9 +54,7 @@ class WebFlowClient extends Component
      */
     protected function sendRequest($request)
     {
-//var_dump($request);
         $response = $request->send();
-//var_dump($response);
         if (!$response->getIsOk()) {
             throw new InvalidResponseException($response, 'Request failed with code: ' . $response->getStatusCode() . ', message: ' . $response->getContent());
         }
@@ -265,6 +268,4 @@ class WebFlowClient extends Component
             'sslVerifyPeer' => false,
         ];
     }
-
-
 }

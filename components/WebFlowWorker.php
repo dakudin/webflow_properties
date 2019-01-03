@@ -13,25 +13,56 @@ use app\models\Property;
 use app\components\WebFlowClient;
 
 
+/**
+ * Class provide interface for inserting and updating properties via WebFlow API.
+ *
+ * @author Kudin Dmitry <dakudin@gmail.com>
+ */
 class WebFlowWorker extends Component
 {
 
+    /**
+     * @var \app\components\WebFlowClient client for work with WebFlow via API
+     */
     protected $_webFlowClient;
 
+    /**
+     * @var string API key
+     */
     protected $_apiKey;
 
+    /**
+     * @var string WebFlow collection id in which need inset/update/delete properties
+     */
     protected $_collectionId;
 
+    /**
+     * @var array of WebFlow properties ids
+     */
     protected $_wfItems;
 
+    /**
+     * @var int Number of items of the collection which we get per request
+     */
     protected $_itemsPerPage = 20;
 
-    // set to true for publishing to live site
+    /**
+     *
+     * @var bool Flag that show for which kind of items need to work: Live or not
+     * set to true for publishing to live site
+     */
     protected $_publishToLiveSite = false;
 
-    // count attempts for update/insert new property
+    /**
+     * @var int Number of attempts for storing properties
+     * If first attempt was wrong it detect images which didn't store, resize them and try to store again
+     */
     protected $_attemptCount = 2;
 
+    /**
+     * @param string $apiKey
+     * @param string $collectionId
+     */
     public function __construct($apiKey, $collectionId)
     {
         parent::__construct();
@@ -43,6 +74,11 @@ class WebFlowWorker extends Component
         $this->_webFlowClient = new WebFlowClient();
     }
 
+    /**
+     * Get all old items from WebFlow collection. Store properties id for detecting which ones need to delete
+     * after inserting/updating
+     * @return bool
+     */
     public function loadAllItems()
     {
         $this->_wfItems = [];
@@ -71,6 +107,11 @@ class WebFlowWorker extends Component
         return true;
     }
 
+    /**
+     * Store item as property in WebFlow collection (detect if it need to insert or update)
+     * @param Property $property
+     * @return bool
+     */
     public function storeProperty(Property $property)
     {
         $dezrezPropertyId = (string)$property->id;
@@ -136,6 +177,12 @@ class WebFlowWorker extends Component
         return $success;
     }
 
+    /**
+     * @param array $wfItem
+     * @param array $item
+     * @param int $imagesCount count of images need to be stored
+     * @return array Fixed item with resized images urls
+     */
     protected function checkForAllImagesExists(array $wfItem, array $item, $imagesCount){
         $result = [
             'item' => $item,
@@ -155,6 +202,11 @@ class WebFlowWorker extends Component
         return $result;
     }
 
+    /**
+     * Insert new item to WebFlow collection
+     * @param array $item Item of WebFlow collection
+     * @return array of inserted WebFlow item
+     */
     protected function insertProperty($item)
     {
         return $this->_webFlowClient->addCollectionItem(
@@ -165,6 +217,12 @@ class WebFlowWorker extends Component
         );
     }
 
+    /**
+     * Update item of WebFlow collection
+     * @param string $itemId ID of item for updating
+     * @param array $item Item of WebFlow collection
+     * @return array of updated WebFlow item
+     */
     protected function updateProperty($itemId, $item)
     {
         return $this->_webFlowClient->updateCollectionItem(
@@ -176,6 +234,9 @@ class WebFlowWorker extends Component
         );
     }
 
+    /**
+     * Detect which properties don't exists in Dezred feed and delete their in WebFlow collection
+     */
     public function deleteOldProperties(){
         $deleted = 0;
 
@@ -192,6 +253,11 @@ class WebFlowWorker extends Component
         echo 'WebFlow: Deleted - ' . $deleted . "\r\n";
     }
 
+    /**
+     * Delete item of WebFlow collection
+     * @param $itemId
+     * @return bool
+     */
     protected function deleteProperty($itemId)
     {
         return $this->_webFlowClient->deleteCollectionItem(
