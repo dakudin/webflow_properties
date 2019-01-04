@@ -125,6 +125,11 @@ class DezrezFeedParser extends Component
      */
     protected function getProperty($dezrezProperty)
     {
+
+/*        if($dezrezProperty['RoleId'] == 9700076){
+            var_dump($dezrezProperty);
+        }*/
+
         $property = new Property();
         $property->id = $dezrezProperty['RoleId'];
         $property->name = $dezrezProperty['RoleId'];
@@ -141,6 +146,11 @@ class DezrezFeedParser extends Component
 
         if ($property->validate()){
             return $property;
+        }else{
+            echo "Error Dezrez validation model for property " . $dezrezProperty['RoleId'] . "\r\n";
+            $errors = $property->errors;
+
+            var_dump($errors);
         }
 
         return false;
@@ -209,13 +219,16 @@ class DezrezFeedParser extends Component
                 $roleFlags[] = $flag['SystemName'];
         }
 
-        if($property->roleType == Property::ROLE_TYPE_SALE && $roleStatus == self::SALE_ROLE_STATUS)
+        if(($property->roleType == Property::ROLE_TYPE_SALE || $property->roleType == Property::ROLE_TYPE_AUCTION)
+            && $roleStatus == self::SALE_ROLE_STATUS)
             return Property::STATUS_FOR_SALE;
 
-        if($property->roleType == Property::ROLE_TYPE_SALE && in_array(self::UNDER_OFFER_MARKET_STATUS, $roleFlags))
+        if(($property->roleType == Property::ROLE_TYPE_SALE || $property->roleType == Property::ROLE_TYPE_AUCTION)
+            && in_array(self::UNDER_OFFER_MARKET_STATUS, $roleFlags))
             return Property::STATUS_SSTC;
 
-        if($property->roleType == Property::ROLE_TYPE_SALE && $roleStatus == self::OFFER_ACCEPTED_ROLE_STATUS)
+        if(($property->roleType == Property::ROLE_TYPE_SALE || $property->roleType == Property::ROLE_TYPE_AUCTION)
+            && $roleStatus == self::OFFER_ACCEPTED_ROLE_STATUS)
             return Property::STATUS_SOLD;
 
         // if status is 'Instruction to Let' and property doesn't have flag 'Offer Accepted' we set status 'To Let’;

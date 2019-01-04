@@ -25,7 +25,7 @@ class ParserController extends Controller
     /**
      * @var int Number of properties for getting from Dezrez API
      */
-    private $propertiesPerPage = 20;
+    private $propertiesPerPage = 10;
 
     /**
      * @var WebFlowWorker worker for manipulate WebFlow API.
@@ -49,8 +49,8 @@ class ParserController extends Controller
         // update properties and insert new ones
         $this->refreshFeed();
 
-        //delete properties which don't exists already in Dezrez feed
-        $this->webFlowWorker->deleteOldProperties();
+        //set as not `In feed` for properties which don't already exists in Dezrez feed
+        $this->webFlowWorker->setOldPropertiesAsNotInFeed();
 
         return ExitCode::OK;
     }
@@ -83,6 +83,8 @@ class ParserController extends Controller
             $this->storePropsInWebFlow($properties);
 
         } while($parser->getAllPropCount()>0 && $parser->getAllPropCount() >= $pageNumber * $this->propertiesPerPage);
+
+        echo "WebFlow: Inserted - " . $this->webFlowWorker->getInsertedCount() . "; Updated - " . $this->webFlowWorker->getUpdatedCount() . "\r\n";
     }
 
     /**
@@ -93,7 +95,10 @@ class ParserController extends Controller
     {
         foreach($properties as $property){
             if($property instanceof Property) {
-               $this->webFlowWorker->storeProperty($property);
+               if(!$this->webFlowWorker->storeProperty($property)){
+                   echo "Error Dezrez: Cannot store property \r\n";
+                   var_dump($property);
+               }
             }
         }
     }

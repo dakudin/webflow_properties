@@ -22,6 +22,17 @@ class WebFlowWorker extends Component
 {
 
     /**
+     * slug for field 'In feed'
+     * if filed is true that property exists in feed, false otherwise
+     */
+    const FIELD_IN_FEED_SLUG = 'in-feed-3';
+
+    /**
+     * WebFlow field id
+     */
+    const FIELD_ID = '_id';
+
+    /**
      * @var \app\components\WebFlowClient client for work with WebFlow via API
      */
     protected $_webFlowClient;
@@ -60,6 +71,16 @@ class WebFlowWorker extends Component
     protected $_attemptCount = 2;
 
     /**
+     * @var int Number of items which were inserted to collection
+     */
+    protected $_insertedCount = 0;
+
+    /**
+     * @var int Number of items which were updated in collection
+     */
+    protected $_updatedCount = 0;
+
+    /**
      * @param string $apiKey
      * @param string $collectionId
      */
@@ -71,7 +92,25 @@ class WebFlowWorker extends Component
 
         $this->_collectionId = $collectionId;
 
+//        $this->_publishToLiveSite = true;
+
         $this->_webFlowClient = new WebFlowClient();
+    }
+
+    /**
+     * @return int Number of items which were inserted to collection
+     */
+    public function getInsertedCount()
+    {
+        return $this->_insertedCount;
+    }
+
+    /**
+     * @return int Number of items which were inserted to collection
+     */
+    public function getUpdatedCount()
+    {
+        return $this->_updatedCount;
     }
 
     /**
@@ -116,6 +155,7 @@ class WebFlowWorker extends Component
     {
         $dezrezPropertyId = (string)$property->id;
         $item = [
+            self::FIELD_IN_FEED_SLUG => true, // slug for field 'In feed'
             '_archived' => false,
             '_draft'=> false,
             'name' => $dezrezPropertyId,
@@ -142,23 +182,24 @@ class WebFlowWorker extends Component
 
         $success = false;
 
+        $isInserted = false;
+
         //try to update/insert WebFlow item
         //if fault then try again
         for($i=1; $i<=$this->_attemptCount; $i++) {
             echo "----------store property-------------".$dezrezPropertyId." (attempt $i)\r\n";
             // need to update item or insert a new one
             if (array_key_exists($dezrezPropertyId, $this->_wfItems)) {
-                echo "----------update property-------------".$dezrezPropertyId."\r\n";
-//                var_dump($this->_wfItems[$dezrezPropertyId]);
-                $wfItem = $this->updateProperty($this->_wfItems[$dezrezPropertyId]['id'], $item);
-                $this->_wfItems[$dezrezPropertyId]['flagUpdated'] = true;
+                $wfItem = $this->updateProperty($dezrezPropertyId, $this->_wfItems[$dezrezPropertyId]['id'], $item);
             } else {
-                echo "----------insert property-------------".$dezrezPropertyId."\r\n";
-                $wfItem = $this->insertProperty($item);
-                $this->_wfItems[$dezrezPropertyId] = [
-                    'id' => $wfItem['_id'],
-                    'flagUpdated' => true,
-                ];
+                $wfItem = $this->insertProperty($dezrezPropertyId, $item);
+                $isInserted = true;
+            }
+
+            // if WebFlow cannot store property
+            if(array_key_exists(self::FIELD_ID, $wfItem) === FALSE){
+                $success = false;
+                break;
             }
 
             // if all images were saved then continue
@@ -169,10 +210,13 @@ class WebFlowWorker extends Component
             $item = $checkedItem['item'];
         }
 
-        if($success)
+        if($success) {
             echo "WebFlow: property `" . $dezrezPropertyId . "` was saved successfully \r\n";
-        else
-            echo "WebFlow: property `" . $dezrezPropertyId . "` wasn't saved properly \r\n";
+
+            if($isInserted) $this->_insertedCount++;
+            else $this->_updatedCount++;
+        } else
+            echo "Error: property `" . $dezrezPropertyId . "` wasn't saved properly \r\n";
 
         return $success;
     }
@@ -204,34 +248,77 @@ class WebFlowWorker extends Component
 
     /**
      * Insert new item to WebFlow collection
+     * @param string $dezrezPropertyId ID of item for inserting
      * @param array $item Item of WebFlow collection
      * @return array of inserted WebFlow item
      */
-    protected function insertProperty($item)
+    protected function insertProperty($dezrezPropertyId, $item)
     {
-        return $this->_webFlowClient->addCollectionItem(
+        echo "----------insert property-------------".$dezrezPropertyId."\r\n";
+
+        $result = $this->_webFlowClient->addCollectionItem(
             $this->_apiKey,
             $this->_collectionId,
             $this->_publishToLiveSite,
             $item
         );
+
+        if(array_key_exists(self::FIELD_ID, $result) !== FALSE){
+                $this->_wfItems[$dezrezPropertyId] = [
+                'id' => $result['_id'],
+                'flagUpdated' => true,
+            ];
+        }
+
+        return $result;
     }
 
     /**
      * Update item of WebFlow collection
+     * @param string $dezrezPropertyId ID of item for updating
      * @param string $itemId ID of item for updating
      * @param array $item Item of WebFlow collection
      * @return array of updated WebFlow item
      */
-    protected function updateProperty($itemId, $item)
+    protected function updateProperty($dezrezPropertyId, $itemId, $item)
     {
-        return $this->_webFlowClient->updateCollectionItem(
+        echo "----------update property-------------".$dezrezPropertyId."\r\n";
+
+        $result = $this->_webFlowClient->updateCollectionItem(
             $this->_apiKey,
             $this->_collectionId,
             $itemId,
-            false, // set to true for publishing to live site
+            $this->_publishToLiveSite, // set to true for publishing to live site
             $item
         );
+
+        if(array_key_exists(self::FIELD_ID, $result) !== FALSE){
+            $this->_wfItems[$dezrezPropertyId]['flagUpdated'] = true;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Patch item of WebFlow collection
+     * @param string $dezrezPropertyId ID of item for patching
+     * @param string $itemId ID of item for patching
+     * @param array $item Item of WebFlow collection
+     * @return array of patched WebFlow item
+     */
+    protected function patchProperty($dezrezPropertyId, $itemId, $item)
+    {
+//        echo "----------patch property-------------".$dezrezPropertyId."\r\n";
+
+        $result = $this->_webFlowClient->patchCollectionItem(
+            $this->_apiKey,
+            $this->_collectionId,
+            $itemId,
+            $this->_publishToLiveSite, // set to true for publishing to live site
+            $item
+        );
+
+        return $result;
     }
 
     /**
@@ -251,6 +338,32 @@ class WebFlowWorker extends Component
         }
 
         echo 'WebFlow: Deleted - ' . $deleted . "\r\n";
+    }
+
+    /**
+     * Detect which properties don't exists in Dezred feed and set their as not 'In feed'
+     */
+    public function setOldPropertiesAsNotInFeed(){
+        $hidden = 0;
+
+        foreach($this->_wfItems as $wfItemId=>$wfItemData) {
+            if (!$wfItemData['flagUpdated']){
+                $item = $this->patchProperty(
+                    $wfItemId,
+                    $wfItemData['id'],
+                    [
+                        self::FIELD_IN_FEED_SLUG => false,
+                    ]);
+
+                if(array_key_exists(self::FIELD_IN_FEED_SLUG, $item) && $item[self::FIELD_IN_FEED_SLUG]===false){
+                    $hidden++;
+                }else{
+                    echo 'Error WebFlow: Couldn\'t set as not `In feed` item ID-' . $wfItemData['id'] . ' with name `' . $wfItemId . '`' . "\r\n";
+                }
+            }
+        }
+
+        echo 'WebFlow: Set as not `In feed` - ' . $hidden . "\r\n";
     }
 
     /**

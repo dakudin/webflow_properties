@@ -14,6 +14,7 @@ class Property extends Model
 {
     const ROLE_TYPE_SALE = 'Selling';
     const ROLE_TYPE_LET = 'Letting';
+    const ROLE_TYPE_AUCTION = 'Auction';
 
     const STATUS_LET_AGREED = 'Let Agreed';
     const STATUS_TO_LET = 'To Let';
@@ -42,9 +43,6 @@ class Property extends Model
     public $price;
     public $numberOfRooms;
     public $numberOfBath;
-
-//    public Square Feet; number
-
     public $fullDescription;
     public $shortDescription;
     public $images;
@@ -57,13 +55,13 @@ class Property extends Model
     public function rules()
     {
         return [
-            // name, email, subject and body are required
+            // id, roleType, marketStatus and body are required
             [['id', 'roleType', 'marketStatus'], 'required'],
             ['price', 'number'],
             [['numberOfRooms', 'numberOfBath'], 'integer'],
 
-            // roleType needs to be 'Selling' or 'Letting'
-            ['roleType', 'in', 'range' => [self::ROLE_TYPE_LET, self::ROLE_TYPE_SALE]],
+            // roleType needs to be 'Selling' or 'Letting' or 'Auction'
+            ['roleType', 'in', 'range' => [self::ROLE_TYPE_LET, self::ROLE_TYPE_SALE, self::ROLE_TYPE_AUCTION]],
             ['marketStatus', 'in', 'range' => [self::STATUS_LET_AGREED, self::STATUS_TO_LET,
                 self::STATUS_SOLD, self::STATUS_SSTC, self::STATUS_FOR_SALE]],
         ];

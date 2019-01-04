@@ -183,6 +183,37 @@ class WebFlowClient extends Component
     }
 
     /**
+     * Patch existing collection item
+     * @see https://developers.webflow.com/?shell#patch-live-collection-item
+     * @param string $apiKey api key.
+     * @param string $collectionId
+     * @param string $itemId
+     * @param boolean $needToPublish
+     * @param array $params array with item fields.
+     * @return array $response patched item.
+     */
+    public function patchCollectionItem($apiKey, $collectionId, $itemId, $needToPublish = false, $params = [])
+    {
+        $defaultParams = [
+            'fields' => []
+        ];
+
+        $url = self::BASE_URL . '/collections/' . $collectionId . '/items/' . $itemId;
+
+        if($needToPublish)
+            $url .= '?live=true';
+
+        $request = $this->createRequest($apiKey)
+            ->setMethod('PATCH')
+            ->setUrl($url)
+            ->setData(array_merge($defaultParams, ['fields' => $params]));
+
+        $response = $this->sendRequest($request);
+
+        return $response;
+    }
+
+    /**
      * Delete collection item
      * @see https://developers.webflow.com/?shell#remove-collection-item
      * @param string $apiKey api key.
