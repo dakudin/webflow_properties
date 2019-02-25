@@ -28,6 +28,10 @@ class Property extends Model
     const WF_STATUS_SSTC = '5c08e2833ae945819ad9c699';
     const WF_STATUS_FOR_SALE = '5c08e27da482fe1e50b0dfd2';
 
+    const WF_ROLE_TYPE_SALE = '5c73bb793f8bb237fc271641';
+    const WF_ROLE_TYPE_LET = '5c73bb803f8bb270e9271646';
+    const WF_ROLE_TYPE_AUCTION = '5c73bb8bfd0819570c8feeec';
+
 /*
 {"items":[{"_archived":false,"_draft":false,"name":
 "Let Agreed","slug":"let-agreed","_id":"5c08e296a482fe2de2b0dfdb"
@@ -47,6 +51,11 @@ class Property extends Model
     public $shortDescription;
     public $images;
     public $floorPlanImageUrl;
+
+    public $propertyType;
+    public $address;
+    public $epc;
+    public $brochure;
 
 
     /**
@@ -75,6 +84,17 @@ class Property extends Model
             case self::STATUS_SOLD : return self::WF_STATUS_SOLD;
             case self::STATUS_SSTC : return self::WF_STATUS_SSTC;
             case self::STATUS_FOR_SALE : return self::WF_STATUS_FOR_SALE;
+        }
+
+        return false;
+    }
+
+    public function getWebflowRoleType()
+    {
+        switch ($this->roleType) {
+            case self::ROLE_TYPE_LET : return self::WF_ROLE_TYPE_LET;
+            case self::ROLE_TYPE_SALE : return self::WF_ROLE_TYPE_SALE;
+            case self::ROLE_TYPE_AUCTION : return self::WF_ROLE_TYPE_AUCTION;
         }
 
         return false;

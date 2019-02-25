@@ -132,7 +132,7 @@ class WebFlowWorker extends Component
                 return false;
 
             foreach($response['items'] as $item){
-                $this->_wfItems[$item['name']] = [
+                $this->_wfItems[$item['propertyid-2']] = [
                     'id' => $item['_id'],
                     'flagUpdated' => false,
                 ];
@@ -158,7 +158,7 @@ class WebFlowWorker extends Component
             self::FIELD_IN_FEED_SLUG => true, // slug for field 'In feed'
             '_archived' => false,
             '_draft'=> false,
-            'name' => $dezrezPropertyId,
+            'name' => $property->name,
             'slug' => $dezrezPropertyId,
             'propertyid-2' => $dezrezPropertyId,
             'property-status' => $property->getWebflowMarketStatus(),
@@ -167,10 +167,19 @@ class WebFlowWorker extends Component
             'number-of-baths' => $property->numberOfBath,
             'property-description' => $property->fullDescription,
             'short-description' => $property->shortDescription,
+            'property-type-2' => $property->propertyType,
+            'property-address' => $property->address,
+            'role-type' => $property->getWebflowRoleType(),
         ];
 
         if(!empty($property->floorPlanImageUrl))
             $item['floorplan'] = $property->floorPlanImageUrl;
+
+        if(!empty($property->epc))
+            $item['epc-rating'] = $property->epc;
+
+        if(!empty($property->brochure))
+            $item['pdf-brochure'] = $property->brochure;
 
         $i = 0;
         foreach($property->images as $image) {

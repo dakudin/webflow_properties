@@ -45,6 +45,16 @@ class DezrezFeedParser extends Component
     const FLOOR_PLAN_FIELD_NAME = 'Floorplan';
 
     /**
+     * field name for detecting EPC rating image url
+     */
+    const EPC_FIELD_NAME = 'EPC';
+
+    /**
+     * field name for detecting EPC rating image url
+     */
+    const BROCHURE_FIELD_NAME = 'Brochure';
+
+    /**
      * @var int Total properties which we can get via API
      */
     private $_allPropCount;
@@ -132,16 +142,27 @@ class DezrezFeedParser extends Component
 
         $property = new Property();
         $property->id = $dezrezProperty['RoleId'];
-        $property->name = $dezrezProperty['RoleId'];
         $property->roleType = $dezrezProperty['RoleType']['SystemName'];
         $property->marketStatus = $this->getMarketStatus($property, $dezrezProperty);
         $property->price = $dezrezProperty['Price']['PriceValue'];
         $property->numberOfRooms = $dezrezProperty['RoomCountsDescription']['Bedrooms'];
         $property->numberOfBath = $dezrezProperty['RoomCountsDescription']['Bathrooms'];
-        $property->shortDescription = $dezrezProperty['SummaryTextDescription'];
-        $property->fullDescription = $this->getFullDescription($dezrezProperty['Descriptions']);
+        $property->shortDescription = str_replace('&nbsp;', ' ', strip_tags($dezrezProperty['SummaryTextDescription']));
+        $property->fullDescription = str_replace('&nbsp;', ' ', strip_tags($this->getFullDescription($dezrezProperty['Descriptions'])));
         $property->images = $this->getImages($dezrezProperty['Images']);
         $property->floorPlanImageUrl = $this->getFloorPlanUrl($dezrezProperty['Documents']);
+
+        $property->propertyType = $this->getPropertyType($dezrezProperty['PropertyType']);
+        $property->address = $this->getAddress($dezrezProperty['Address']);
+
+        $property->epc = $this->getEPC($dezrezProperty['EPC']);
+        if(empty($property->epc))
+            $property->epc = $this->getEPCinDocuments($dezrezProperty['Documents']);
+
+        $property->brochure = $this->getBrochure($dezrezProperty['Documents']);
+
+        //create property name from bedrooms, property type, market type (sales/lettings)
+        $property->name = $this->getPropertyName($property->numberOfRooms, $property->propertyType, $property->roleType);
 
 
         if ($property->validate()){
@@ -154,6 +175,45 @@ class DezrezFeedParser extends Component
         }
 
         return false;
+    }
+
+    /**
+     * @param $propertyType
+     * @return string
+     */
+    protected function getPropertyType($propertyType)
+    {
+        if(!empty($propertyType)){
+            return $propertyType['DisplayName'];
+        }
+
+        return '';
+    }
+
+    /**
+     * @param string $bedrooms
+     * @param string $propertyType
+     * @param string $roleType
+     * @return string
+     */
+    protected function getPropertyName($bedrooms, $propertyType, $roleType)
+    {
+        $name = '';
+
+        if(!empty($bedrooms))
+            $name = $bedrooms . ' bed ';
+
+        if(!empty($propertyType))
+            $name .= $propertyType . ' ';
+
+        if($roleType == Property::ROLE_TYPE_SALE)
+            $name .= 'for sale';
+        elseif($roleType == Property::ROLE_TYPE_LET)
+            $name .= 'to let';
+        else
+            $name .= 'for auction';
+
+        return strtolower(trim($name));
     }
 
     /**
@@ -171,6 +231,92 @@ class DezrezFeedParser extends Component
         }
 
         return '';
+    }
+
+    //"EPC":{"EPCType":{"DisplayName":"England and Wales Residential","SystemName":"EnglandWalesResidential"},
+    //"EERCurrent":65,"EERPotential":70,"EIRCurrent":65,"EIRPotential":70,"Image":{"Id":4394925,"Url":"https://dezrezcorelive.blob.core.windows.net/systempublic/epc_ce65_pe70_ci65_pi70.png",
+    //"DocumentType":{"DisplayName":"Image","SystemName":"Image"},"DocumentSubType":{"DisplayName":"EPC","SystemName":"EPC"}}}
+    /**
+     * @param array $epc
+     * @return string
+     */
+    protected function getEPC($epc)
+    {
+        if(!empty($epc) && !empty($epc['Image'])){
+            if($epc['Image']['DocumentSubType']['SystemName'] == self::EPC_FIELD_NAME)
+                return $epc['Image']['Url'];
+        }
+
+        return '';
+    }
+
+    //"Documents":[{"Id":4394925,"Url":"https://dezrezcorelive.blob.core.windows.net/systempublic/epc_ce65_pe70_ci65_pi70.png",
+    //"DocumentType":{"DisplayName":"Image","SystemName":"Image"},"DocumentSubType":{"DisplayName":"EPC","SystemName":"EPC"}}]
+    /**
+     * @param array $documents
+     * @return string
+     */
+    protected function getEPCinDocuments(array $documents)
+    {
+        foreach($documents as $document){
+            if($document['DocumentSubType']['SystemName'] == self::EPC_FIELD_NAME
+//                && $document['DocumentType']['SystemName'] == 'Document'
+            )
+                return $document['Url'];
+        }
+
+        return '';
+    }
+
+    /**
+     * @param array $documents
+     * @return string
+     */
+    protected function getBrochure(array $documents)
+    {
+        foreach($documents as $document){
+            if($document['DocumentSubType']['SystemName'] == self::BROCHURE_FIELD_NAME
+                && $document['DocumentType']['SystemName'] == 'Document'
+            )
+                return $document['Url'];
+        }
+
+        return '';
+    }
+
+    /**
+     * @param $feedAddress
+     * @return string
+     */
+    protected function getAddress($feedAddress)
+    {
+        $address = '';
+
+        if($feedAddress['OrganizationName']!='')
+            $address = $feedAddress['OrganizationName'] . ', ';
+
+        if($feedAddress['Number']!='')
+            $address .= $feedAddress['Number'] . ', ';
+
+        if($feedAddress['BuildingName']!='')
+            $address .= $feedAddress['BuildingName'] . ', ';
+
+        if($feedAddress['Street']!='')
+            $address .= $feedAddress['Street'] . ', ';
+
+        if($feedAddress['Town']!='')
+            $address .= $feedAddress['Town'] . ', ';
+
+        if($feedAddress['Locality']!='')
+            $address .= $feedAddress['Locality'] . ', ';
+
+        if($feedAddress['County']!='')
+            $address .= $feedAddress['County'] . ', ';
+
+        if($feedAddress['Postcode']!='')
+            $address .= $feedAddress['Postcode'];
+
+        return trim($address, ' ,');
     }
 
     /**
