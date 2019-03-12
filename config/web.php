@@ -43,14 +43,15 @@ $config = [
             ],
         ],
         'db' => $db,
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                '/' => 'site/index',
+//                'catchAll' => ['site/offline'], // for maintenance mode
+                '<action:[\w\-]+>' => 'site/<action>',
             ],
         ],
-        */
     ],
     'params' => $params,
 ];

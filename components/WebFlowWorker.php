@@ -163,12 +163,14 @@ class WebFlowWorker extends Component
             'propertyid-2' => $dezrezPropertyId,
             'property-status' => $property->getWebflowMarketStatus(),
             'rent-or-sale-price' => $property->price,
+            'asking-price-text' => $property->priceText,
             'number-of-rooms' => $property->numberOfRooms,
             'number-of-baths' => $property->numberOfBath,
             'property-description' => $property->fullDescription,
             'short-description' => $property->shortDescription,
             'property-type-2' => $property->propertyType,
             'property-address' => $property->address,
+            'filtering-category' => $property->getWebflowFilteredCategory(),
             'role-type' => $property->getWebflowRoleType(),
         ];
 

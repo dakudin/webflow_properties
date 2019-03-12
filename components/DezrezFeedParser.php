@@ -86,6 +86,9 @@ class DezrezFeedParser extends Component
 
     public function parse($data)
     {
+        //for the correct price transforming
+        setlocale(LC_MONETARY, 'en_GB');
+
         $this->_allPropCount = $data['TotalCount'];
 
         $this->_curPropCount = $data['CurrentCount'];
@@ -145,6 +148,8 @@ class DezrezFeedParser extends Component
         $property->roleType = $dezrezProperty['RoleType']['SystemName'];
         $property->marketStatus = $this->getMarketStatus($property, $dezrezProperty);
         $property->price = $dezrezProperty['Price']['PriceValue'];
+//        $property->priceText = utf8_encode(money_format('%n', $property->price));
+        $property->priceText = number_format($property->price, 0, '.', ',');
         $property->numberOfRooms = $dezrezProperty['RoomCountsDescription']['Bedrooms'];
         $property->numberOfBath = $dezrezProperty['RoomCountsDescription']['Bathrooms'];
         $property->shortDescription = str_replace('&nbsp;', ' ', strip_tags($dezrezProperty['SummaryTextDescription']));

@@ -22,29 +22,35 @@ class Property extends Model
     const STATUS_SSTC = 'SSTC';
     const STATUS_FOR_SALE = 'For Sale';
 
-    const WF_STATUS_LET_AGREED = '5c08e296a482fe2de2b0dfdb';
-    const WF_STATUS_TO_LET = '5c08e28f19c6a579cbbb689e';
-    const WF_STATUS_SOLD = '5c08e288179c1c5a660f41d8';
-    const WF_STATUS_SSTC = '5c08e2833ae945819ad9c699';
-    const WF_STATUS_FOR_SALE = '5c08e27da482fe1e50b0dfd2';
+    const WF_STATUS_LET_AGREED = '5c7ac6365c22932f2b4a252a';
+    const WF_STATUS_TO_LET = '5c7ac6365c2293008f4a2529';
+    const WF_STATUS_SOLD = '5c7ac6365c22937c134a2522';
+    const WF_STATUS_SSTC = '5c7ac6365c2293747f4a250f';
+    const WF_STATUS_FOR_SALE = '5c7ac6365c22935aac4a24fd';
 
-    const WF_ROLE_TYPE_SALE = '5c73bb793f8bb237fc271641';
-    const WF_ROLE_TYPE_LET = '5c73bb803f8bb270e9271646';
-    const WF_ROLE_TYPE_AUCTION = '5c73bb8bfd0819570c8feeec';
+    const WF_ROLE_TYPE_SALE = '5c7ac6365c22931a644a2571';
+    const WF_ROLE_TYPE_LET = '5c7ac6365c229352704a2572';
+    const WF_ROLE_TYPE_AUCTION = '5c7ac6365c229306fd4a2573';
 
-/*
-{"items":[{"_archived":false,"_draft":false,"name":
-"Let Agreed","slug":"let-agreed","_id":"5c08e296a482fe2de2b0dfdb"
-"To Let","slug":"to-let","updated-on":"2018-12-06T08:49:19.343Z","published-on":null,"published-by":null,"_id":"5c08e28f19c6a579cbbb689e"},
-"Sold","slug":"sold","updated-on":"2018-12-06T08:49:12.699Z","published-on":null,"published-by":null,"_cid":"5c08e2753ae945040ed9c693","_id":"5c08e288179c1c5a660f41d8"},
-"SSTC","slug":"sstc","updated-on":"2018-12-06T08:49:07.505Z","published-on":null,"published-by":null,"_cid":"5c08e2753ae945040ed9c693","_id":"5c08e2833ae945819ad9c699"},
-"For Sale","slug":"for-sale","updated-on":"2018-12-06T08:49:01.214Z","updated-by":"Person_5aba15c5ba193676c79b4eae","created-on":"2018-12-06T08:49:01.214Z","created-by":"Person_5aba15c5ba193676c79b4eae","published-on":null,"published-by":null,"_cid":"5c08e2753ae945040ed9c693","_id":"5c08e27da482fe1e50b0dfd2"}],"count":5,"limit":100,"offset":0,"total":5}
-  */
+    const WF_FILTERED_CATEGORY_SALE = '65cc23e5c2a1c68df968ca6fb85777f5';
+    const WF_FILTERED_CATEGORY_LET = '0cdda993be013d7085e688590f428a74';
+    const WF_FILTERED_CATEGORY_AUCTION = '6234b37e65fac579c03fe4f13d487492';
+
+
+    /*
+    {"items":[{"_archived":false,"_draft":false,"name":
+    "Let Agreed","slug":"let-agreed","_id":"5c08e296a482fe2de2b0dfdb"
+    "To Let","slug":"to-let","updated-on":"2018-12-06T08:49:19.343Z","published-on":null,"published-by":null,"_id":"5c08e28f19c6a579cbbb689e"},
+    "Sold","slug":"sold","updated-on":"2018-12-06T08:49:12.699Z","published-on":null,"published-by":null,"_cid":"5c08e2753ae945040ed9c693","_id":"5c08e288179c1c5a660f41d8"},
+    "SSTC","slug":"sstc","updated-on":"2018-12-06T08:49:07.505Z","published-on":null,"published-by":null,"_cid":"5c08e2753ae945040ed9c693","_id":"5c08e2833ae945819ad9c699"},
+    "For Sale","slug":"for-sale","updated-on":"2018-12-06T08:49:01.214Z","updated-by":"Person_5aba15c5ba193676c79b4eae","created-on":"2018-12-06T08:49:01.214Z","created-by":"Person_5aba15c5ba193676c79b4eae","published-on":null,"published-by":null,"_cid":"5c08e2753ae945040ed9c693","_id":"5c08e27da482fe1e50b0dfd2"}],"count":5,"limit":100,"offset":0,"total":5}
+      */
     public $id;
     public $name;
     public $roleType;
     public $marketStatus;
     public $price;
+    public $priceText;
     public $numberOfRooms;
     public $numberOfBath;
     public $fullDescription;
@@ -95,6 +101,17 @@ class Property extends Model
             case self::ROLE_TYPE_LET : return self::WF_ROLE_TYPE_LET;
             case self::ROLE_TYPE_SALE : return self::WF_ROLE_TYPE_SALE;
             case self::ROLE_TYPE_AUCTION : return self::WF_ROLE_TYPE_AUCTION;
+        }
+
+        return false;
+    }
+
+    public function getWebflowFilteredCategory()
+    {
+        switch ($this->roleType) {
+            case self::ROLE_TYPE_LET : return self::WF_FILTERED_CATEGORY_LET;
+            case self::ROLE_TYPE_SALE : return self::WF_FILTERED_CATEGORY_SALE;
+            case self::ROLE_TYPE_AUCTION : return self::WF_FILTERED_CATEGORY_AUCTION;
         }
 
         return false;
