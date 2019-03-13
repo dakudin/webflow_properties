@@ -126,9 +126,21 @@ $js = <<< JS
         var type = String(marketTypeInput.value);
 
         if(type == 'lettings'){
+            $('#breadcrumb-market').html('LETTINGS');
+            $('#breadcrumb-stoke').html('STOKE-ON-TRENT PROPERTY TO LET');
+            $('#page-header').html('Properties for Rent in Stoke-on-Trent');
             minPriceRangeInput.innerHTML = getLettingsOptions(true).join();
             maxPriceRangeInput.innerHTML = getLettingsOptions(false).join();
         }else{
+            if(type == 'sales'){
+                $('#breadcrumb-market').html('SALES');
+                $('#breadcrumb-stoke').html('STOKE-ON-TRENT PROPERTY FOR SALE');
+                $('#page-header').html('Properties for Sale in Stoke-on-Trent');
+            }else{
+                $('#breadcrumb-market').html('AUCTIONS');
+                $('#breadcrumb-stoke').html('STOKE-ON-TRENT PROPERTY FOR AUCTION');
+                $('#page-header').html('Properties for Auction in Stoke-on-Trent');
+            }
             minPriceRangeInput.innerHTML = getSalesOptions(true).join();
             maxPriceRangeInput.innerHTML = getSalesOptions(false).join();
         }
@@ -171,9 +183,9 @@ $js = <<< JS
         var arrOptions = [];
 
         if(firstSelected)
-            arrOptions.push('<option value="50000" selected>&pound;50000</option>');
+            arrOptions.push('<option value="50000" selected>&pound;50,000</option>');
         else
-            arrOptions.push('<option value="50000">&pound;50000</option>');
+            arrOptions.push('<option value="50000">&pound;50,000</option>');
 
         arrOptions.push('<option value="100000">&pound;100,000</option>');
         arrOptions.push('<option value="150000">&pound;150,000</option>');
