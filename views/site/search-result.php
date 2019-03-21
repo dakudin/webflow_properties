@@ -97,6 +97,9 @@ $js = <<< JS
 
                 if (state.activePagination.limit === activeLimit && state.activePagination.page === activePage) return;
 
+                // refresh slider for property images
+                Webflow.require('slider').redraw();
+
                 // Pagination state has changed:
                 activePage = state.activePagination.page;
                 activeLimit = state.activePagination.limit;

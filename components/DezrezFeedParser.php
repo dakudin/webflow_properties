@@ -152,8 +152,8 @@ class DezrezFeedParser extends Component
         $property->priceText = number_format($property->price, 0, '.', ',');
         $property->numberOfRooms = $dezrezProperty['RoomCountsDescription']['Bedrooms'];
         $property->numberOfBath = $dezrezProperty['RoomCountsDescription']['Bathrooms'];
-        $property->shortDescription = str_replace('&nbsp;', ' ', strip_tags($dezrezProperty['SummaryTextDescription']));
-        $property->fullDescription = str_replace('&nbsp;', ' ', strip_tags($this->getFullDescription($dezrezProperty['Descriptions'])));
+        $property->shortDescription = $this->fixTextProperty($dezrezProperty['SummaryTextDescription']);
+        $property->fullDescription = $this->fixTextProperty($this->getFullDescription($dezrezProperty['Descriptions']));
         $property->images = $this->getImages($dezrezProperty['Images']);
         $property->floorPlanImageUrl = $this->getFloorPlanUrl($dezrezProperty['Documents']);
 
@@ -180,6 +180,20 @@ class DezrezFeedParser extends Component
         }
 
         return false;
+    }
+
+    protected function fixTextProperty($text)
+    {
+        mb_regex_encoding('UTF-8');
+        //replace MS special characters first
+        $search = array('/&nbsp;/u', '/&lsquo;/u', '/&rsquo;/u', '/&ldquo;/u', '/&rdquo;/u', '/&mdash;/u');
+        $replace = array(' ', '\'', '\'', '"', '"', '-');
+        $text = preg_replace($search, $replace, $text);
+
+        $text = strip_tags(html_entity_decode($text));
+        $text = str_replace("\n", ' ', $text);
+
+        return $text;
     }
 
     /**

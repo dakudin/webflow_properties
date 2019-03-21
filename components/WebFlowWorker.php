@@ -11,7 +11,7 @@ use Yii;
 use yii\base\Component;
 use app\models\Property;
 use app\components\WebFlowClient;
-
+use yii\helpers\StringHelper;
 
 /**
  * Class provide interface for inserting and updating properties via WebFlow API.
@@ -20,6 +20,9 @@ use app\components\WebFlowClient;
  */
 class WebFlowWorker extends Component
 {
+    const SHORT_DESCRIPTION_LENGTH = 230;
+
+    const SHORT_DESCRIPTION_MOBILE_LENGTH = 100;
 
     /**
      * slug for field 'In feed'
@@ -167,7 +170,8 @@ class WebFlowWorker extends Component
             'number-of-rooms' => $property->numberOfRooms,
             'number-of-baths' => $property->numberOfBath,
             'property-description' => $property->fullDescription,
-            'short-description' => $property->shortDescription,
+            'short-description' => StringHelper::truncate($property->shortDescription, self::SHORT_DESCRIPTION_LENGTH, '...'),
+            'short-description-mobile' => StringHelper::truncate($property->shortDescription, self::SHORT_DESCRIPTION_MOBILE_LENGTH, '...'),
             'property-type-2' => $property->propertyType,
             'property-address' => $property->address,
             'filtering-category' => $property->getWebflowFilteredCategory(),
@@ -249,7 +253,11 @@ class WebFlowWorker extends Component
                 echo 'WebFlow: image-'.$i.' (' . $item['image-'.$i] .') didn\'t stored for `' . $wfItem['name'] . '` property' . "\r\n";
 
                 //resize image
-                $result['item']['image-'.$i] = $item['image-'.$i] . '?width=1000';
+                if(strpos($item['image-'.$i], '?') === FALSE)
+                    $result['item']['image-'.$i] = $item['image-'.$i] . '?width=1000';
+                else
+                    $result['item']['image-'.$i] = $item['image-'.$i] . '&width=1000';
+
                 $result['allSaved'] = false;
             }
         }
