@@ -22,15 +22,15 @@ class Property extends Model
     const STATUS_SSTC = 'SSTC';
     const STATUS_FOR_SALE = 'For Sale';
 
-    const WF_STATUS_LET_AGREED = '5c7ac6365c22932f2b4a252a';
-    const WF_STATUS_TO_LET = '5c7ac6365c2293008f4a2529';
-    const WF_STATUS_SOLD = '5c7ac6365c22937c134a2522';
-    const WF_STATUS_SSTC = '5c7ac6365c2293747f4a250f';
-    const WF_STATUS_FOR_SALE = '5c7ac6365c22935aac4a24fd';
+    const WF_STATUS_LET_AGREED = '5c9bba955bef787f6ea75e3b';
+    const WF_STATUS_TO_LET = '5c9bba955bef7869c4a75e23';
+    const WF_STATUS_SOLD = '5c9bba955bef78bc8da75e0f';
+    const WF_STATUS_SSTC = '5c9bba955bef784312a75dfb';
+    const WF_STATUS_FOR_SALE = '5c9bba955bef78a863a75de8';
 
-    const WF_ROLE_TYPE_SALE = '5c7ac6365c22931a644a2571';
-    const WF_ROLE_TYPE_LET = '5c7ac6365c229352704a2572';
-    const WF_ROLE_TYPE_AUCTION = '5c7ac6365c229306fd4a2573';
+    const WF_ROLE_TYPE_SALE = '5c9bba955bef7841c7a75eb1';
+    const WF_ROLE_TYPE_LET = '5c9bba955bef780bffa75eb2';
+    const WF_ROLE_TYPE_AUCTION = '5c9bba955bef78fa81a75eb3';
 
     const WF_FILTERED_CATEGORY_SALE = '65cc23e5c2a1c68df968ca6fb85777f5';
     const WF_FILTERED_CATEGORY_LET = '0cdda993be013d7085e688590f428a74';

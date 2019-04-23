@@ -221,6 +221,8 @@ class DezrezFeedParser extends Component
 
         if(!empty($bedrooms))
             $name = $bedrooms . ' bed ';
+        elseif($bedrooms === 0)
+            $name = 'Studio ';
 
         if(!empty($propertyType))
             $name .= $propertyType . ' ';
@@ -232,7 +234,7 @@ class DezrezFeedParser extends Component
         else
             $name .= 'for auction';
 
-        return strtolower(trim($name));
+        return ucfirst(strtolower(trim($name)));
     }
 
     /**
