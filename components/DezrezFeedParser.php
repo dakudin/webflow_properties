@@ -55,6 +55,11 @@ class DezrezFeedParser extends Component
     const BROCHURE_FIELD_NAME = 'Brochure';
 
     /**
+     * field name for detecting EPC rating image url
+     */
+    const FEATURED_FLAG_NAME = 'Featured';
+
+    /**
      * @var int Total properties which we can get via API
      */
     private $_allPropCount;
@@ -156,8 +161,8 @@ class DezrezFeedParser extends Component
         $property->fullDescription = $this->fixTextProperty($this->getFullDescription($dezrezProperty['Descriptions']));
         $property->images = $this->getImages($dezrezProperty['Images']);
         $property->floorPlanImageUrl = $this->getFloorPlanUrl($dezrezProperty['Documents']);
-
         $property->propertyType = $this->getPropertyType($dezrezProperty['PropertyType']);
+        $property->featured = $this->getFeaturedFlag($dezrezProperty['Flags']);
         $property->address = $this->getAddress($dezrezProperty['Address']);
 
         $property->epc = $this->getEPC($dezrezProperty['EPC']);
@@ -207,6 +212,20 @@ class DezrezFeedParser extends Component
         }
 
         return '';
+    }
+
+    /**
+     * Get featured flag
+     * @param $flags
+     * @return bool
+     */
+    protected function getFeaturedFlag($flags)
+    {
+        foreach($flags as $flag){
+            if($flag['SystemName']==static::FEATURED_FLAG_NAME) return true;
+        }
+
+        return false;
     }
 
     /**

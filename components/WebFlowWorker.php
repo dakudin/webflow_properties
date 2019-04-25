@@ -367,6 +367,7 @@ class WebFlowWorker extends Component
             'property-address' => $property->address,
             'filtering-category' => $this->webFlowStatuses->getWebFlowFilteredCategory($property->roleType),
             'role-type' => $this->webFlowStatuses->getWebFlowRoleType($property->roleType),
+            'featured-property' => $property->featured,
         ];
 
         if (!empty($property->floorPlanImageUrl))
