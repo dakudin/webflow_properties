@@ -46,9 +46,44 @@ class WebFlowWorker extends Component
     protected $_apiKey;
 
     /**
-     * @var string WebFlow collection id in which need inset/update/delete properties
+     * @var string WebFlow site id with which properties will insert/update/delete
      */
-    protected $_collectionId;
+    protected $_siteId;
+
+    /**
+     * @var string WebFlow collection name of Role types
+     */
+    protected $_roleTypeCollectionName;
+
+    /**
+     * @var string WebFlow collection name of properties
+     */
+    protected $_propertyCollectionName;
+
+    /**
+     * @var string WebFlow collection name of property statuses
+     */
+    protected $_propertyStatusCollectionName;
+
+    /**
+     * @var WebFlowCollection WebFlow collection of Role types
+     */
+    protected $_roleTypeCollection;
+
+    /**
+     * @var WebFlowCollection WebFlow collection of properties
+     */
+    protected $_propertyCollection;
+
+    /**
+     * @var WebFlowCollection WebFlow collection of property statuses
+     */
+    protected $_propertyStatusCollection;
+
+    /**
+     * @var WebFlowStatuses WebFlow ids of statuses and role types
+     */
+    protected $webFlowStatuses;
 
     /**
      * @var array of WebFlow properties ids
@@ -84,20 +119,28 @@ class WebFlowWorker extends Component
     protected $_updatedCount = 0;
 
     /**
-     * @param string $apiKey
-     * @param string $collectionId
+     * @param array $apiKey
+     * @param $roleTypeCollectionName
+     * @param $propertyCollectionName
+     * @param $propertyStatusCollectionName
+     * @param $publishToLiveSite
+     * @throws \Exception
      */
-    public function __construct($apiKey, $collectionId)
+    public function __construct($apiKey, $roleTypeCollectionName, $propertyCollectionName,
+                                $propertyStatusCollectionName, $publishToLiveSite)
     {
         parent::__construct();
 
         $this->_apiKey = $apiKey;
-
-        $this->_collectionId = $collectionId;
-
-//        $this->_publishToLiveSite = true;
-
+        $this->_roleTypeCollectionName = $roleTypeCollectionName;
+        $this->_propertyCollectionName = $propertyCollectionName;
+        $this->_propertyStatusCollectionName = $propertyStatusCollectionName;
+        $this->_publishToLiveSite = $publishToLiveSite===true ? true : false;
         $this->_webFlowClient = new WebFlowClient();
+
+        if(!$this->prepareWFClient()){
+            throw new \Exception('Error - cannot prepare WebFlow client');
+        }
     }
 
     /**
@@ -121,20 +164,16 @@ class WebFlowWorker extends Component
      * after inserting/updating
      * @return bool
      */
-    public function loadAllItems()
+    public function loadAllProperties()
     {
         $this->_wfItems = [];
         $offset = 0;
 
         do {
-            $response = $this->_webFlowClient->getCollectionItems(
-                $this->_apiKey, $this->_collectionId, $this->_itemsPerPage, $offset
-            );
-
-            if(!isset($response['items']) || !isset($response['count']))
+            if(!$this->_propertyCollection->loadItems($this->_apiKey, $this->_itemsPerPage, $offset))
                 return false;
 
-            foreach($response['items'] as $item){
+            foreach($this->_propertyCollection->getItems() as $item){
                 $this->_wfItems[$item['propertyid-2']] = [
                     'id' => $item['_id'],
                     'flagUpdated' => false,
@@ -142,7 +181,8 @@ class WebFlowWorker extends Component
             }
 
             $offset += $this->_itemsPerPage;
-        } while ($response['total']>0 && $response['total'] > $response['offset'] + $response['count']);
+        } while ($this->_propertyCollection->getItemsTotal()>0
+            && $this->_propertyCollection->getItemsTotal() > $this->_propertyCollection->getItemsOffset() + $this->_propertyCollection->getItemsCount());
 
         echo "WebFlow properties count before update: " . count($this->_wfItems) . "\r\n";
 
@@ -157,48 +197,11 @@ class WebFlowWorker extends Component
     public function storeProperty(Property $property)
     {
         $dezrezPropertyId = (string)$property->id;
-        $item = [
-            self::FIELD_IN_FEED_SLUG => true, // slug for field 'In feed'
-            '_archived' => false,
-            '_draft'=> false,
-            'name' => $property->name,
-            'slug' => $dezrezPropertyId,
-            'propertyid-2' => $dezrezPropertyId,
-            'property-status' => $property->getWebflowMarketStatus(),
-            'rent-or-sale-price' => $property->price,
-            'asking-price-text' => $property->priceText,
-            'number-of-rooms' => $property->numberOfRooms,
-            'number-of-baths' => $property->numberOfBath,
-            'property-description' => $property->fullDescription,
-            'short-description' => StringHelper::truncate($property->shortDescription, self::SHORT_DESCRIPTION_LENGTH, '...'),
-            'short-description-mobile' => StringHelper::truncate($property->shortDescription, self::SHORT_DESCRIPTION_MOBILE_LENGTH, '...'),
-            'property-type-2' => $property->propertyType,
-            'property-address' => $property->address,
-            'filtering-category' => $property->getWebflowFilteredCategory(),
-            'role-type' => $property->getWebflowRoleType(),
-        ];
-
-        if(!empty($property->floorPlanImageUrl))
-            $item['floorplan'] = $property->floorPlanImageUrl;
-
-        if(!empty($property->epc))
-            $item['epc-rating'] = $property->epc;
-
-        if(!empty($property->brochure))
-            $item['pdf-brochure'] = $property->brochure;
-
-        $i = 0;
-        foreach($property->images as $image) {
-            $i++;
-            if ($i > 8) break;
-            $item['image-'.$i] = $image;
-        }
-        $imagesToUpload = $i>0 ? $i-1 : $i;
+        $item = $this->fillProperty($property, $dezrezPropertyId);
+        $imagesToUpload = $this->countImagesForUpload($property, $item);
 
         $success = false;
-
         $isInserted = false;
-
         //try to update/insert WebFlow item
         //if fault then try again
         for($i=1; $i<=$this->_attemptCount; $i++) {
@@ -231,113 +234,9 @@ class WebFlowWorker extends Component
             if($isInserted) $this->_insertedCount++;
             else $this->_updatedCount++;
         } else
-            echo "Error: property `" . $dezrezPropertyId . "` wasn't saved properly \r\n";
+            echo "Warning: property `" . $dezrezPropertyId . "` wasn't saved properly \r\n";
 
         return $success;
-    }
-
-    /**
-     * @param array $wfItem
-     * @param array $item
-     * @param int $imagesCount count of images need to be stored
-     * @return array Fixed item with resized images urls
-     */
-    protected function checkForAllImagesExists(array $wfItem, array $item, $imagesCount){
-        $result = [
-            'item' => $item,
-            'allSaved' => true
-        ];
-
-        for($i=1; $i<=$imagesCount; $i++){
-            if(!array_key_exists('image-'.$i, $wfItem)){
-                echo 'WebFlow: image-'.$i.' (' . $item['image-'.$i] .') didn\'t stored for `' . $wfItem['name'] . '` property' . "\r\n";
-
-                //resize image
-                if(strpos($item['image-'.$i], '?') === FALSE)
-                    $result['item']['image-'.$i] = $item['image-'.$i] . '?width=1000';
-                else
-                    $result['item']['image-'.$i] = $item['image-'.$i] . '&width=1000';
-
-                $result['allSaved'] = false;
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Insert new item to WebFlow collection
-     * @param string $dezrezPropertyId ID of item for inserting
-     * @param array $item Item of WebFlow collection
-     * @return array of inserted WebFlow item
-     */
-    protected function insertProperty($dezrezPropertyId, $item)
-    {
-        echo "----------insert property-------------".$dezrezPropertyId."\r\n";
-
-        $result = $this->_webFlowClient->addCollectionItem(
-            $this->_apiKey,
-            $this->_collectionId,
-            $this->_publishToLiveSite,
-            $item
-        );
-
-        if(array_key_exists(self::FIELD_ID, $result) !== FALSE){
-                $this->_wfItems[$dezrezPropertyId] = [
-                'id' => $result['_id'],
-                'flagUpdated' => true,
-            ];
-        }
-
-        return $result;
-    }
-
-    /**
-     * Update item of WebFlow collection
-     * @param string $dezrezPropertyId ID of item for updating
-     * @param string $itemId ID of item for updating
-     * @param array $item Item of WebFlow collection
-     * @return array of updated WebFlow item
-     */
-    protected function updateProperty($dezrezPropertyId, $itemId, $item)
-    {
-        echo "----------update property-------------".$dezrezPropertyId."\r\n";
-
-        $result = $this->_webFlowClient->updateCollectionItem(
-            $this->_apiKey,
-            $this->_collectionId,
-            $itemId,
-            $this->_publishToLiveSite, // set to true for publishing to live site
-            $item
-        );
-
-        if(array_key_exists(self::FIELD_ID, $result) !== FALSE){
-            $this->_wfItems[$dezrezPropertyId]['flagUpdated'] = true;
-        }
-
-        return $result;
-    }
-
-    /**
-     * Patch item of WebFlow collection
-     * @param string $dezrezPropertyId ID of item for patching
-     * @param string $itemId ID of item for patching
-     * @param array $item Item of WebFlow collection
-     * @return array of patched WebFlow item
-     */
-    protected function patchProperty($dezrezPropertyId, $itemId, $item)
-    {
-//        echo "----------patch property-------------".$dezrezPropertyId."\r\n";
-
-        $result = $this->_webFlowClient->patchCollectionItem(
-            $this->_apiKey,
-            $this->_collectionId,
-            $itemId,
-            $this->_publishToLiveSite, // set to true for publishing to live site
-            $item
-        );
-
-        return $result;
     }
 
     /**
@@ -386,6 +285,224 @@ class WebFlowWorker extends Component
     }
 
     /**
+     * Prepare WebFlow client for first use. Load collections with role types, property types and old properties IDs
+     * @return bool
+     */
+    protected function prepareWFClient()
+    {
+        if(!$this->getSiteId()) return false;
+        if(!$this->loadCollections()) return false;
+
+        return true;
+    }
+
+    /**
+     * Get Web Flow site id for getting collections
+     * @return bool
+     */
+    protected function getSiteId()
+    {
+        $info = $this->_webFlowClient->getInfo($this->_apiKey);
+
+        if(!isset($info['sites'])) return false;
+
+        // get only first site from list
+        return (is_array($info['sites']) && $this->_siteId = $info['sites'][0]);
+    }
+
+    /**
+     * Load Web Flow collections with statuses, roles and properties
+     * @return bool
+     */
+    protected function loadCollections()
+    {
+        $collections = $this->_webFlowClient->getSiteCollections($this->_apiKey, $this->_siteId);
+
+        if(!is_array($collections)) return false;
+
+        foreach($collections as $collection){
+            if($collection['name']==$this->_roleTypeCollectionName){
+                $this->_roleTypeCollection = new WebFlowCollection($collection['_id'], $collection['name'] ,$collection['slug'], $this->_webFlowClient);
+                if(!$this->_roleTypeCollection->loadItems($this->_apiKey))
+                    return false;
+            }elseif($collection['name']==$this->_propertyCollectionName){
+                $this->_propertyCollection = new WebFlowCollection($collection['_id'], $collection['name'] ,$collection['slug'], $this->_webFlowClient);
+                if(!$this->_propertyCollection->loadFields($this->_apiKey))
+                    return false;
+            }elseif($collection['name']==$this->_propertyStatusCollectionName){
+                $this->_propertyStatusCollection = new WebFlowCollection($collection['_id'], $collection['name'] ,$collection['slug'], $this->_webFlowClient);
+                if(!$this->_propertyStatusCollection->loadItems($this->_apiKey))
+                    return false;
+            }
+        }
+
+        $this->webFlowStatuses = new WebFlowStatuses($this->_roleTypeCollection, $this->_propertyStatusCollection, $this->_propertyCollection);
+
+        return true;
+    }
+
+    /**
+     * @param Property $property
+     * @param $dezrezPropertyId
+     * @return array
+     */
+    protected function fillProperty(Property $property, $dezrezPropertyId)
+    {
+        $item = [
+            self::FIELD_IN_FEED_SLUG => true, // slug for field 'In feed'
+            '_archived' => false,
+            '_draft' => false,
+            'name' => $property->name,
+            'slug' => $dezrezPropertyId,
+            'propertyid-2' => $dezrezPropertyId,
+            'property-status' => $this->webFlowStatuses->getWebFlowMarketStatus($property->marketStatus),
+            'rent-or-sale-price' => $property->price,
+            'asking-price-text' => $property->priceText,
+            'number-of-rooms' => $property->numberOfRooms,
+            'number-of-baths' => $property->numberOfBath,
+            'property-description' => $property->fullDescription,
+            'short-description' => StringHelper::truncate($property->shortDescription, self::SHORT_DESCRIPTION_LENGTH, '...'),
+            'short-description-mobile' => StringHelper::truncate($property->shortDescription, self::SHORT_DESCRIPTION_MOBILE_LENGTH, '...'),
+            'property-type-2' => $property->propertyType,
+            'property-address' => $property->address,
+            'filtering-category' => $this->webFlowStatuses->getWebFlowFilteredCategory($property->roleType),
+            'role-type' => $this->webFlowStatuses->getWebFlowRoleType($property->roleType),
+        ];
+
+        if (!empty($property->floorPlanImageUrl))
+            $item['floorplan'] = $property->floorPlanImageUrl;
+
+        if (!empty($property->epc))
+            $item['epc-rating'] = $property->epc;
+
+        if (!empty($property->brochure))
+            $item['pdf-brochure'] = $property->brochure;
+
+        return $item;
+    }
+
+    /**
+     * @param Property $property
+     * @param $item
+     * @return int
+     */
+    protected function countImagesForUpload(Property $property, &$item)
+    {
+        $i = 0;
+        foreach ($property->images as $image) {
+            $i++;
+            if ($i > 8) break;
+            $item['image-' . $i] = $image;
+        }
+
+        return $i > 0 ? $i - 1 : $i;
+    }
+
+    /**
+     * @param array $wfItem
+     * @param array $item
+     * @param int $imagesCount count of images need to be stored
+     * @return array Fixed item with resized images urls
+     */
+    protected function checkForAllImagesExists(array $wfItem, array $item, $imagesCount){
+        $result = [
+            'item' => $item,
+            'allSaved' => true
+        ];
+
+        for($i=1; $i<=$imagesCount; $i++){
+            if(!array_key_exists('image-'.$i, $wfItem)){
+                echo 'WebFlow: image-'.$i.' (' . $item['image-'.$i] .') didn\'t stored for `' . $wfItem['name'] . '` property' . "\r\n";
+
+                //resize image
+                if(strpos($item['image-'.$i], '?') === FALSE)
+                    $result['item']['image-'.$i] = $item['image-'.$i] . '?width=1000';
+                else
+                    $result['item']['image-'.$i] = $item['image-'.$i] . '&width=1000';
+
+                $result['allSaved'] = false;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Insert new item to WebFlow collection
+     * @param string $dezrezPropertyId ID of item for inserting
+     * @param array $item Item of WebFlow collection
+     * @return array of inserted WebFlow item
+     */
+    protected function insertProperty($dezrezPropertyId, $item)
+    {
+        echo "----------insert property-------------".$dezrezPropertyId."\r\n";
+
+        $result = $this->_webFlowClient->addCollectionItem(
+            $this->_apiKey,
+            $this->_propertyCollection->getId(),
+            $this->_publishToLiveSite,
+            $item
+        );
+
+        if(array_key_exists(self::FIELD_ID, $result) !== FALSE){
+                $this->_wfItems[$dezrezPropertyId] = [
+                'id' => $result['_id'],
+                'flagUpdated' => true,
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Update item of WebFlow collection
+     * @param string $dezrezPropertyId ID of item for updating
+     * @param string $itemId ID of item for updating
+     * @param array $item Item of WebFlow collection
+     * @return array of updated WebFlow item
+     */
+    protected function updateProperty($dezrezPropertyId, $itemId, $item)
+    {
+        echo "----------update property-------------".$dezrezPropertyId."\r\n";
+
+        $result = $this->_webFlowClient->updateCollectionItem(
+            $this->_apiKey,
+            $this->_propertyCollection->getId(),
+            $itemId,
+            $this->_publishToLiveSite, // set to true for publishing to live site
+            $item
+        );
+
+        if(array_key_exists(self::FIELD_ID, $result) !== FALSE){
+            $this->_wfItems[$dezrezPropertyId]['flagUpdated'] = true;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Patch item of WebFlow collection
+     * @param string $dezrezPropertyId ID of item for patching
+     * @param string $itemId ID of item for patching
+     * @param array $item Item of WebFlow collection
+     * @return array of patched WebFlow item
+     */
+    protected function patchProperty($dezrezPropertyId, $itemId, $item)
+    {
+//        echo "----------patch property-------------".$dezrezPropertyId."\r\n";
+
+        $result = $this->_webFlowClient->patchCollectionItem(
+            $this->_apiKey,
+            $this->_propertyCollection->getId(),
+            $itemId,
+            $this->_publishToLiveSite, // set to true for publishing to live site
+            $item
+        );
+
+        return $result;
+    }
+
+    /**
      * Delete item of WebFlow collection
      * @param $itemId
      * @return bool
@@ -394,7 +511,7 @@ class WebFlowWorker extends Component
     {
         return $this->_webFlowClient->deleteCollectionItem(
             $this->_apiKey,
-            $this->_collectionId,
+            $this->_propertyCollection->getId(),
             $itemId
         );
     }

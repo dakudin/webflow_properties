@@ -40,11 +40,14 @@ class ParserController extends Controller
     {
         $this->webFlowWorker = new WebFlowWorker(
             Yii::$app->params['webflow_api_key'],
-            Yii::$app->params['webflow_collection_id']
+            Yii::$app->params['webflow_role_type_collection'],
+            Yii::$app->params['webflow_properties_collection'],
+            Yii::$app->params['webflow_property_status_collection'],
+            false
         );
 
         //load all old properties
-        $this->webFlowWorker->loadAllItems();
+        $this->webFlowWorker->loadAllProperties();
 
         // update properties and insert new ones
         $this->refreshFeed();

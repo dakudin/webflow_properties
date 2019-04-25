@@ -47,22 +47,44 @@ class WebFlowClient extends Component
     }
 
     /**
-     * Sends the given HTTP request, returning response data.
-     * @param \yii\httpclient\Request $request HTTP request to be sent.
-     * @return array response data.
-     * @throws InvalidResponseException on invalid remote response.
+     * Get current authorization info (status, users, list of sites and etc.)
+     * @see https://developers.webflow.com/#meta
+     * @param string $apiKey api key.
+     * @return array $response list of properties.
      */
-    protected function sendRequest($request)
+    public function getInfo($apiKey)
     {
-        $response = $request->send();
-        if (!$response->getIsOk()) {
-            throw new InvalidResponseException($response, 'Request failed with code: ' . $response->getStatusCode() . ', message: ' . $response->getContent());
-        }
+        $request = $this->createRequest($apiKey)
+            ->setMethod('GET')
+            ->setUrl(self::BASE_URL . '/info')
+            ->setData([]);
 
-        //need some waiting for API (rate limit 60 requests per minute)
-        sleep(2);
+        $response = $this->sendRequest($request);
 
-        return $response->getData();
+        return $response;
+    }
+
+    /**
+     * Get list of site collections.
+     * @see https://developers.webflow.com/#list-collections
+     * @param string $siteId
+     * @param string $apiKey api key.
+     * @param array $params additional request params.
+     * @return array $response list of collections.
+     */
+    public function getSiteCollections($apiKey, $siteId, $params = [])
+    {
+        $defaultParams = [
+        ];
+
+        $request = $this->createRequest($apiKey)
+            ->setMethod('GET')
+            ->setUrl(self::BASE_URL . '/sites/' . $siteId . '/collections')
+            ->setData(array_merge($defaultParams, $params));
+
+        $response = $this->sendRequest($request);
+
+        return $response;
     }
 
     /**
@@ -71,7 +93,7 @@ class WebFlowClient extends Component
      * @param string $collectionId
      * @param string $apiKey api key.
      * @param array $params additional request params.
-     * @return array $response list of properties.
+     * @return array $response list of fields in collection.
      */
     public function getCollectionSchema($apiKey, $collectionId, $params = [])
     {
@@ -299,4 +321,25 @@ class WebFlowClient extends Component
             'sslVerifyPeer' => false,
         ];
     }
+
+    /**
+     * Sends the given HTTP request, returning response data.
+     * @param \yii\httpclient\Request $request HTTP request to be sent.
+     * @return array response data.
+     * @throws InvalidResponseException on invalid remote response.
+     */
+    protected function sendRequest($request)
+    {
+        $response = $request->send();
+        if (!$response->getIsOk()) {
+            throw new InvalidResponseException($response, 'Request failed with code: ' . $response->getStatusCode() . ', message: ' . $response->getContent());
+        }
+
+        //need some waiting for API (rate limit 60 requests per minute)
+        sleep(2);
+
+        return $response->getData();
+    }
+
+
 }

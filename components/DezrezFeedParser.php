@@ -335,7 +335,7 @@ class DezrezFeedParser extends Component
             $address .= $feedAddress['County'] . ', ';
 
         if($feedAddress['Postcode']!='')
-            $address .= $feedAddress['Postcode'];
+            $address = trim($address, ' ,') . ' ' . $feedAddress['Postcode'];
 
         return trim($address, ' ,');
     }
