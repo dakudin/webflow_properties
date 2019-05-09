@@ -69,6 +69,11 @@ class SiteController extends Controller
         return $this->render('search-result');
     }
 
+    public function actionDetailpage()
+    {
+        return $this->render('detail-page');
+    }
+
     /**
      * Login action.
      *

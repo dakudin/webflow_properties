@@ -1,7 +1,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mixitup/3.3.0/mixitup.min.js"></script>
-<script src="https://dl.dropboxusercontent.com/s/sjmoui7gw650948/mixitup-pagination.js" ></script>
+<script src="https://dl.dropboxusercontent.com/s/s4jngiqvk1c9duf/mixitup-pagination.js" ></script>
 <script src="https://cdn.rawgit.com/malsup/cycle2/master/build/jquery.cycle2.min.js"></script>
-<script src="https://s3-us-west-2.amazonaws.com/truereflectionmedia/owl.carousel.min.js"></script>
+<script src="https://dl.dropboxusercontent.com/s/tpr2tq9yuok3w5w/owl.carousel.min.js"></script>
 
 <script>
 var getUrlParameter = function getUrlParameter(sParam) {
@@ -54,6 +54,8 @@ priceArray.forEach( function(elem) {
 var bedroomArray =  document.querySelectorAll('.w-dyn-item .bedroom-search');
 bedroomArray.forEach( function(elem) {
     var bedroom = elem.innerText || elem.innerContent;
+    if (typeof(bedroom) == "undefined") bedroom = '-1';
+
     elem.parentElement.setAttribute('data-bedroom', bedroom);
 });
 
@@ -84,6 +86,10 @@ var mixer = mixitup(containerEl, {
 
             activePage = state.activePagination.page;
             activeLimit = state.activePagination.limit;
+
+            $("body,html").animate({
+                scrollTop: $("#page-header").offset().top
+            }, 800);
         }
     }
 });
@@ -92,7 +98,7 @@ function getRange() {
     var min = Number(minPriceRangeInput.value);
     var max = Number(maxPriceRangeInput.value);
     var type = String(marketTypeInput.value);
-    var bedroom = Number(bedroomCountInput.value);
+    var bedroom = String(bedroomCountInput.value);
 
     return {
         min: min,
@@ -113,6 +119,7 @@ function handleMarketTypeInputChange() {
         $('#breadcrumb-market').html('LETTINGS');
         $('#breadcrumb-stoke').html('STOKE-ON-TRENT PROPERTY TO LET');
         $('#page-header').html('Properties for Rent in Stoke-on-Trent');
+        $('#looking-property').html('LOOKING TO LET YOUR PROPERTY?');
         changeOptions('minPrice', lettingPrices, true);
         changeOptions('maxPrice', lettingPrices, false);
     }else{
@@ -120,10 +127,12 @@ function handleMarketTypeInputChange() {
             $('#breadcrumb-market').html('SALES');
             $('#breadcrumb-stoke').html('STOKE-ON-TRENT PROPERTY FOR SALE');
             $('#page-header').html('Properties for Sale in Stoke-on-Trent');
+            $('#looking-property').html('LOOKING TO SELL YOUR PROPERTY?');
         }else{
             $('#breadcrumb-market').html('AUCTIONS');
             $('#breadcrumb-stoke').html('STOKE-ON-TRENT PROPERTY FOR AUCTION');
             $('#page-header').html('Properties for Auction in Stoke-on-Trent');
+            $('#looking-property').html('LOOKING TO SELL YOUR PROPERTY?');
         }
         changeOptions('minPrice', salesPrices, true);
         changeOptions('maxPrice', salesPrices, false);
@@ -153,7 +162,7 @@ function filterTestResult(testResult, target) {
     var range = getRange();
 
     if (price >= range.min && price <= range.max && type == range.type
-        && (range.bedroom == 0 || (range.bedroom == bedroom && bedroom > 0 && bedroom < 5) || (range.bedroom == 5 && bedroom >= 5))) {
+        && (range.bedroom == '' || (Number(range.bedroom) == bedroom && bedroom >= 0 && bedroom < 5) || (range.bedroom == '5' && bedroom >= 5))) {
         return testResult;
     }
 
