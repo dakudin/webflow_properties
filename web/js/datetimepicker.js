@@ -11,7 +11,8 @@
             title: "Select Date and Time",
             buttonTitle: "Select",
             mainClass: "dtp_main",
-            submitBtnClass: "dpt_modal-button"
+            submitBtnClass: "dpt_modal-button",
+            resultElementId: "date_time-input"
         }, options);
         moment.locale(settings.locale);
         var elem = this;
@@ -204,8 +205,11 @@
                     ///angle-up-hour angle-up-minute angle-down-hour angle-down-minute
                     var arr = $el.attr('id').split('-');
                     var increment = 1;
+                    if (arr[2] == 'minute') {
+                        /* increment = 15; */
+                    }
                     if (arr[1] == 'down') {
-                        increment = -1;
+                        increment = -1*increment;
                     }
                     appendIncrement(arr[2], increment);
                     setTimeout(function () {
@@ -340,7 +344,7 @@
                         $('#time-line').text(lastSelected.format(settings.dateFormat));
                     }
                     updateMainElem();
-                    elem.next().val(selectDate.format(settings.dateFormat));
+                    $('#'+settings.resultElementId).val(selectDate.format(settings.dateFormat));
                     if (!settings.showTime) {
                         $content.remove();
                         $win.remove();

@@ -39,7 +39,8 @@ $('#prefered-time-date').dateTimePicker({
     dateFormat: "DD/MM/YYYY HH:mm",
     title: "Prefered Time & Date",
     mainClass: "text-field-2 w-input",
-    submitBtnClass: "button-violet w-button dpt_modal-button"
+    submitBtnClass: "button-violet w-button dpt_modal-button",
+    resultElementId: "prefered_time_date-input"
 });
 JS;
 
@@ -84,7 +85,7 @@ $this->registerJS($js, $this::POS_READY);
 
     <div class="form-group">
         <div id="prefered-time-date">Prefered time and sate</div>
-        <input type="hidden" value="" />
+        <input id="prefered_time_date-input" type="hidden" value="" />
     </div>
 </form>
 

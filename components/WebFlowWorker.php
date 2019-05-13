@@ -24,6 +24,8 @@ class WebFlowWorker extends Component
 
     const SHORT_DESCRIPTION_MOBILE_LENGTH = 100;
 
+    const MAX_IMAGE_WIDTH = 1200;
+
     /**
      * slug for field 'In feed'
      * if filed is true that property exists in feed, false otherwise
@@ -393,7 +395,7 @@ class WebFlowWorker extends Component
         foreach ($property->images as $image) {
             $i++;
             if ($i > 8) break;
-            $item['image-' . $i] = $image;
+            $item['image-' . $i] = static::getResizedImage($image);
         }
 
         return $i > 0 ? $i - 1 : $i;
@@ -416,10 +418,7 @@ class WebFlowWorker extends Component
                 echo 'WebFlow: image-'.$i.' (' . $item['image-'.$i] .') didn\'t stored for `' . $wfItem['name'] . '` property' . "\r\n";
 
                 //resize image
-                if(strpos($item['image-'.$i], '?') === FALSE)
-                    $result['item']['image-'.$i] = $item['image-'.$i] . '?width=1000';
-                else
-                    $result['item']['image-'.$i] = $item['image-'.$i] . '&width=1000';
+                $result['item']['image-'.$i] = static::getResizedImage($item['image-'.$i]);
 
                 $result['allSaved'] = false;
             }
@@ -427,6 +426,20 @@ class WebFlowWorker extends Component
 
         return $result;
     }
+
+    /**
+     * @param string $image
+     * @return string
+     */
+    protected static function getResizedImage($image)
+    {
+        if(strpos($image, '?') === FALSE) {
+            return $image . '?width=' . self::MAX_IMAGE_WIDTH;
+        }
+
+        return $image . '&width=' . self::MAX_IMAGE_WIDTH;
+    }
+
 
     /**
      * Insert new item to WebFlow collection

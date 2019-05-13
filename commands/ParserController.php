@@ -72,12 +72,15 @@ class ParserController extends Controller
             $pageNumber++;
 
             $data = $client->getProperties(
-                Yii::$app->params['dezrez_test_api_key'],
+                Yii::$app->params['dezrez_live_api_key'],
                 [
                     'PageSize' => $this->propertiesPerPage,
                     'PageNumber' => $pageNumber
                 ]
             );
+
+            //for getting logging response
+            // \Yii::error($data); die;
 
             $properties = $parser->parse($data);
 

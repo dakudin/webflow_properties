@@ -334,9 +334,9 @@ class DezrezFeedParser extends Component
 
         if($feedAddress['OrganizationName']!='')
             $address = $feedAddress['OrganizationName'] . ', ';
-
-        if($feedAddress['Number']!='')
-            $address .= $feedAddress['Number'] . ', ';
+// do not show house number
+//        if($feedAddress['Number']!='')
+//            $address .= $feedAddress['Number'] . ', ';
 
         if($feedAddress['BuildingName']!='')
             $address .= $feedAddress['BuildingName'] . ', ';
