@@ -190,8 +190,6 @@ $(document).ready(function(){
             },500);
         });
     });
-
-    $(".owl-carousel").owlCarousel();
 });
 
 </script>

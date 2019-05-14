@@ -23,10 +23,60 @@ if(marketType == 'lettings'){
     }
 }
 
+$('#prefered-time-date').addClass('dtp_main');
 $('#prefered-time-date').dateTimePicker({
     dateFormat: "DD/MM/YYYY HH:mm",
     title: "Prefered Time & Date",
     mainClass: "text-field-2 w-input",
-    submitBtnClass: "button-violet w-button dpt_modal-button"
+    submitBtnClass: "button-violet w-button dpt_modal-button",
+    resultElementId: "prefered_time_date-input"
 });
+
+$('#prefered-time-date2').addClass('dtp_main');
+$('#prefered-time-date2').dateTimePicker({
+    dateFormat: "DD/MM/YYYY HH:mm",
+    title: "Prefered Time & Date",
+    mainClass: "text-field-2 w-input",
+    submitBtnClass: "button-violet w-button dpt_modal-button",
+    resultElementId: "prefered_time_date-input2"
+});
+
+loadSimilar();
+
+$('.carousel-property').not('.item-updated').remove();
+
+function loadSimilar(){
+    var itemsFilled = 0;
+    var curPropertyRole = $('#current-prop-role-type').html();
+    var curPropertyType = $('#current-prop-type').html();
+    var curPropertyBeds = Number($('#current-prop-beds').html());
+    var currentPropertyId = $('#current-prop-id').html();
+
+    $('.property-item').each(function(){
+        var itemPropertyId = $(this).find('div.item-property_id').html();
+        var itemRoleType = $(this).find('div.item-role_type').html();
+        var itemPropertyStatus = $(this).find('div.item-prop_status').html();
+        var itemPropertyBeds = Number($(this).find('div.item-prop_beds').html());
+        var itemPropertyImage = $(this).find('a');
+
+        if(itemRoleType==curPropertyRole
+            && itemPropertyStatus==curPropertyType
+            && itemPropertyId!=currentPropertyId
+            && curPropertyBeds-1<=itemPropertyBeds && curPropertyBeds+1>=itemPropertyBeds
+        ){
+
+            var carouselDiv = $('.carousel-property')[itemsFilled];
+            var carouselItem = $('.collection-list-wrapper-36').find(carouselDiv);
+            var carouselImage = carouselItem.find('a.text-prop-image');
+            carouselImage.attr('href', itemPropertyImage.attr('href'));
+            carouselImage.attr('style', itemPropertyImage.attr('style'));
+            carouselItem.find('h2.text-prop-name').html(itemPropertyImage.html());
+            carouselItem.find('div.text-price-value').html($(this).find('div.item-prop-price').html());
+            carouselItem.find('div.text-prop-address').html($(this).find('div.item-prop-address').html());
+            carouselItem.addClass('item-updated');
+            itemsFilled++;
+        }
+    });
+}
+
 </script>
