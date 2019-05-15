@@ -344,11 +344,11 @@ class DezrezFeedParser extends Component
         if($feedAddress['Street']!='')
             $address .= $feedAddress['Street'] . ', ';
 
-        if($feedAddress['Town']!='')
-            $address .= $feedAddress['Town'] . ', ';
-
         if($feedAddress['Locality']!='')
             $address .= $feedAddress['Locality'] . ', ';
+
+        if($feedAddress['Town']!='')
+            $address .= $feedAddress['Town'] . ', ';
 
         if($feedAddress['County']!='')
             $address .= $feedAddress['County'] . ', ';
