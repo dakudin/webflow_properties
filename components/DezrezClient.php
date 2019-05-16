@@ -108,7 +108,8 @@ class DezrezClient extends Component
             'MaximumPrice' => 9999999,
             'MarketingFlags' => ["ApprovedForMarketingWebsite"],
             'PageSize' => 10,
-            'PageNumber' => 1
+            'PageNumber' => 1,
+            'IncludeStc' => true
         ];
 
         $request = $this->createRequest()

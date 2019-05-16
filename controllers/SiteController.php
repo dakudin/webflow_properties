@@ -74,6 +74,11 @@ class SiteController extends Controller
         return $this->render('detail-page');
     }
 
+    public function actionCarouselpage()
+    {
+        return $this->render('carousel');
+    }
+
     /**
      * Login action.
      *

@@ -172,7 +172,7 @@ class DezrezFeedParser extends Component
         $property->brochure = $this->getBrochure($dezrezProperty['Documents']);
 
         //create property name from bedrooms, property type, market type (sales/lettings)
-        $property->name = $this->getPropertyName($property->numberOfRooms, $property->propertyType, $property->roleType);
+        $property->name = $this->getPropertyName($property->numberOfRooms, $property->propertyType, $property->marketStatus);
 
 
         if ($property->validate()){
@@ -231,10 +231,10 @@ class DezrezFeedParser extends Component
     /**
      * @param string $bedrooms
      * @param string $propertyType
-     * @param string $roleType
+     * @param string $marketStatus
      * @return string
      */
-    protected function getPropertyName($bedrooms, $propertyType, $roleType)
+    protected function getPropertyName($bedrooms, $propertyType, $marketStatus)
     {
         $name = '';
 
@@ -246,12 +246,8 @@ class DezrezFeedParser extends Component
         if(!empty($propertyType))
             $name .= $propertyType . ' ';
 
-        if($roleType == Property::ROLE_TYPE_SALE)
-            $name .= 'for sale';
-        elseif($roleType == Property::ROLE_TYPE_LET)
-            $name .= 'to let';
-        else
-            $name .= 'for auction';
+        if(!empty($marketStatus))
+            $name .= $marketStatus;
 
         return ucfirst(strtolower(trim($name)));
     }
