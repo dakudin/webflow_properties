@@ -44,6 +44,7 @@ $('#prefered-time-date2').dateTimePicker({
 loadSimilar();
 
 $('.carousel-property').not('.item-updated').remove();
+$('.carousel-property-mobile').not('.item-updated').remove();
 
 function loadSimilar(){
     var itemsFilled = 0;
@@ -74,6 +75,17 @@ function loadSimilar(){
             carouselItem.find('div.text-price-value').html($(this).find('div.item-prop-price').html());
             carouselItem.find('div.text-prop-address').html($(this).find('div.item-prop-address').html());
             carouselItem.addClass('item-updated');
+
+            var carouselDivMobile = $('.carousel-property-mobile')[itemsFilled];
+            var carouselItemMobile = $('.mobi-slider').find(carouselDivMobile);
+            var carouselImageMobile = carouselItemMobile.find('a.text-prop-image');
+            carouselImageMobile.attr('href', itemPropertyImage.attr('href'));
+            carouselImageMobile.attr('style', itemPropertyImage.attr('style'));
+            carouselItemMobile.find('h2.text-prop-name').html(itemPropertyImage.html());
+            carouselItemMobile.find('div.text-price-value').html($(this).find('div.item-prop-price').html());
+            carouselItemMobile.find('div.text-prop-address').html($(this).find('div.item-prop-address').html());
+            carouselItemMobile.addClass('item-updated');
+
             itemsFilled++;
         }
     });

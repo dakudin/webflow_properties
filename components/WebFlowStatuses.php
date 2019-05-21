@@ -122,6 +122,14 @@ class WebFlowStatuses
         return false;
     }
 
+    public function getShowShortcutValue($marketStatus)
+    {
+        if($marketStatus==Property::STATUS_TO_LET || $marketStatus==Property::STATUS_FOR_SALE)
+            return 'No';
+
+        return 'Yes';
+    }
+
     public function getWebFlowRoleType($roleType)
     {
         switch ($roleType) {

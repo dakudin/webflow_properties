@@ -370,6 +370,7 @@ class WebFlowWorker extends Component
             'filtering-category' => $this->webFlowStatuses->getWebFlowFilteredCategory($property->roleType),
             'role-type' => $this->webFlowStatuses->getWebFlowRoleType($property->roleType),
             'featured-property' => $property->featured,
+            'shortcut-show-2' => $this->webFlowStatuses->getShowShortcutValue($property->marketStatus),
         ];
 
         if (!empty($property->floorPlanImageUrl))

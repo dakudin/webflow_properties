@@ -69,14 +69,15 @@ marketStatusArray.forEach( function(elem) {
     elem.parentElement.setAttribute('data-status-sold', status);
 });
 
+var minPriceTxt = "Min Price";
 var containerEl = document.querySelector('.container');
 var minPriceRangeInput = document.querySelector('[name="minPrice"]');
 var maxPriceRangeInput = document.querySelector('[name="maxPrice"]');
 var marketTypeInput = document.querySelector('[name="marketType"]');
 var bedroomCountInput = document.querySelector('[name="bedroomCount"]');
 var excludeSoldInput = document.querySelector('[name="exclude_sold"]');
-var lettingPrices = {"100":"100","150":"150","200":"200","250":"250","300":"300","350":"350","400":"400","450":"450","500":"500","600":"600","700":"700","800":"800","900":"900","1000":"1,000+"};
-var salesPrices = {"50000":"50,000","60000":"60,000","70000":"70,000","80000":"80,000","90000":"90,000","100000":"100,000","110000":"110,000","120000":"120,000","125000":"125,000","130000":"130,000","140000":"140,000","150000":"150,000","160000":"160,000","170000":"170,000","175000":"175,000","180000":"180,000","190000":"190,000","200000":"200,000","210000":"210,000","220000":"220,000","230000":"230,000","240000":"240,000","250000":"250,000","260000":"260,000","270000":"270,000","280000":"280,000","290000":"290,000","300000":"300,000","325000":"325,000","350000":"350,000","375000":"375,000","400000":"400,000","425000":"425,000","450000":"450,000","475000":"475,000","9000000":"500,000+"};
+var lettingPrices = {"0":minPriceTxt,"100":"100","150":"150","200":"200","250":"250","300":"300","350":"350","400":"400","450":"450","500":"500","600":"600","700":"700","800":"800","900":"900","100000":"1,000+"};
+var salesPrices = {"0":minPriceTxt,"50000":"50,000","60000":"60,000","70000":"70,000","80000":"80,000","90000":"90,000","100000":"100,000","110000":"110,000","120000":"120,000","125000":"125,000","130000":"130,000","140000":"140,000","150000":"150,000","160000":"160,000","170000":"170,000","175000":"175,000","180000":"180,000","190000":"190,000","200000":"200,000","210000":"210,000","220000":"220,000","230000":"230,000","240000":"240,000","250000":"250,000","260000":"260,000","270000":"270,000","280000":"280,000","290000":"290,000","300000":"300,000","325000":"325,000","350000":"350,000","375000":"375,000","400000":"400,000","425000":"425,000","450000":"450,000","475000":"475,000","9000000":"500,000+"};
 var activePage = 1;
 var activeLimit = 8;
 var selectSort = document.querySelector('.sort_select');
@@ -135,6 +136,7 @@ function handleMarketTypeInputChange() {
         $('#looking-property').html('LOOKING TO LET YOUR PROPERTY?');
         changeOptions('minPrice', lettingPrices, true);
         changeOptions('maxPrice', lettingPrices, false);
+        $('#label-exclude_sold').html('Exclude Let Agreed Properties');
     }else{
         if(type == 'sales'){
             $('#breadcrumb-market').html('SALES');
@@ -149,6 +151,7 @@ function handleMarketTypeInputChange() {
         }
         changeOptions('minPrice', salesPrices, true);
         changeOptions('maxPrice', salesPrices, false);
+        $('#label-exclude_sold').html('Exclude Sold Properties');
     }
 
     handleRangeInputChange();
@@ -157,9 +160,10 @@ function handleMarketTypeInputChange() {
 function changeOptions(id, selectValues, isFirstSelected){
     $('#'+id).find('option').remove();
     $.each(selectValues, function(key, value) {
-        $('#'+id)
-            .append($('<option>', { value : key })
-                .html("&pound;" + value));
+        if(!(!isFirstSelected && key=='0')){
+            value = key == '0' ? value : "&pound;" + value;
+            $('#' + id).append($('<option>', {value: key}).html(value));
+        }
     });
 
     if(isFirstSelected)
@@ -175,7 +179,7 @@ function filterTestResult(testResult, target) {
     var statusSold = Number(target.dom.el.getAttribute('data-status-sold'));
     var range = getRange();
 
-    if (price>=range.min && price<=range.max && type==range.type
+    if(price>=range.min && price<=range.max && type==range.type
         && (!range.excludeSold || (range.excludeSold && statusSold==0))
         && (range.bedroom=='' || (Number(range.bedroom)==bedroom && bedroom>=0 && bedroom<5) || (range.bedroom=='5' && bedroom>=5))) {
         return testResult;
