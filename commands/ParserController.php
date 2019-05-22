@@ -43,7 +43,7 @@ class ParserController extends Controller
             Yii::$app->params['webflow_role_type_collection'],
             Yii::$app->params['webflow_properties_collection'],
             Yii::$app->params['webflow_property_status_collection'],
-            false
+            Yii::$app->params['webflow_published_to_live']
         );
 
         //load all old properties
