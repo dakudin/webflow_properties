@@ -88,7 +88,7 @@ class ParserController extends Controller
 
             $this->storePropsInWebFlow($properties);
 
-            break; //for testing
+            //break; //for testing
         } while($parser->getAllPropCount()>0 && $parser->getAllPropCount() >= $pageNumber * $this->propertiesPerPage);
 
         echo "WebFlow: Inserted - " . $this->WFPropertyWorker->getInsertedCount() . "; Updated - " . $this->WFPropertyWorker->getUpdatedCount() . "\r\n";
