@@ -79,6 +79,11 @@ class SiteController extends Controller
         return $this->render('carousel');
     }
 
+    public function actionReviewpage()
+    {
+        return $this->render('google_review');
+    }
+
     /**
      * Login action.
      *

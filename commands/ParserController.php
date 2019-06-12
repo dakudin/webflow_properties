@@ -8,7 +8,7 @@
 namespace app\commands;
 
 use app\components\DezrezFeedParser;
-use app\components\WebFlowWorker;
+use app\components\WFPropertyWorker;
 use Yii;
 use app\components\DezrezClient;
 use yii\console\Controller;
@@ -28,9 +28,9 @@ class ParserController extends Controller
     private $propertiesPerPage = 10;
 
     /**
-     * @var WebFlowWorker worker for manipulate WebFlow API.
+     * @var WFPropertyWorker worker for manipulate WebFlow API.
      */
-    protected $webFlowWorker;
+    protected $WFPropertyWorker;
 
     /**
      * This command parse properties from Dezred feed and store to WebFlow site via API
@@ -38,7 +38,7 @@ class ParserController extends Controller
      */
     public function actionIndex()
     {
-        $this->webFlowWorker = new WebFlowWorker(
+        $this->WFPropertyWorker = new WFPropertyWorker(
             Yii::$app->params['webflow_api_key'],
             Yii::$app->params['webflow_role_type_collection'],
             Yii::$app->params['webflow_properties_collection'],
@@ -47,13 +47,13 @@ class ParserController extends Controller
         );
 
         //load all old properties
-        $this->webFlowWorker->loadAllProperties();
+        $this->WFPropertyWorker->loadAllProperties();
 
         // update properties and insert new ones
         $this->refreshFeed();
 
         //set as not `In feed` for properties which don't already exists in Dezrez feed
-        $this->webFlowWorker->setOldPropertiesAsNotInFeed();
+        $this->WFPropertyWorker->setOldPropertiesAsNotInFeed();
 
         return ExitCode::OK;
     }
@@ -88,10 +88,10 @@ class ParserController extends Controller
 
             $this->storePropsInWebFlow($properties);
 
-//            break; //for testing
+            break; //for testing
         } while($parser->getAllPropCount()>0 && $parser->getAllPropCount() >= $pageNumber * $this->propertiesPerPage);
 
-        echo "WebFlow: Inserted - " . $this->webFlowWorker->getInsertedCount() . "; Updated - " . $this->webFlowWorker->getUpdatedCount() . "\r\n";
+        echo "WebFlow: Inserted - " . $this->WFPropertyWorker->getInsertedCount() . "; Updated - " . $this->WFPropertyWorker->getUpdatedCount() . "\r\n";
     }
 
     /**
@@ -102,7 +102,7 @@ class ParserController extends Controller
     {
         foreach($properties as $property){
             if($property instanceof Property) {
-               if(!$this->webFlowWorker->storeProperty($property)){
+               if(!$this->WFPropertyWorker->storeProperty($property)){
                    echo "Error Dezrez: Cannot store property \r\n";
                    var_dump($property);
                }

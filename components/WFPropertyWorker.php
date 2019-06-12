@@ -8,7 +8,6 @@
 namespace app\components;
 
 use Yii;
-use yii\base\Component;
 use app\models\Property;
 use app\components\WebFlowClient;
 use yii\helpers\StringHelper;
@@ -18,7 +17,7 @@ use yii\helpers\StringHelper;
  *
  * @author Kudin Dmitry <dakudin@gmail.com>
  */
-class WebFlowWorker extends Component
+class WFPropertyWorker extends WFWorkerBase
 {
     const SHORT_DESCRIPTION_LENGTH = 230;
 
@@ -36,21 +35,6 @@ class WebFlowWorker extends Component
      * WebFlow field id
      */
     const FIELD_ID = '_id';
-
-    /**
-     * @var \app\components\WebFlowClient client for work with WebFlow via API
-     */
-    protected $_webFlowClient;
-
-    /**
-     * @var string API key
-     */
-    protected $_apiKey;
-
-    /**
-     * @var string WebFlow site id with which properties will insert/update/delete
-     */
-    protected $_siteId;
 
     /**
      * @var string WebFlow collection name of Role types
@@ -98,13 +82,6 @@ class WebFlowWorker extends Component
     protected $_itemsPerPage = 20;
 
     /**
-     *
-     * @var bool Flag that show for which kind of items need to work: Live or not
-     * set to true for publishing to live site
-     */
-    protected $_publishToLiveSite = false;
-
-    /**
      * @var int Number of attempts for storing properties
      * If first attempt was wrong it detect images which didn't store, resize them and try to store again
      */
@@ -131,14 +108,11 @@ class WebFlowWorker extends Component
     public function __construct($apiKey, $roleTypeCollectionName, $propertyCollectionName,
                                 $propertyStatusCollectionName, $publishToLiveSite)
     {
-        parent::__construct();
+        parent::__construct($apiKey, $publishToLiveSite);
 
-        $this->_apiKey = $apiKey;
         $this->_roleTypeCollectionName = $roleTypeCollectionName;
         $this->_propertyCollectionName = $propertyCollectionName;
         $this->_propertyStatusCollectionName = $propertyStatusCollectionName;
-        $this->_publishToLiveSite = $publishToLiveSite===true ? true : false;
-        $this->_webFlowClient = new WebFlowClient();
 
         if(!$this->prepareWFClient()){
             throw new \Exception('Error - cannot prepare WebFlow client');
@@ -217,7 +191,7 @@ class WebFlowWorker extends Component
             }
 
             // if WebFlow cannot store property
-            if(array_key_exists(self::FIELD_ID, $wfItem) === FALSE){
+            if(array_key_exists(static::FIELD_ID, $wfItem) === FALSE){
                 $success = false;
                 break;
             }
@@ -272,10 +246,10 @@ class WebFlowWorker extends Component
                     $wfItemId,
                     $wfItemData['id'],
                     [
-                        self::FIELD_IN_FEED_SLUG => false,
+                        static::FIELD_IN_FEED_SLUG => false,
                     ]);
 
-                if(array_key_exists(self::FIELD_IN_FEED_SLUG, $item) && $item[self::FIELD_IN_FEED_SLUG]===false){
+                if(array_key_exists(static::FIELD_IN_FEED_SLUG, $item) && $item[static::FIELD_IN_FEED_SLUG]===false){
                     $hidden++;
                 }else{
                     echo 'Error WebFlow: Couldn\'t set as not `In feed` item ID-' . $wfItemData['id'] . ' with name `' . $wfItemId . '`' . "\r\n";
@@ -296,20 +270,6 @@ class WebFlowWorker extends Component
         if(!$this->loadCollections()) return false;
 
         return true;
-    }
-
-    /**
-     * Get Web Flow site id for getting collections
-     * @return bool
-     */
-    protected function getSiteId()
-    {
-        $info = $this->_webFlowClient->getInfo($this->_apiKey);
-
-        if(!isset($info['sites'])) return false;
-
-        // get only first site from list
-        return (is_array($info['sites']) && $this->_siteId = $info['sites'][0]);
     }
 
     /**
@@ -351,7 +311,7 @@ class WebFlowWorker extends Component
     protected function fillProperty(Property $property, $dezrezPropertyId)
     {
         $item = [
-            self::FIELD_IN_FEED_SLUG => true, // slug for field 'In feed'
+            static::FIELD_IN_FEED_SLUG => true, // slug for field 'In feed'
             '_archived' => false,
             '_draft' => false,
             'name' => $property->name,
@@ -363,8 +323,8 @@ class WebFlowWorker extends Component
             'number-of-rooms' => $property->numberOfRooms,
             'number-of-baths' => $property->numberOfBath,
             'property-description' => $property->fullDescription,
-            'short-description' => StringHelper::truncate($property->shortDescription, self::SHORT_DESCRIPTION_LENGTH, '...'),
-            'short-description-mobile' => StringHelper::truncate($property->shortDescription, self::SHORT_DESCRIPTION_MOBILE_LENGTH, '...'),
+            'short-description' => StringHelper::truncate($property->shortDescription, static::SHORT_DESCRIPTION_LENGTH, '...'),
+            'short-description-mobile' => StringHelper::truncate($property->shortDescription, static::SHORT_DESCRIPTION_MOBILE_LENGTH, '...'),
             'property-type-2' => $property->propertyType,
             'property-address' => $property->address,
             'filtering-category' => $this->webFlowStatuses->getWebFlowFilteredCategory($property->roleType),
@@ -435,10 +395,10 @@ class WebFlowWorker extends Component
     protected static function getResizedImage($image)
     {
         if(strpos($image, '?') === FALSE) {
-            return $image . '?width=' . self::MAX_IMAGE_WIDTH;
+            return $image . '?width=' . static::MAX_IMAGE_WIDTH;
         }
 
-        return $image . '&width=' . self::MAX_IMAGE_WIDTH;
+        return $image . '&width=' . static::MAX_IMAGE_WIDTH;
     }
 
 
@@ -459,7 +419,7 @@ class WebFlowWorker extends Component
             $item
         );
 
-        if(array_key_exists(self::FIELD_ID, $result) !== FALSE){
+        if(array_key_exists(static::FIELD_ID, $result) !== FALSE){
                 $this->_wfItems[$dezrezPropertyId] = [
                 'id' => $result['_id'],
                 'flagUpdated' => true,
@@ -488,7 +448,7 @@ class WebFlowWorker extends Component
             $item
         );
 
-        if(array_key_exists(self::FIELD_ID, $result) !== FALSE){
+        if(array_key_exists(static::FIELD_ID, $result) !== FALSE){
             $this->_wfItems[$dezrezPropertyId]['flagUpdated'] = true;
         }
 
