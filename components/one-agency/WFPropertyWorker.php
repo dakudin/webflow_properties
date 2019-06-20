@@ -5,12 +5,12 @@
  * Time: 23:10
  */
 
-namespace app\components;
+namespace app\components\one\agency;
 
 use Yii;
 use app\models\Property;
-use app\components\WebFlowClient;
-use yii\helpers\StringHelper;
+use app\components\WFWorkerBase;
+use app\components\WebFlowCollection;
 
 /**
  * Class provide interface for inserting and updating properties via WebFlow API.
@@ -30,11 +30,6 @@ class WFPropertyWorker extends WFWorkerBase
      * if filed is true that property exists in feed, false otherwise
      */
     const FIELD_IN_FEED_SLUG = 'in-feed-3';
-
-    /**
-     * WebFlow field id
-     */
-    const FIELD_ID = '_id';
 
     /**
      * @var string WebFlow collection name of Role types
@@ -72,30 +67,10 @@ class WFPropertyWorker extends WFWorkerBase
     protected $webFlowStatuses;
 
     /**
-     * @var array of WebFlow properties ids
-     */
-    protected $_wfItems;
-
-    /**
-     * @var int Number of items of the collection which we get per request
-     */
-    protected $_itemsPerPage = 20;
-
-    /**
      * @var int Number of attempts for storing properties
      * If first attempt was wrong it detect images which didn't store, resize them and try to store again
      */
     protected $_attemptCount = 2;
-
-    /**
-     * @var int Number of items which were inserted to collection
-     */
-    protected $_insertedCount = 0;
-
-    /**
-     * @var int Number of items which were updated in collection
-     */
-    protected $_updatedCount = 0;
 
     /**
      * @param array $apiKey
@@ -117,22 +92,6 @@ class WFPropertyWorker extends WFWorkerBase
         if(!$this->prepareWFClient()){
             throw new \Exception('Error - cannot prepare WebFlow client');
         }
-    }
-
-    /**
-     * @return int Number of items which were inserted to collection
-     */
-    public function getInsertedCount()
-    {
-        return $this->_insertedCount;
-    }
-
-    /**
-     * @return int Number of items which were inserted to collection
-     */
-    public function getUpdatedCount()
-    {
-        return $this->_updatedCount;
     }
 
     /**
@@ -184,14 +143,14 @@ class WFPropertyWorker extends WFWorkerBase
             echo "----------store property-------------".$dezrezPropertyId." (attempt $i)\r\n";
             // need to update item or insert a new one
             if (array_key_exists($dezrezPropertyId, $this->_wfItems)) {
-                $wfItem = $this->updateProperty($dezrezPropertyId, $this->_wfItems[$dezrezPropertyId]['id'], $item);
+                $wfItem = $this->updateWFItem($this->_propertyCollection->getId(), $dezrezPropertyId, $this->_wfItems[$dezrezPropertyId]['id'], $item);
             } else {
-                $wfItem = $this->insertProperty($dezrezPropertyId, $item);
+                $wfItem = $this->insertWFItem($this->_propertyCollection->getId(), $dezrezPropertyId, $item);
                 $isInserted = true;
             }
 
             // if WebFlow cannot store property
-            if(array_key_exists(static::FIELD_ID, $wfItem) === FALSE){
+            if(array_key_exists($this->fieldId, $wfItem) === FALSE){
                 $success = false;
                 break;
             }
@@ -216,25 +175,6 @@ class WFPropertyWorker extends WFWorkerBase
     }
 
     /**
-     * Detect which properties don't exists in Dezred feed and delete their in WebFlow collection
-     */
-    public function deleteOldProperties(){
-        $deleted = 0;
-
-        foreach($this->_wfItems as $wfItemId=>$wfItemData) {
-            if (!$wfItemData['flagUpdated']){
-                if (!$this->deleteProperty($wfItemData['id'])) {
-                    echo 'WebFlow: Couldn\'t delete item ID-' . $wfItemData['id'] . ' with name `' . $wfItemId . '`' . "\r\n";
-                }else {
-                    $deleted++;
-                }
-            }
-        }
-
-        echo 'WebFlow: Deleted - ' . $deleted . "\r\n";
-    }
-
-    /**
      * Detect which properties don't exists in Dezred feed and set their as not 'In feed'
      */
     public function setOldPropertiesAsNotInFeed(){
@@ -242,7 +182,8 @@ class WFPropertyWorker extends WFWorkerBase
 
         foreach($this->_wfItems as $wfItemId=>$wfItemData) {
             if (!$wfItemData['flagUpdated']){
-                $item = $this->patchProperty(
+                $item = $this->patchWFItem(
+                    $this->_propertyCollection->getId(),
                     $wfItemId,
                     $wfItemData['id'],
                     [
@@ -400,95 +341,4 @@ class WFPropertyWorker extends WFWorkerBase
 
         return $image . '&width=' . static::MAX_IMAGE_WIDTH;
     }
-
-
-    /**
-     * Insert new item to WebFlow collection
-     * @param string $dezrezPropertyId ID of item for inserting
-     * @param array $item Item of WebFlow collection
-     * @return array of inserted WebFlow item
-     */
-    protected function insertProperty($dezrezPropertyId, $item)
-    {
-        echo "----------insert property-------------".$dezrezPropertyId."\r\n";
-
-        $result = $this->_webFlowClient->addCollectionItem(
-            $this->_apiKey,
-            $this->_propertyCollection->getId(),
-            $this->_publishToLiveSite,
-            $item
-        );
-
-        if(array_key_exists(static::FIELD_ID, $result) !== FALSE){
-                $this->_wfItems[$dezrezPropertyId] = [
-                'id' => $result['_id'],
-                'flagUpdated' => true,
-            ];
-        }
-
-        return $result;
-    }
-
-    /**
-     * Update item of WebFlow collection
-     * @param string $dezrezPropertyId ID of item for updating
-     * @param string $itemId ID of item for updating
-     * @param array $item Item of WebFlow collection
-     * @return array of updated WebFlow item
-     */
-    protected function updateProperty($dezrezPropertyId, $itemId, $item)
-    {
-        echo "----------update property-------------".$dezrezPropertyId."\r\n";
-
-        $result = $this->_webFlowClient->updateCollectionItem(
-            $this->_apiKey,
-            $this->_propertyCollection->getId(),
-            $itemId,
-            $this->_publishToLiveSite, // set to true for publishing to live site
-            $item
-        );
-
-        if(array_key_exists(static::FIELD_ID, $result) !== FALSE){
-            $this->_wfItems[$dezrezPropertyId]['flagUpdated'] = true;
-        }
-
-        return $result;
-    }
-
-    /**
-     * Patch item of WebFlow collection
-     * @param string $dezrezPropertyId ID of item for patching
-     * @param string $itemId ID of item for patching
-     * @param array $item Item of WebFlow collection
-     * @return array of patched WebFlow item
-     */
-    protected function patchProperty($dezrezPropertyId, $itemId, $item)
-    {
-//        echo "----------patch property-------------".$dezrezPropertyId."\r\n";
-
-        $result = $this->_webFlowClient->patchCollectionItem(
-            $this->_apiKey,
-            $this->_propertyCollection->getId(),
-            $itemId,
-            $this->_publishToLiveSite, // set to true for publishing to live site
-            $item
-        );
-
-        return $result;
-    }
-
-    /**
-     * Delete item of WebFlow collection
-     * @param $itemId
-     * @return bool
-     */
-    protected function deleteProperty($itemId)
-    {
-        return $this->_webFlowClient->deleteCollectionItem(
-            $this->_apiKey,
-            $this->_propertyCollection->getId(),
-            $itemId
-        );
-    }
-
 }

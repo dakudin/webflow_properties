@@ -5,7 +5,7 @@
  * Time: 21:28
  */
 
-namespace app\components;
+namespace app\components\one\agency;
 
 use app\models\Property;
 

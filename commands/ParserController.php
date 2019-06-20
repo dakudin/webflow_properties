@@ -39,7 +39,7 @@ class ParserController extends Controller
     public function actionIndex()
     {
         $this->WFPropertyWorker = new WFPropertyWorker(
-            Yii::$app->params['webflow_api_key'],
+            Yii::$app->params['one_agency']['webflow_api_key'],
             Yii::$app->params['webflow_role_type_collection'],
             Yii::$app->params['webflow_properties_collection'],
             Yii::$app->params['webflow_property_status_collection'],
@@ -72,7 +72,7 @@ class ParserController extends Controller
             $pageNumber++;
 
             $data = $client->getProperties(
-                Yii::$app->params['dezrez_live_api_key'],
+                Yii::$app->params['one_agency']['dezrez_live_api_key'],
                 [
                     'PageSize' => $this->propertiesPerPage,
                     'PageNumber' => $pageNumber
