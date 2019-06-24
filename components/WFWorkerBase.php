@@ -107,7 +107,7 @@ class WFWorkerBase extends Component
      * Detect which items don't exists in external source and delete their in WebFlow collection
      * @param string $collectionId ID of collection of updating item
      */
-    public function deleteOldItems($collectionId){
+    protected function deleteOldItems($collectionId){
         $deleted = 0;
 
         foreach($this->_wfItems as $wfItemId=>$wfItemData) {

@@ -8,7 +8,7 @@
 namespace app\commands;
 
 use app\components\DezrezFeedParser;
-use app\components\WFPropertyWorker;
+use app\components\one\agency\WFPropertyWorker;
 use Yii;
 use app\components\DezrezClient;
 use yii\console\Controller;
@@ -40,10 +40,10 @@ class ParserController extends Controller
     {
         $this->WFPropertyWorker = new WFPropertyWorker(
             Yii::$app->params['one_agency']['webflow_api_key'],
-            Yii::$app->params['webflow_role_type_collection'],
-            Yii::$app->params['webflow_properties_collection'],
-            Yii::$app->params['webflow_property_status_collection'],
-            Yii::$app->params['webflow_published_to_live']
+            Yii::$app->params['one_agency']['webflow_role_type_collection'],
+            Yii::$app->params['one_agency']['webflow_properties_collection'],
+            Yii::$app->params['one_agency']['webflow_property_status_collection'],
+            Yii::$app->params['one_agency']['webflow_published_to_live']
         );
 
         //load all old properties

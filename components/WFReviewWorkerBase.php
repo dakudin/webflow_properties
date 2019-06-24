@@ -44,6 +44,13 @@ class WFReviewWorkerBase extends WFWorkerBase
     }
 
     /**
+     * Detect which reviews don't exists in external source and delete their in WebFlow collection
+     */
+    public function deleteOldReviews(){
+        $this->deleteOldItems($this->reviewCollection->getId());
+    }
+
+        /**
      * Prepare WebFlow client for first use. Load collections with old reviews IDs
      * @return bool
      */

@@ -137,6 +137,7 @@ function handleMarketTypeInputChange() {
         changeOptions('minPrice', lettingPrices, true);
         changeOptions('maxPrice', lettingPrices, false);
         $('#label-exclude_sold').html('Exclude Let Agreed Properties');
+        $('#btn-book').attr('href', '/lettings-valuation');
     }else{
         if(type == 'sales'){
             $('#breadcrumb-market').html('SALES');
@@ -152,6 +153,7 @@ function handleMarketTypeInputChange() {
         changeOptions('minPrice', salesPrices, true);
         changeOptions('maxPrice', salesPrices, false);
         $('#label-exclude_sold').html('Exclude Sold Properties');
+        $('#btn-book').attr('href', '/sales-valuation');
     }
 
     handleRangeInputChange();
