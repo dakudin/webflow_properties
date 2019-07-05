@@ -8,4 +8,8 @@ return [
         'webflow_property_status_collection' => 'Property Statuses',
         'webflow_published_to_live' => true,
     ],
+    'white_house_clinic' => [
+        'webflow_review_collection' => 'Reviews',
+        'webflow_published_to_live' => false,
+    ],
 ];
