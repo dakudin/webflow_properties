@@ -6,7 +6,7 @@
  * Time: 8:57
  */
 
-namespace app\components\whitehouse\clinic;
+namespace app\components\whitehouseclinic;
 
 use app\components\WFReviewWorkerBase;
 use app\models\GoogleReview;

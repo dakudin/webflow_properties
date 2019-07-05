@@ -5,7 +5,7 @@
  * Time: 23:10
  */
 
-namespace app\components\one\agency;
+namespace app\components\oneagency;
 
 use Yii;
 use app\models\Property;

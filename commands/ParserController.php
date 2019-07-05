@@ -8,7 +8,7 @@
 namespace app\commands;
 
 use app\components\DezrezFeedParser;
-use app\components\one\agency\WFPropertyWorker;
+use app\components\oneagency\WFPropertyWorker;
 use Yii;
 use app\components\DezrezClient;
 use yii\console\Controller;
