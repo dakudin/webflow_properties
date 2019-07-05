@@ -13,9 +13,9 @@
 
 
 $js = <<< JS
-
 var marketType = $(".categ").html();
 
+var similarHeading = 'Similar properties to let in Stoke on Trent';
 if(marketType == 'lettings'){
     $('#breadcrumb-market').html('LETTINGS');
     $('#breadcrumb-market').attr("href", $('#breadcrumb-market').attr("href")+"?type=lettings");
@@ -26,13 +26,18 @@ if(marketType == 'lettings'){
         $('#breadcrumb-market').html('SALES');
         $('#breadcrumb-stoke').html('STOKE-ON-TRENT PROPERTY FOR SALE');
         $('#page-header').html('Properties for Sale in Stoke-on-Trent');
+        $('#similar_heading').html('Similar properties for sale in Stoke on Trent');
+        var similarHeading = 'Similar properties for sale in Stoke on Trent';
     }else{
         $('#breadcrumb-market').html('AUCTIONS');
         $('#breadcrumb-market').attr("href", $('#breadcrumb-market').attr("href")+"?type=auctions");
         $('#breadcrumb-stoke').html('STOKE-ON-TRENT PROPERTY FOR AUCTION');
         $('#page-header').html('Properties for Auction in Stoke-on-Trent');
+        var similarHeading = 'Similar properties for auctions in Stoke on Trent';
     }
 }
+$('#similar_heading').html(similarHeading);
+$('#similar_heading_mobile').html(similarHeading);
 
 $('#prefered-time-date').addClass('dtp_main');
 $('#prefered-time-date').dateTimePicker({
@@ -43,16 +48,27 @@ $('#prefered-time-date').dateTimePicker({
     resultElementId: "prefered_time_date-input"
 });
 
-loadSimilar();
+$('#prefered-time-date2').addClass('dtp_main');
+$('#prefered-time-date2').dateTimePicker({
+    dateFormat: "DD/MM/YYYY HH:mm",
+    title: "Prefered Time & Date",
+    mainClass: "text-field-2 w-input",
+    submitBtnClass: "button-violet w-button dpt_modal-button",
+    resultElementId: "prefered_time_date-input2"
+});
 
-$('.carousel-property').not('.item-updated').remove();
+loadSimilar();
 
 function loadSimilar(){
     var itemsFilled = 0;
+    var invisibleClass = 'w-condition-invisible';
     var curPropertyRole = $('#current-prop-role-type').html();
     var curPropertyType = $('#current-prop-type').html();
     var curPropertyBeds = Number($('#current-prop-beds').html());
     var currentPropertyId = $('#current-prop-id').html();
+/*    var curMarkerStatusText = $('#cur-marker-status').html();
+    var curMarkerStatusIsNotVisible = $('#cur-marker-status').hasClass(invisibleClass);
+*/
 
     $('.property-item').each(function(){
         var itemPropertyId = $(this).find('div.item-property_id').html();
@@ -63,22 +79,58 @@ function loadSimilar(){
 
         if(itemRoleType==curPropertyRole
             && itemPropertyStatus==curPropertyType
-            && itemPropertyId!=currentPropertyId
             && curPropertyBeds-1<=itemPropertyBeds && curPropertyBeds+1>=itemPropertyBeds
-            ){
+        ){
 
             var carouselDiv = $('.carousel-property')[itemsFilled];
             var carouselItem = $('.collection-list-wrapper-36').find(carouselDiv);
-            var carouselImage = carouselItem.find('a.text-prop-image');
-            carouselImage.attr('href', itemPropertyImage.attr('href'));
-            carouselImage.attr('style', itemPropertyImage.attr('style'));
-            carouselItem.find('h2.text-prop-name').html(itemPropertyImage.html());
-            carouselItem.find('div.text-price-value').html($(this).find('div.item-prop-price').html());
-            carouselItem.find('div.text-prop-address').html($(this).find('div.item-prop-address').html());
-            carouselItem.addClass('item-updated');
-            itemsFilled++;
+            var carouselImage = carouselItem.find('div.text-prop-image');
+            var carouselUrl = carouselItem.find('a.text-prop-image');
+            var carouselDivMobile = $('.carousel-property-mobile')[itemsFilled];
+            var carouselItemMobile = $('.mobi-slider').find(carouselDivMobile);
+            var carouselImageMobile = carouselItemMobile.find('a.text-prop-image');
+
+            if(itemPropertyId!=currentPropertyId){
+                carouselUrl.attr('href', itemPropertyImage.attr('href'));
+                carouselImage.attr('style', itemPropertyImage.attr('style'));
+                carouselItem.find('h2.text-prop-name').html(itemPropertyImage.html());
+                carouselItem.find('div.text-price-value').html($(this).find('div.item-prop-price').html());
+                carouselItem.find('div.text-prop-address').html($(this).find('div.item-prop-address').html());
+/*                carouselImage.first().first().html(curMarkerStatusText); */
+                carouselItem.addClass('item-updated');
+
+                carouselImageMobile.attr('href', itemPropertyImage.attr('href'));
+                carouselImageMobile.attr('style', itemPropertyImage.attr('style'));
+                carouselItemMobile.find('h2.text-prop-name').html(itemPropertyImage.html());
+                carouselItemMobile.find('div.text-price-value').html($(this).find('div.item-prop-price').html());
+                carouselItemMobile.find('div.text-prop-address').html($(this).find('div.item-prop-address').html());
+                carouselItemMobile.addClass('item-updated');
+                itemsFilled++;
+/*
+                if(curMarkerStatusIsNotVisible){
+                    carouselImage.first().addClass(invisibleClass);
+                }else{
+                    carouselImage.first().removeClass(invisibleClass);
+                }
+*/
+            }else{
+                carouselUrl.attr('href', '');
+                carouselImage.attr('style', '');
+                carouselItem.find('h2.text-prop-name').html('');
+                carouselItem.find('div.text-price-value').html('');
+                carouselItem.find('div.text-prop-address').html('');
+
+                carouselImageMobile.attr('href', '');
+                carouselImageMobile.attr('style', '');
+                carouselItemMobile.find('h2.text-prop-name').html('');
+                carouselItemMobile.find('div.text-price-value').html('');
+                carouselItemMobile.find('div.text-prop-address').html('');
+            }
         }
     });
+
+    $('.carousel-property').not('.item-updated').remove();
+    $('.carousel-property-mobile').not('.item-updated').remove();
 }
 
 JS;
@@ -131,8 +183,8 @@ $this->registerJS($js, $this::POS_READY);
 </form>
 
 
-<div class="block-content-property _2"><div class="blockbrief-information"><h1 class="h1 property">2 bed terraced house for sale</h1><div class="text-address-property">Heath Street, Stoke-on-Trent, Goldenhill, Staffordshire ST6 5RZ</div><div class="block-price-property"><div class="text-price-property-t">Guide Price &pound;</div><div class="text-block-75">75,000</div><div class="text-price-property">75000</div></div><a href="#" class="button-violet m w-button" data-ix="open-order-form">arrange a viewing</a><div class="div-block-115">
-            <div id="current-prop-id">14653833</div>
+<div class="block-content-property _2"><div class="blockbrief-information"><h1 class="h1 property">3 bed terraced house for sale</h1><div class="text-address-property">Dividy Road, Stoke-on-Trent, Bucknall, Staffordshire ST2 9JW</div><div class="block-price-property"><div class="text-price-property-t">Guide Price &pound;</div><div class="text-block-75">100,000</div><div class="text-price-property">100000</div></div><a href="#" class="button-violet m w-button" data-ix="open-order-form">arrange a viewing</a><div class="div-block-115">
+            <div id="current-prop-id">14597934</div>
             <div id="current-prop-role-type">Sales</div><div id="current-prop-type">For Sale</div>
             <div id="current-prop-beds">3</div></div></div><div class="block-kontakt _2"><div class="text-block-37">Local office</div><div class="text-block-38">Why not visit us in person at our local Stoke on Trent office?</div><div class="text-block-39"><a href="tel:+44(0)1782970222" class="link-31">+44 (0)1782 970222</a></div><a href="mailto:hello@oneagencygroup.co.uk" class="button-10 w-button">Email Office Directly</a><div class="text-block-41"><a href="/contact" class="link-6">View Office &nbsp;Details</a></div></div><div class="categ">sales</div></div>
 
