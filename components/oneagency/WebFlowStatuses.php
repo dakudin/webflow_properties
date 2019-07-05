@@ -8,6 +8,7 @@
 namespace app\components\oneagency;
 
 use app\models\Property;
+use app\components\WebFlowCollection;
 
 class WebFlowStatuses
 {
