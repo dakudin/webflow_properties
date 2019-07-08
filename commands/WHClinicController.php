@@ -43,12 +43,48 @@ class WHClinicController extends Controller
         $this->WFReviewWorker->loadAllReviews();*/
 
         // update reviews and insert new ones
-        $this->refreshReviews();
+        $this->refreshReviews3();
 
         //delete not exists reviews from WebFlow collection
 //        $this->WFReviewWorker->deleteOldReviews();
 
         return ExitCode::OK;
+    }
+
+    protected function refreshReviews3()
+    {
+        $client = new \Google_Client();
+
+        $client->setClientId(Yii::$app->params['white_house_clinic']['google_mybusiness_api_client_id']);
+        $client->setClientSecret(Yii::$app->params['white_house_clinic']['google_mybusiness_api_client_secret']);
+
+        $client->addScope("https://www.googleapis.com/auth/plus.business.manage");
+        $client->setSubject(Yii::$app->params['white_house_clinic']['google_mybusiness_api_account_email']);
+//        $client->refreshToken(' ###### ');
+
+        $mybusinessService = new \Google_Service_MyBusiness($client);
+
+        $accounts = $mybusinessService->accounts;
+        $accountsList = $accounts->listAccounts()->getAccounts();
+
+        foreach ($accountsList as $accKey => $account) {
+            var_dump('$account->name', $account->name);
+
+            $locations = $mybusinessService->accounts_locations;
+            $locationsList = $locations->listAccountsLocations($account->name)->getLocations();
+            var_dump('$locationsList', $locationsList);
+
+
+            // Final Goal of my Code
+            if (empty($locationsList)===false) {
+                foreach ($locationsList as $locKey => $location) {
+                    $reviews = $mybusinessService->accounts_locations_reviews;
+                    $listReviewsResponse = $reviews->listAccountsLocationsReviews($location->name);
+                    $reviewsList = $listReviewsResponse->getReviews();
+                    var_dump('$reviewsList', $reviewsList);
+                }
+            }
+        }
     }
 
     protected function refreshReviews2()
@@ -58,7 +94,7 @@ class WHClinicController extends Controller
             'refresh_token' => ''
             ];
 
-        /*$accounts previusly populate*/
+        /*$accounts previously populate*/
         /*(GMB - v4)*/
         $credentials_f = Yii::$app->params['white_house_clinic']['google_mybusiness_api_credential'];
         $client = new \Google_Client();
