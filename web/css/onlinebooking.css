@@ -1,0 +1,384 @@
+#OBapp button,#OBapp select,button,select{text-transform:none}
+body,figure,h1,h2,h3,h4,h5,h6{margin:0}
+#mainHeader,#mainpage{width:auto;margin-right:auto;margin-left:auto}
+#mainContainer #OBcontainer #OBapp #ver,[hidden],template{display:none}
+#mainContainer #clinicData .detail:after,#mainContainer:after,#mainpage:after,#mainpage:before{content:"";clear:both}
+#OBapp html,html{-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
+#OBapp abbr[title],abbr[title]{border-bottom:1px dotted}
+#OBapp dfn,dfn{font-style:italic}
+#OBapp sub,#OBapp sup,sub,sup{line-height:0;vertical-align:baseline}
+#OBapp button,#OBapp html input[type=button],#OBapp input[type=reset],#OBapp input[type=submit],button,html input[type=button],input[type=reset],input[type=submit]{-webkit-appearance:button;cursor:pointer}
+#OBapp button[disabled],#OBapp html input[disabled],button[disabled],html input[disabled]{cursor:default}
+#OBapp img,img,legend{border:0}
+#OBapp,#OBapp svg:not(:root),svg:not(:root){overflow:hidden}
+#OBapp table,table{border-spacing:0;border-collapse:collapse}
+article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section,summary{display:block}
+audio,canvas,video{display:inline-block}
+audio:not([controls]){display:none;height:0}
+.copyright a:hover,a{background:0 0}
+.copyright a:focus:hover,a:focus{outline:dotted thin}
+.copyright a:active:hover,.copyright a:hover,a:active,a:hover{outline:0}
+h1{font-size:2em}
+b,strong{font-weight:700}
+hr{-moz-box-sizing:content-box;box-sizing:content-box;height:0}
+mark{background:#ff0;color:#000}
+code,kbd,pre,samp{font-family:monospace,serif;font-size:1em}
+pre{white-space:pre-wrap}
+q{quotes:"\201C" "\201D" "\2018" "\2019"}
+small{font-size:80%}
+sub,sup{font-size:75%;position:relative}
+sup{top:-.5em}
+sub{bottom:-.25em}
+fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}
+legend{padding:0}
+button,input,select,textarea{font-family:inherit;font-size:100%;margin:0}
+button,input{line-height:normal}
+input[type=checkbox],input[type=radio]{box-sizing:border-box;padding:0}
+input[type=search]{-webkit-appearance:textfield;-moz-box-sizing:content-box;-webkit-box-sizing:content-box;box-sizing:content-box}
+input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-search-decoration{-webkit-appearance:none}
+button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}
+textarea{overflow:auto;vertical-align:top}
+body,html{height:100%;width:100%;font-family:"Segoe UI","Arial Narrow",Arial,Helvetica,sans-serif}
+h1,h2,h3,h4,h5,h6{color:#454545;font-family:"Segoe UI Light","Arial Narrow",Arial,Helvetica,sans-serif;text-rendering:optimizelegibility;letter-spacing:-1px}
+#mainpage{max-width:1132px;min-height:83.5%;border-right:1px solid #ddd;border-left:1px solid #ddd}
+#mainpage:after,#mainpage:before{display:table;line-height:0}
+#mainHeaderBG{background-color:rgba(79,129,189,.5);z-index:1}
+#mainHeader{max-width:1114px;min-height:10%;padding:0 10px 10px;z-index:1;position:relative;background-color:#4F81BD}
+#mainHeader h2{font-size:300%;font-weight:100;color:#fff}
+#mainHeader h3{font-size:150%;font-weight:100;color:#fff}
+#mainContainer{clear:both;text-align:center;background-color:rgba(255,255,255,.4)}
+#mainContainer #dummy{min-width:320px;width:100%;height:800px}
+#mainContainer #clinicData{display:inline-block;width:25%;min-width:270px;margin:0 auto;text-align:center;font-size:1.2em;word-wrap:break-word;overflow-y:auto;color:#323232}
+#mainContainer #OBcontainer{position:relative;display:inline-block;width:60%;max-width:750px;min-width:550px;float:left}
+#mainContainer #OBcontainer #OBapp{padding:0 5px;border-left:none!important;border-top:none!important;border-bottom:none!important;border-right:1px solid #ddd}
+#mainContainer #OBcontainer .loading{position:absolute;left:0;right:0;top:20%;color:#fff}
+#mainContainer #OBcontainer #OBapp .loading{color:inherit}
+#mainContainer #OBcontainer #OBapp #app_heading{padding:0;margin:10px 5px}
+#mainContainer #OBcontainer #OBapp #main-content{border:none}
+#mainContainer #clinicData .detail{margin:20px;text-align:left;clear:both;word-break:break-word}
+#mainContainer #clinicData .detail dl,#mainContainer #clinicData .detail dl dd{margin:0}
+#mainContainer #clinicData .detail.address{text-align:center}
+#mainContainer #clinicData .detail a{color:#4f81bd;max-width:100%}
+#copyright,#copyright a,#copyright a:hover{color:#fff}
+#mainContainer #clinicData .detail:after{display:table}
+#OBapp [hidden],#OBapp template,#mainContainer #clinicData #mapWrapper,.loading{display:none}
+#mainContainer #clinicData #mapWrapper #map_canvas{margin:0 auto;width:250px;height:250px;box-shadow:0 1px 2px rgba(0,0,0,.4)}
+#mainContainer #clinicData #mapWrapper #mapExpand a{font-size:14px;color:#4f81bd}
+#mainContainer #onlinebooking{padding:5px;margin-top:35px;width:650px;min-height:600px;background:#fff}
+#mainContainer:after{display:table}
+#copyright{width:100%;height:6.5%;text-align:center;margin:0 auto;background-color:#2A2A2A;line-height:60px;font-size:13px}
+#copyright a:hover{text-decoration:underline}
+@media (max-width:850px){
+    #mainContainer #OBcontainer #OBapp,#mainContainer #clinicData,#mainpage,body{padding:0}
+    #mainpage{width:100%;margin:0}
+    #mainHeader{text-align:center}
+    #mainContainer #OBcontainer,#mainContainer #clinicData{margin:0 auto;float:none;width:100%;min-width:320px}
+    #mainContainer #clinicData .detail{margin:10px auto;width:320px}
+    #mainContainer #clinicData #mapWrapper #map_canvas{width:100%}
+    #mainContainer #clinicData #mapWrapper #mapExpand{font-size:16px}
+}
+@media (max-width:400px){
+    #mainContainer #clinicData .detail{width:80%;text-align:center}
+    #mainContainer #clinicData .detail a{float:none;display:block}
+}
+#OBapp h1,#OBapp h2,#OBapp h3{letter-spacing:-.1rem}
+.clearfix:after{content:".";display:block;height:0;clear:both;visibility:hidden}
+@webkit-keyframes justFade{0%{opacity:0}100%{opacity:1}}
+@keyframes justFade{0%{opacity:0}100%{opacity:1}}
+@-webkit-keyframes fadeTop{0%{position:relative;top:-10px;opacity:0}100%{top:0;opacity:1}}
+@keyframes fadeTop{0%{position:relative;top:-10px;opacity:0}100%{top:0;opacity:1}}
+@-webkit-keyframes fadeLeft{0%{position:relative;left:-10px;opacity:0}100%{left:0;opacity:1}}
+@keyframes fadeLeft{0%{position:relative;left:-10px;opacity:0}100%{left:0;opacity:1}}
+@-webkit-keyframes fadeRight{0%{position:relative;right:-10px;opacity:0}100%{right:0;opacity:1}}
+@keyframes fadeRight{0%{position:relative;right:-10px;opacity:0}100%{right:0;opacity:1}}
+@keyframes loop{0%{margin-left:-50%}100%{margin-left:100%}}
+@-webkit-keyframes loop{0%{margin-left:-50%}100%{margin-left:100%}}
+@-moz-keyframes spin{0%{-webkit-transform:rotate(0);-ms-transform:rotate(0);-moz-transform:rotate(0);-o-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(359deg);-ms-transform:rotate(359deg);-moz-transform:rotate(359deg);-o-transform:rotate(359deg);transform:rotate(359deg)}}
+@-webkit-keyframes spin{0%{-webkit-transform:rotate(0);-ms-transform:rotate(0);-moz-transform:rotate(0);-o-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(359deg);-ms-transform:rotate(359deg);-moz-transform:rotate(359deg);-o-transform:rotate(359deg);transform:rotate(359deg)}}
+@-o-keyframes spin{0%{-webkit-transform:rotate(0);-ms-transform:rotate(0);-moz-transform:rotate(0);-o-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(359deg);-ms-transform:rotate(359deg);-moz-transform:rotate(359deg);-o-transform:rotate(359deg);transform:rotate(359deg)}}
+@-ms-keyframes spin{0%{-webkit-transform:rotate(0);-ms-transform:rotate(0);-moz-transform:rotate(0);-o-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(359deg);-ms-transform:rotate(359deg);-moz-transform:rotate(359deg);-o-transform:rotate(359deg);transform:rotate(359deg)}}
+@keyframes spin{0%{-webkit-transform:rotate(0);-ms-transform:rotate(0);-moz-transform:rotate(0);-o-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(359deg);-ms-transform:rotate(359deg);-moz-transform:rotate(359deg);-o-transform:rotate(359deg);transform:rotate(359deg)}}
+@font-face{font-family:fontello;src:url(/fonts/fontello.eot?12149061);src:url(/fonts/fontello.eot?12149061#iefix) format("embedded-opentype"),url(/fonts/fontello.woff?12149061) format("woff"),url(/fonts/fontello.ttf?12149061) format("truetype"),url(/fonts/fontello.svg?12149061#fontello) format("svg");font-weight:400;font-style:normal}.loading{position:relative;top:40px;font-family:Calibri,sans-serif}.loading .loading_wrapper{width:300px;margin:0 auto}.loading .loading_wrapper .loading_bar{overflow:hidden;width:100%;height:10px;background:#fff;transition:all .1s;-webkit-transition:all .1s;-moz-transition:all .1s}.loading .loading_wrapper .loading_bar .loading_fill{width:100%;height:100%;background:#4F81BD}.loading .loading_wrapper .loading_bar.loopy .loading_fill{width:50%;-webkit-animation:loop 1.2s cubic-bezier(.5,.15,.5,.9) infinite;animation:loop 1.2s cubic-bezier(.5,.15,.5,.9) infinite}.loading .loading_wrapper .loading_text{width:100%;text-align:center;margin-top:5px}.loading .loading_bg{position:absolute;top:0;right:0;bottom:0;left:0;width:100%;height:100%}#OBapp html{font-family:sans-serif;font-size:62.5%}#OBapp body{margin:0}#OBapp article,#OBapp aside,#OBapp details,#OBapp figcaption,#OBapp figure,#OBapp footer,#OBapp header,#OBapp hgroup,#OBapp main,#OBapp menu,#OBapp nav,#OBapp section,#OBapp summary{display:block}#OBapp audio,#OBapp canvas,#OBapp progress,#OBapp video{display:inline-block;vertical-align:baseline}#OBapp audio:not([controls]){display:none;height:0}#OBapp a{background-color:transparent;color:#1EAEDB}#OBapp a:active,#OBapp a:hover{outline:0}#OBapp b,#OBapp optgroup,#OBapp strong{font-weight:700}#OBapp mark{background:#ff0;color:#000}#OBapp small{font-size:80%}#OBapp sub,#OBapp sup{font-size:75%;position:relative}#OBapp sup{top:-.5em}#OBapp sub{bottom:-.25em}#OBapp figure{margin:1em 40px}#OBapp hr{-moz-box-sizing:content-box;box-sizing:content-box;height:0}#OBapp pre{overflow:auto}#OBapp code,#OBapp kbd,#OBapp pre,#OBapp samp{font-family:monospace,monospace;font-size:1em}#OBapp button,#OBapp input,#OBapp optgroup,#OBapp select,#OBapp textarea{color:inherit;font:inherit;margin:0}#OBapp button{overflow:visible}#OBapp button::-moz-focus-inner,#OBapp input::-moz-focus-inner{border:0;padding:0}#OBapp input{line-height:normal}#OBapp input[type=checkbox],#OBapp input[type=radio]{box-sizing:border-box;padding:0}#OBapp input[type=number]::-webkit-inner-spin-button,#OBapp input[type=number]::-webkit-outer-spin-button{height:auto}#OBapp input[type=search]{-moz-box-sizing:content-box;-webkit-box-sizing:content-box}#OBapp input[type=search]::-webkit-search-cancel-button,#OBapp input[type=search]::-webkit-search-decoration{-webkit-appearance:none}#OBapp fieldset{border:1px solid silver;margin:0 2px}#OBapp legend{border:0;padding:0}#OBapp .container{position:relative;max-width:960px;margin:0 auto;box-sizing:border-box}#OBapp .column,#OBapp .columns{width:100%;float:left;box-sizing:border-box}
+@media (min-width:400px){
+    #OBapp .container{width:85%;padding:0}
+}
+#OBapp body{font-size:1.5em;line-height:1.6;font-weight:400;font-family:Raleway,HelveticaNeue,"Helvetica Neue",Helvetica,Arial,sans-serif;color:#222}
+#OBapp h1,#OBapp h2,#OBapp h3,#OBapp h4,#OBapp h5,#OBapp h6{margin-top:0;margin-bottom:2rem;font-weight:300}
+#OBapp h1{line-height:1.2}
+#OBapp h2{line-height:1.25}
+#OBapp h3{line-height:1.3}
+#OBapp h4{line-height:1.35;letter-spacing:-.08rem}
+#OBapp h5{line-height:1.5;letter-spacing:-.05rem}
+#OBapp h6{line-height:1.6;letter-spacing:0}
+@media (min-width:550px){
+    #OBapp .container{width:80%}
+    #OBapp .column,#OBapp .columns{margin-left:4%}
+    #OBapp .column:first-child,#OBapp .columns:first-child{margin-left:0}
+    #OBapp .one.column,#OBapp .one.columns{width:4.66666666667%}
+    #OBapp .two.columns{width:13.3333333333%}
+    #OBapp .three.columns{width:22%}
+    #OBapp .four.columns{width:30.6666666667%}
+    #OBapp .five.columns{width:39.3333333333%}
+    #OBapp .six.columns{width:48%}
+    #OBapp .seven.columns{width:56.6666666667%}
+    #OBapp .eight.columns{width:65.3333333333%}
+    #OBapp .nine.columns{width:74%}
+    #OBapp .ten.columns{width:82.6666666667%}
+    #OBapp .eleven.columns{width:91.3333333333%}
+    #OBapp .twelve.columns{width:100%;margin-left:0}
+    #OBapp .one-third.column{width:30.6666666667%}
+    #OBapp .two-thirds.column{width:65.3333333333%}
+    #OBapp .one-half.column{width:48%}
+    #OBapp .offset-by-one.column,#OBapp .offset-by-one.columns{margin-left:8.66666666667%}
+    #OBapp .offset-by-two.column,#OBapp .offset-by-two.columns{margin-left:17.3333333333%}
+    #OBapp .offset-by-three.column,#OBapp .offset-by-three.columns{margin-left:26%}
+    #OBapp .offset-by-four.column,#OBapp .offset-by-four.columns{margin-left:34.6666666667%}
+    #OBapp .offset-by-five.column,#OBapp .offset-by-five.columns{margin-left:43.3333333333%}
+    #OBapp .offset-by-six.column,#OBapp .offset-by-six.columns{margin-left:52%}
+    #OBapp .offset-by-seven.column,#OBapp .offset-by-seven.columns{margin-left:60.6666666667%}
+    #OBapp .offset-by-eight.column,#OBapp .offset-by-eight.columns{margin-left:69.3333333333%}
+    #OBapp .offset-by-nine.column,#OBapp .offset-by-nine.columns{margin-left:78%}
+    #OBapp .offset-by-ten.column,#OBapp .offset-by-ten.columns{margin-left:86.6666666667%}
+    #OBapp .offset-by-eleven.column,#OBapp .offset-by-eleven.columns{margin-left:95.3333333333%}
+    #OBapp .offset-by-one-third.column,#OBapp .offset-by-one-third.columns{margin-left:34.6666666667%}
+    #OBapp .offset-by-two-thirds.column,#OBapp .offset-by-two-thirds.columns{margin-left:69.3333333333%}
+    #OBapp .offset-by-one-half.column,#OBapp .offset-by-one-half.columns{margin-left:52%}
+    #OBapp h1{font-size:5rem}
+    #OBapp h2{font-size:4.2rem}
+    #OBapp h3{font-size:3.6rem}
+    #OBapp h4{font-size:3rem}
+    #OBapp h5{font-size:2.4rem}
+    #OBapp h6{font-size:1.5rem}
+}
+#OBapp p{margin-top:0}
+#OBapp a:hover{color:#0FA0CE}
+#OBapp .button,#OBapp button,#OBapp input[type=button],#OBapp input[type=reset],#OBapp input[type=submit]{display:inline-block;height:38px;padding:0 30px;color:#555;text-align:center;font-size:11px;font-weight:600;line-height:38px;letter-spacing:.1rem;text-transform:uppercase;text-decoration:none;white-space:nowrap;background-color:transparent;border-radius:4px;border:1px solid #bbb;cursor:pointer;box-sizing:border-box}
+#OBapp .button:focus,#OBapp .button:hover,#OBapp button:focus,#OBapp button:hover,#OBapp input[type=button]:focus,#OBapp input[type=button]:hover,#OBapp input[type=reset]:focus,#OBapp input[type=reset]:hover,#OBapp input[type=submit]:focus,#OBapp input[type=submit]:hover{color:#333;border-color:#888;outline:0}
+#OBapp .button.button-primary,#OBapp button.button-primary,#OBapp input[type=button].button-primary,#OBapp input[type=reset].button-primary,#OBapp input[type=submit].button-primary{color:#FFF;background-color:#33C3F0;border-color:#33C3F0}
+#OBapp .button.button-primary:focus,#OBapp .button.button-primary:hover,#OBapp button.button-primary:focus,#OBapp button.button-primary:hover,#OBapp input[type=button].button-primary:focus,#OBapp input[type=button].button-primary:hover,#OBapp input[type=reset].button-primary:focus,#OBapp input[type=reset].button-primary:hover,#OBapp input[type=submit].button-primary:focus,#OBapp input[type=submit].button-primary:hover{color:#FFF;background-color:#1EAEDB;border-color:#1EAEDB}
+#OBapp input[type=email],#OBapp input[type=number],#OBapp input[type=password],#OBapp input[type=search],#OBapp input[type=tel],#OBapp input[type=text],#OBapp input[type=url],#OBapp select,#OBapp textarea{height:38px;padding:6px 10px;background-color:#fff;border-radius:4px;box-shadow:none;box-sizing:border-box}
+#OBapp input[type=email],#OBapp input[type=number],#OBapp input[type=password],#OBapp input[type=search],#OBapp input[type=tel],#OBapp input[type=text],#OBapp input[type=url],#OBapp textarea{-webkit-appearance:none;-moz-appearance:none;appearance:none}
+#OBapp textarea{overflow:auto;min-height:65px;padding-top:6px;padding-bottom:6px}
+#OBapp label,#OBapp legend{display:block;margin-bottom:.5rem;font-weight:600}
+#OBapp fieldset{padding:0;border-width:0}
+#OBapp input[type=checkbox],#OBapp input[type=radio]{display:inline}
+#OBapp label>.label-body{display:inline-block;margin-left:.5rem;font-weight:400}
+#OBapp ul{list-style:circle inside}
+#OBapp ol{list-style:decimal inside}
+#OBapp ol,#OBapp ul{padding-left:0;margin-top:0}
+#OBapp ol ol,#OBapp ol ul,#OBapp ul ol,#OBapp ul ul{margin:1.5rem 0 1.5rem 3rem;font-size:90%}
+#OBapp .button,#OBapp button,#OBapp li{margin-bottom:1rem}
+#OBapp fieldset,#OBapp input,#OBapp select,#OBapp textarea{margin-bottom:1.5rem}
+#OBapp h1,#OBapp h2,#OBapp h3,#OBapp h4,#OBapp h5,#OBapp h6{margin:10px}
+#OBapp code{padding:.2rem .5rem;margin:0 .2rem;font-size:90%;white-space:nowrap;background:#F1F1F1;border:1px solid #E1E1E1;border-radius:4px}
+#OBapp pre>code{display:block;padding:1rem 1.5rem;white-space:pre}
+#OBapp td,#OBapp th{padding:12px 15px;text-align:left;border-bottom:1px solid #E1E1E1}
+#OBapp td:first-child,#OBapp th:first-child{padding-left:0}
+#OBapp td:last-child,#OBapp th:last-child{padding-right:0}
+#OBapp blockquote,#OBapp dl,#OBapp figure,#OBapp form,#OBapp ol,#OBapp p,#OBapp pre,#OBapp table,#OBapp ul{margin-bottom:2.5rem}
+#OBapp .u-full-width{width:100%;box-sizing:border-box}
+#OBapp .u-max-full-width{max-width:100%;box-sizing:border-box}
+#OBapp .u-pull-right{float:right}
+#OBapp .u-pull-left{float:left}
+#OBapp hr{margin-top:3rem;margin-bottom:3.5rem;border-width:0;border-top:1px solid #E1E1E1}
+#OBapp .container:after,#OBapp .row:after,#OBapp .u-cf{content:"";display:table;clear:both}
+#OBapp [class*=" icon-"]:before,#OBapp [class^=icon-]:before{font-family:fontello;font-style:normal;font-weight:400;speak:none;display:inline-block;text-decoration:inherit;width:1em;margin-right:.2em;text-align:center;font-variant:normal;text-transform:none;line-height:1em;margin-left:.2em}
+#OBapp .icon-check:before{content:'\e800'}
+#OBapp .icon-hospital:before{content:'\e801'}
+#OBapp .icon-doctor:before{content:'\e802'}
+#OBapp .icon-stethoscope:before{content:'\e803'}
+#OBapp .icon-lock:before{content:'\e804'}
+#OBapp .icon-chevron-left:before{content:'\e805'}
+#OBapp .icon-chevron-right:before{content:'\e806'}
+#OBapp .icon-cancel:before{content:'\e807'}
+#OBapp .icon-clock:before{content:'\e808'}
+#OBapp button[type=submit]:disabled:after,#OBapp:before{content:"";position:absolute;top:0;bottom:0}
+#OBapp{min-width:320px;width:auto;max-width:100%;min-height:800px;position:relative;border:1px solid #A8A8A8;background-color:#fff;font-family:"Segoe UI","Arial Narrow",Arial,Helvetica,sans-serif;text-align:left;line-height:normal;box-sizing:border-box}
+#OBapp:before{display:block;right:0;left:0;z-index:-1;height:100%;width:100%}
+#OBapp.blackout:before{background:rgba(0,0,0,.1);z-index:2}
+#OBapp h1{font-size:40px}
+#OBapp h2{font-size:35px}
+#OBapp h3{font-size:30px}
+#OBapp h4{font-size:25px}
+#OBapp h5{font-size:20px}
+#OBapp h6{font-size:15px}
+#OBapp form{margin:0}
+#OBapp label{cursor:pointer;margin-top:5px;margin-bottom:5px}
+#OBapp input[type=email],#OBapp input[type=number],#OBapp input[type=password],#OBapp input[type=search],#OBapp input[type=tel],#OBapp input[type=text],#OBapp input[type=url],#OBapp select,#OBapp textarea{border:1px solid #cecece}
+#OBapp input[type=email]:focus,#OBapp input[type=number]:focus,#OBapp input[type=password]:focus,#OBapp input[type=search]:focus,#OBapp input[type=tel]:focus,#OBapp input[type=text]:focus,#OBapp input[type=url]:focus,#OBapp select:focus,#OBapp textarea:focus{outline:0;border:1px solid #749ccb}
+#OBapp button[type=submit]{display:block;height:auto;width:auto;max-width:100%;background:#4FBF4F;color:#fff;padding:10px;margin:0 auto;font-size:20px;text-transform:none;letter-spacing:normal;font-weight:100;line-height:inherit;white-space:nowrap;transition:all .1s;-webkit-transition:all .1s;-moz-transition:all .1s}
+#OBapp button[type=submit].submit-large{min-width:275px;width:100%;font-size:25px;clear:both}
+#OBapp button[type=submit].submit-blue{background:#4F81BD;color:#fff;border-color:transparent}
+#OBapp button[type=submit].submit-blue:hover{border-color:#2d5079}
+#OBapp button[type=submit].submit-blue.inline{display:inline-block;margin:5px;padding:5px;font-size:18px;font-weight:400;line-height:18px;white-space:initial}
+#OBapp button[type=submit]:disabled{transition:all .1s;-webkit-transition:all .1s;-moz-transition:all .1s;position:relative;background:#9ada9a;padding-right:40px}
+#OBapp button[type=submit]:disabled:after{right:5px;height:20px;width:20px;margin:auto;border-radius:100%;border:2px solid #fff;border-bottom-color:transparent;background:0 0;display:inline-block;-webkit-animation:spin .75s linear infinite;animation:spin .75s linear infinite}
+#OBapp [class*=" icon-"],#OBapp [class^=icon-]{background-image:none}
+#OBapp .row{position:static;margin:0;padding:0}
+#OBapp .heading{margin:0 0 10px;font-size:19px;font-weight:100;text-align:center}
+#OBapp .subheading{margin:5px 0;padding:5px;font-size:18px;text-align:center;background:#f4f4f4}
+#OBapp #app-error{position:relative;background:#FF6868;color:#fff;padding:5px 10px;font-size:18px}
+#OBapp #app-error .error-text{display:block;margin-right:20px}
+#OBapp .close{position:absolute;top:5px;right:5px;display:inline-block;cursor:pointer;height:auto;width:auto;line-height:20px;font-size:18px}
+#OBapp .error-highlight{border:1px solid #FF6868!important}
+#OBapp #main-error{margin:0 1px 5px}
+#OBapp #main-content{position:relative;margin:-5px 1px 0;border:1px solid #749ccb;padding:10px}
+#OBapp #main-content .loading{position:absolute;margin:0 auto;left:0;right:0;bottom:0;top:0;z-index:1}
+#OBapp #main-content .loading .loading_wrapper{position:absolute;top:20%;left:0;right:0}
+#OBapp #main-content .loading .loading_bg{z-index:-1;background-color:#fff}
+#OBapp .container{width:100%;padding:0}
+#OBapp #ver{position:absolute;top:5px;right:10px;font-size:14px}
+#OBapp #pagination .page-link{position:relative;display:block;margin:5px 1px;padding:5px;font-size:18px;color:#A8A8A8;background:#f4f4f4;cursor:default}
+#OBapp #pagination .page-link.locked a{text-decoration:none}
+#OBapp #pagination .page-link.active{cursor:pointer;color:#000}
+#OBapp #pagination .page-link.active:hover{background:#4F81BD;color:#fff}
+#OBapp #pagination .page-link.selected{color:#fff;background:#4F81BD}
+#OBapp #pagination .page-link.selected.active{color:#fff}
+#OBapp #pagination .page-link.locked:after{content:'\e804';position:absolute;right:10px;margin-top:2px;font-family:fontello;font-style:normal;font-weight:400;speak:none;font-variant:normal;text-transform:none}
+#OBapp #pagination .page-link.locked+#main-error+#main-content{padding:0;border:none}
+#OBapp #pagination #back_btn{position:absolute;bottom:10px;left:15px;font-size:20px;cursor:pointer;z-index:1}
+#OBapp #details label{text-align:left;font-weight:400}
+#OBapp #details label.mandatory{font-weight:600}
+#OBapp #details label.mandatory:after{content:" *"}
+#OBapp #details #details-mandatory-msg{text-align:center;margin:10px 0}
+#OBapp #details #details-loginbox{display:none;position:absolute;top:20px;left:0;right:0;margin:0 auto;padding:10px;z-index:2;background:#fff;border:1px solid #A8A8A8;-webkit-border-radius:5px;-ms-border-radius:5px;-moz-border-radius:5px;-o-border-radius:5px;border-radius:5px;-webkit-box-shadow:3px 3px 0 rgba(0,0,0,.2);-ms-box-shadow:3px 3px 0 rgba(0,0,0,.2);-moz-box-shadow:3px 3px 0 rgba(0,0,0,.2);-o-box-shadow:3px 3px 0 rgba(0,0,0,.2);box-shadow:3px 3px 0 rgba(0,0,0,.2)}
+#OBapp #details #details-loginbox label.columns:first-child{margin-left:0}
+#OBapp #details #details-loginbox #details-login-error{margin:10px 0 0}
+#OBapp #details #details-login{text-align:center}
+#OBapp #details #details-form label.columns:first-child{margin-left:0}
+#OBapp #details #details-form #dob-container select{display:inline-block}
+#OBapp #details #details-form #dob-container #dob-day{padding:0 0 0 5px}
+#OBapp #details #details-form #dob-container #dob-month{padding:0 0 0 10px}
+#OBapp #appointments{min-height:400px}
+#OBapp #appointments #appts-intro{margin:0 0 10px}
+#OBapp #appointments #appts-search #appts-search-controls #aptts-search-tabs{margin-bottom:10px}
+#OBapp #appointments #appts-search #appts-search-controls #aptts-search-tabs .appts-control-tab-container{text-align:center}
+#OBapp #appointments #appts-search #appts-search-controls #aptts-search-tabs .appts-control-tab-container .appts-control-tab{cursor:pointer;padding:5px;margin:5px 0;position:relative;background:#cecece;font-size:16px}
+#OBapp #appointments #appts-search #appts-search-controls #aptts-search-tabs .appts-control-tab-container .appts-control-tab.selected{background-color:#A8A8A8;color:#fff}
+#OBapp #appointments #appts-search #appts-search-controls #aptts-search-tabs .appts-control-tab-container .appts-control-tab.selected:hover{background-color:#A8A8A8}
+#OBapp #appointments #appts-search #appts-search-controls #aptts-search-tabs .appts-control-tab-container .appts-control-tab.error{background-color:#ff5a5a;color:#fff}
+#OBapp #appointments #appts-search #appts-search-controls #aptts-search-tabs .appts-control-tab-container .appts-control-tab.error:hover{background-color:#ff5a5a}
+#OBapp #appointments #appts-search #appts-search-controls #aptts-search-tabs .appts-control-tab-container .appts-control-tab:hover{background-color:#cecece;transition:all .1s;-webkit-transition:all .1s;-moz-transition:all .1s}
+#OBapp #appointments #appts-search #appts-search-controls #aptts-search-tabs .appts-control-tab-container .appts-control-tab .tab-name{display:block}
+#OBapp #appointments #appts-search #appts-search-controls #aptts-search-tabs .appts-control-tab-container .appts-control-tab .tab-selection{font-size:20px;font-weight:500}
+#OBapp #appointments #appts-search #appts-search-controls #aptts-search-tabs .appts-control-tab-container .appts-control-tab .tab-icon{position:absolute;left:0;font-size:18px}
+@keyframes filterfetching{0%,100%{background:#cecece}50%{background:#b0b0b0}}
+#OBapp #appointments #appts-search #appts-search-controls #aptts-search-tabs .appts-control-tab-container .appts-control-tab.fetching{animation:filterfetching 1s infinite}
+#OBapp #appointments #appts-search #appts-search-controls #aptts-search-tabs .appts-control-tab-container:hover .appts-control-tab{background:#A8A8A8}
+#OBapp #appointments #appts-search #appts-search-controls #appts-search-display{position:relative;border-width:1px;border-color:#A8A8A8;border-style:solid;min-height:100px;padding:0 0 10px;margin-top:-5px;overflow-y:auto;overflow-x:hidden}
+#OBapp #appointments #appts-search #appts-search-controls #appts-search-display .loading .loading_wrapper{top:40%;width:200px}
+#OBapp #appointments #appts-search #appts-search-controls #appts-search-display .appt-control{position:relative;padding:10px 30px 10px 10px;font-size:17px;color:#4B4B4B;transition:all .1s;-webkit-transition:all .1s;-moz-transition:all .1s}
+#OBapp #appointments #appts-search #appts-search-controls #appts-search-display .appt-control:hover{cursor:pointer;transition:all .1s;-webkit-transition:all .1s;-moz-transition:all .1s;-webkit-box-shadow:inset 6px 0 0 -1px #cecece;-ms-box-shadow:inset 6px 0 0 -1px #cecece;-moz-box-shadow:inset 6px 0 0 -1px #cecece;-o-box-shadow:inset 6px 0 0 -1px #cecece;box-shadow:inset 6px 0 0 -1px #cecece}
+#OBapp #appointments #appts-search #appts-search-controls #appts-search-display .appt-control .name{display:inline-block;max-width:75%}
+#OBapp #appointments #appts-search #appts-search-controls #appts-search-display .appt-control .cost{display:inline-block;min-width:10%;max-width:15%;float:right;margin-right:20px;text-align:center;white-space:nowrap}
+#OBapp #appointments #appts-search #appts-search-controls #appts-search-display .appt-control .selected-icon{position:absolute;right:2%;top:10px;visibility:hidden;display:inline-block;height:25px;width:25px}
+#OBapp #appointments #appts-search #appts-search-controls #appts-search-display .appt-control.selected{color:#000;-webkit-box-shadow:inset 6px 0 0 -1px #A8A8A8;-ms-box-shadow:inset 6px 0 0 -1px #A8A8A8;-moz-box-shadow:inset 6px 0 0 -1px #A8A8A8;-o-box-shadow:inset 6px 0 0 -1px #A8A8A8;box-shadow:inset 6px 0 0 -1px #A8A8A8}
+#OBapp #appointments #appts-search #appts-search-controls #appts-search-display .appt-control.selected .selected-icon{visibility:visible}
+#OBapp #appointments #appts-search #appts-search-controls #appts-search-display .appt-control.disabled{color:#757575}
+#OBapp #appointments #appts-search #appts-search-controls #appts-search-display .appt-control.disabled:hover{padding:10px 25px 10px 10px;cursor:default;-webkit-box-shadow:none;-ms-box-shadow:none;-moz-box-shadow:none;-o-box-shadow:none;box-shadow:none}
+#OBapp #appointments #appts-search #appts-search-controls #appts-search-display .appt-control.disabled .disabled-reason{color:#A8A8A8;font-size:15px}
+#OBapp #appointments #appts-search #appts-search-button-container{text-align:center}
+#OBapp #appointments #appts-search #appts-search-button-container #view-results{margin:10px auto 0}
+#OBapp #appointments #appts-select #appts-select-heading{margin-bottom:10px;text-align:center;background:#f4f4f4}
+#OBapp #appointments #appts-select #appts-select-heading #selection-heading{display:inline-block}
+#OBapp #appointments #appts-select #appts-calendar{height:320px;margin:0 auto;float:none}
+#OBapp #appointments #appts-select #appts-calendar .loading{left:-10px;right:-10px}
+#OBapp #appointments #appts-select #appts-calendar .loading .loading_wrapper{top:80px;width:200px}
+#OBapp #appointments #appts-select #appts-calendar .loading .loading_bg{z-index:-1;background-color:rgba(255,255,255,.9)}
+#OBapp #appointments #appts-select #appts-calendar #appts-calendar-container{height:100%;max-width:300px;margin:0 auto;position:relative;z-index:0}
+#OBapp #appointments #appts-select #appts-calendar #appts-calendar-container #appts-calendar-controls{position:relative;width:100%;height:40px;text-align:center;margin:0 0 5px}
+#OBapp #appointments #appts-select #appts-calendar #appts-calendar-container #appts-calendar-controls #monthYear{font-size:1.3em}
+#OBapp #appointments #appts-select #appts-calendar #appts-calendar-container #appts-calendar-controls .calendarBtn{position:absolute;width:40px;height:40px;padding:2px 0;cursor:pointer;border:0;border-radius:0;background:#9ada9a}
+#OBapp #appointments #appts-select #appts-calendar #appts-calendar-container #appts-calendar-controls #nextMonth{top:0;right:0}
+#OBapp #appointments #appts-select #appts-calendar #appts-calendar-container #appts-calendar-controls #prevMonth{top:0;left:0}
+#OBapp #appointments #appts-select #appts-calendar #appts-calendar-container #appts-calendar-table-wrap{position:relative}
+#OBapp #appointments #appts-select #appts-calendar #appts-calendar-container #appts-noappts{position:absolute;top:0;bottom:0;right:0;left:0;font-size:1.3em;z-index:1;text-align:center;background:rgba(255,255,255,.6)}
+#OBapp #appointments #appts-select #appts-calendar #appts-calendar-container #appts-noappts #appts-noappts-text{position:absolute;top:80px;left:0;right:0;background-color:#fff}
+#OBapp #appointments #appts-select #appts-calendar #appts-calendar-container table{position:relative;width:100%;clear:both;table-layout:fixed;border-collapse:collapse;border-spacing:0;margin-bottom:0}
+#OBapp #appointments #appts-select #appts-calendar #appts-calendar-container th{font-size:.7em;color:#757575;border:none;text-align:center}
+#OBapp #appointments #appts-select #appts-calendar #appts-calendar-container td{font-size:.8em;line-height:1em;height:40px;width:40px;vertical-align:top;text-align:center;border:2px solid #fff}
+#OBapp #appointments #appts-select #appts-calendar #appts-calendar-container td,#OBapp #appointments #appts-select #appts-calendar #appts-calendar-container th{padding:0}
+#OBapp #appointments #appts-select #appts-calendar #appts-calendar-container .default{background:#fff;color:#757575}
+#OBapp #appointments #appts-select #appts-calendar #appts-calendar-container .weekend{color:#A8A8A8}
+#OBapp #appointments #appts-select #appts-calendar #appts-calendar-container .cDay{border-top:2px solid transparent;display:block;height:100%;width:100%;line-height:2em}
+#OBapp #appointments #appts-select #appts-calendar #appts-calendar-container .activeDay{background:#f4f4f4;color:#757575}
+#OBapp #appointments #appts-select #appts-calendar #appts-calendar-container .activeDay .cDay{position:relative;bottom:0;background:#9ada9a;cursor:pointer;transition:all .1s;-webkit-transition:all .1s;-moz-transition:all .1s}
+#OBapp #appointments #appts-select #appts-calendar #appts-calendar-container .activeDay:hover{background:#f4f4f4}
+#OBapp #appointments #appts-select #appts-calendar #appts-calendar-container .activeDay:hover .cDay{bottom:5px;-webkit-box-shadow:0 5px 5px 0 rgba(50,50,50,.5),0 0 0 1px rgba(50,50,50,.2);-ms-box-shadow:0 5px 5px 0 rgba(50,50,50,.5),0 0 0 1px rgba(50,50,50,.2);-moz-box-shadow:0 5px 5px 0 rgba(50,50,50,.5),0 0 0 1px rgba(50,50,50,.2);-o-box-shadow:0 5px 5px 0 rgba(50,50,50,.5),0 0 0 1px rgba(50,50,50,.2);box-shadow:0 5px 5px 0 rgba(50,50,50,.5),0 0 0 1px rgba(50,50,50,.2)}
+#OBapp #appointments #appts-select #appts-calendar #appts-calendar-container .fullDay{background:#FF6868!important}
+#OBapp #appointments #appts-select #appts-calendar #appts-calendar-container .fullDay .cDay{background:#FF6868!important;color:#cecece}
+#OBapp #appointments #appts-select #appts-calendar #appts-calendar-container .fullDay.selectedDay .cDay{color:#fff!important}
+#OBapp #appointments #appts-select #appts-calendar #appts-calendar-container .blockedDay{background:#FF8A8A;color:#757575}
+#OBapp #appointments #appts-select #appts-calendar #appts-calendar-container .selectedDay{background:#f4f4f4}
+#OBapp #appointments #appts-select #appts-calendar #appts-calendar-container .selectedDay .cDay{position:relative;bottom:5px;color:#000;background:#9ada9a;border-top:2px solid #fff;-webkit-box-shadow:0 5px 5px 0 rgba(50,50,50,.5),0 0 0 1px rgba(50,50,50,.2);-ms-box-shadow:0 5px 5px 0 rgba(50,50,50,.5),0 0 0 1px rgba(50,50,50,.2);-moz-box-shadow:0 5px 5px 0 rgba(50,50,50,.5),0 0 0 1px rgba(50,50,50,.2);-o-box-shadow:0 5px 5px 0 rgba(50,50,50,.5),0 0 0 1px rgba(50,50,50,.2);box-shadow:0 5px 5px 0 rgba(50,50,50,.5),0 0 0 1px rgba(50,50,50,.2)}
+#OBapp #appointments #appts-select #appts-calendar #appts-calendar-container .otherMonth{background:0 0;border-collapse:collapse;border:none;padding:0}
+#OBapp #appointments #appts-select #appts-calendar #appts-calendar-container .otherMonth .cDay{display:block;height:50%;width:45%;margin:4px auto;color:#cecece;line-height:1.2em}
+#OBapp #appointments #appts-list-wrapper{position:relative;height:auto;margin-top:10px;margin-bottom:20px}
+#OBapp #appointments #appts-list-wrapper #appts-list-heading{position:relative;padding:0 5px 5px;font-size:1.3em;text-align:center;background:#fff;z-index:1}
+#OBapp #appointments #appts-list-wrapper #appts-list-message{position:absolute;top:0;font-size:1.3em;text-align:center}
+#OBapp #appointments #appts-list-wrapper #appts-list-legend{font-size:18px;margin-top:20px}
+#OBapp #appointments #appts-list-wrapper #appts-list-legend .legend-span{display:inline-block;padding:0 4px 2px;color:#757575;background:#9ada9a}
+#OBapp #appointments #appts-list-wrapper #appts-list{position:relative;height:auto;min-height:100px;margin-bottom:10px;overflow-y:auto;overflow-x:hidden;visibility:hidden;border:1px solid #A8A8A8;background:#fff;max-height:400px}
+#OBapp #appointments #appts-list-wrapper #appts-list .appts-list-elem{position:relative;padding:5px 30px 5px 10px;cursor:pointer;color:#5b5b5b;transition:all .1s;-webkit-transition:all .1s;-moz-transition:all .1s}
+#OBapp #appointments #appts-list-wrapper #appts-list .appts-list-elem .appt-location{font-size:70%}
+#OBapp #appointments #appts-list-wrapper #appts-list .appts-list-elem .appt-checked{opacity:0;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";filter:alpha(Opacity=0);position:absolute;right:5px;top:20%;width:20px;font-size:17px}
+#OBapp #appointments #appts-list-wrapper #appts-list .appts-list-elem:hover{-webkit-box-shadow:inset 6px 0 0 -1px #cecece;-ms-box-shadow:inset 6px 0 0 -1px #cecece;-moz-box-shadow:inset 6px 0 0 -1px #cecece;-o-box-shadow:inset 6px 0 0 -1px #cecece;box-shadow:inset 6px 0 0 -1px #cecece}
+#OBapp #appointments #appts-list-wrapper #appts-list .appts-list-elem.fully-booked{color:#A8A8A8}
+#OBapp #appointments #appts-list-wrapper #appts-list .appts-list-elem.fully-booked:hover{cursor:default;-webkit-box-shadow:none;-ms-box-shadow:none;-moz-box-shadow:none;-o-box-shadow:none;box-shadow:none}
+#OBapp #appointments #appts-list-wrapper #appts-list .appts-list-elem.fully-booked .fully-booked-text{color:#FF6868;font-weight:500}
+#OBapp #appointments #appts-list-wrapper #appts-list .appts-list-elem.selected{color:#000;-webkit-box-shadow:inset 6px 0 0 -1px #A8A8A8;-ms-box-shadow:inset 6px 0 0 -1px #A8A8A8;-moz-box-shadow:inset 6px 0 0 -1px #A8A8A8;-o-box-shadow:inset 6px 0 0 -1px #A8A8A8;box-shadow:inset 6px 0 0 -1px #A8A8A8}
+#OBapp #appointments #appts-list-wrapper #appts-list .appts-list-elem.selected .appt-checked{opacity:1;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";filter:alpha(Opacity=100)}
+#OBapp #confirmation #additional-notes{width:100%;max-width:100%;max-height:75px}
+#OBapp #confirmation .details-block{border:1px solid #A8A8A8;-webkit-border-radius:5px;-ms-border-radius:5px;-moz-border-radius:5px;-o-border-radius:5px;border-radius:5px;padding:5px 10px}
+#OBapp .modal .content .inner-content,#OBapp .modal header{padding:10px}
+#OBapp #confirmation .details-block div{box-shadow:0 1px 0 #f4f4f4}
+#OBapp #confirmation .details-block .details-label{display:inline-block;width:29%;vertical-align:top;text-align:left;color:#5b5b5b;line-height:25px}
+.additional-notes{width:100%}
+#OBapp #confirmation .details-block .details-content{width:69%;vertical-align:top;text-align:right;display:inline-block;word-wrap:break-word;line-height:25px}
+#OBapp #expire_time_container,#OBapp .payment-btns,#OBapp p.error{text-align:center}
+#OBapp #confirmation #confirm-buttons{position:relative;margin:10px 0}
+#OBapp #confirmation #confirm-buttons #start-over{display:block;position:static;margin:10px auto 0}
+#OBapp #confirmation .loading{font-family:inherit}
+#OBapp .modal{position:fixed;background:#fff;border:2px solid #749ccb;left:300px;top:250px;display:none;z-index:100;max-width:70%}
+#OBapp .modal header:after{content:".";display:block;height:0;clear:both;visibility:hidden}
+#OBapp .modal header h2{margin:0;float:left}
+#OBapp .modal header a.modal-close{float:right;font-size:1.3em;margin-top:7px}
+#OBapp .modal .content{height:calc(100% - 63px);overflow:auto}
+#OBapp .payment-btns{width:338px;margin:0 auto}
+#OBapp .payment-btns .payment-option-btn{padding:15px 15px 10px;border:1px solid #325f94;text-decoration:none;border-radius:3px;display:block;text-indent:-9999px;float:left;margin-right:10px;width:127px}
+#OBapp .payment-btns .payment-option-btn.sagepay{color:#fff;background:url(/img/sagepay-logo.png) center 2px no-repeat #41A940;background-size:363px}
+#OBapp .payment-btns .payment-option-btn.sagepay:after{background:url(/img/sagepay-vertical.jpg);content:'';display:block;width:100px;height:89px;margin:10px auto 0}
+#OBapp .payment-btns .payment-option-btn.paypal{background:url(/img/paypal-logo.png) center 3px no-repeat #00457C;background-size:363px;color:#fff;height:119px}
+#OBapp .payment-btns .payment-option-btn.paypal:after{display:block;content:'';background:url(https://www.paypalobjects.com/webstatic/mktg/logo/bdg_secured_by_pp_2line.png);height:43px;background-size:127px;margin-top:28px}
+#OBapp #sage-pay-area{margin-top:24px;border:1px solid #a8a8a8;padding:10px;text-align:center;border-radius:3px}
+#OBapp p.error{background:#ff5a5a;padding:5px 10px;color:#fff;margin-bottom:12px;font-size:.9em}
+#OBapp .sagepay-form input,#OBapp .sagepay-form select{width:300px}
+@media (max-width:426px){
+    #privacy-notes-modal,#terms-modal{position:absolute;top:75%!important;left:50%!important;transform:translate(-50%,-50%);height:auto;width:100%}
+}
+@media (min-width:550px){
+    #OBapp,#OBapp #pagination .page-link{padding:10px}
+    #OBapp{width:100%}
+    #OBapp .fadeIn{-webkit-animation:justFade .4s;-moz-animation:justFade .4s;-ms-animation:justFade .4s;animation:justFade .4s}
+    #OBapp .fadeTop,#OBapp.fadeTop{-webkit-animation:fadeTop .3s;-moz-animation:fadeTop .3s;-ms-animation:fadeTop .3s;animation:fadeTop .3s}
+    #OBapp .fadeLeft{-webkit-animation:fadeLeft .3s;-moz-animation:fadeLeft .3s;-ms-animation:fadeLeft .3s;animation:fadeLeft .3s}
+    #OBapp .fadeRight{-webkit-animation:fadeRight .3s;-moz-animation:fadeRight .3s;-ms-animation:fadeRight .3s;animation:fadeRight .3s}
+    #OBapp button[type=submit]{width:auto}
+    #OBapp button[type=submit].submit-large{width:auto;min-width:275px;font-size:30px}
+    #OBapp button[type=submit].inline{margin:0}
+    #OBapp .heading{font-size:22px;font-weight:100}
+    #OBapp #app-error{font-size:18px}
+    #OBapp #details label{text-align:right}
+    #OBapp #details #details-form label.columns:first-child,#OBapp #details #details-loginbox label.columns:first-child{margin-left:4%}
+    #OBapp #appointments #appts-search #appts-search-controls #aptts-search-tabs{margin-bottom:10px}
+    #OBapp #appointments #appts-search #appts-search-controls #aptts-search-tabs .appts-control-tab{font-size:16px}
+    #OBapp #appointments #appts-search #appts-search-controls #appts-search-display{height:400px;max-height:none}
+    #OBapp #appointments #appts-search #appts-search-controls #appts-search-display .loading .loading_wrapper{width:300px}
+    #OBapp #appointments #appts-search #appts-search-criteria{border-top:1px solid #A8A8A8}
+    #OBapp #appointments #appts-search #appts-search-button-container #view-results{position:absolute;right:0;bottom:0}
+    #OBapp #appointments #appts-select #appts-calendar{float:left}
+    #OBapp #appointments #appts-list-wrapper{height:340px;margin-top:0;margin-bottom:0}
+    #OBapp #appointments #appts-list-wrapper #appts-list{height:300px}
+    #OBapp #confirmation #confirm-buttons #start-over{position:absolute;bottom:0;right:0;margin:0}
+    #privacy-notes-modal .content .inner-content button{display:block;height:auto;width:auto;max-width:100%;background:#4FBF4F;color:#fff;padding:10px;margin:0 auto;font-size:20px;text-transform:none;letter-spacing:normal;font-weight:100;line-height:inherit;white-space:nowrap;transition:all .1s;-webkit-transition:all .1s}
+}
