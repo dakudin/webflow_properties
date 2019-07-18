@@ -70,7 +70,7 @@ marketStatusArray.forEach( function(elem) {
 });
 
 var minPriceTxt = "Min Price";
-var containerEl = document.querySelector('.container');
+var containerEl = $('#mix-container');
 var minPriceRangeInput = document.querySelector('[name="minPrice"]');
 var maxPriceRangeInput = document.querySelector('[name="maxPrice"]');
 var marketTypeInput = document.querySelector('[name="marketType"]');
@@ -81,18 +81,21 @@ var salesPrices = {"0":minPriceTxt,"50000":"50,000","60000":"60,000","70000":"70
 var activePage = 1;
 var activeLimit = 8;
 var selectSort = document.querySelector('.sort_select');
-var mixer = mixitup(containerEl, {
+var mixerConfig = {
     load: {
         page: activePage
     },
     pagination: {
         limit: activeLimit
     },
+    controls: {
+        live: true
+    },
     callbacks: {
         onMixEnd: function(state) {
             $('.blog-count').text(state.totalMatching);
 
-            Webflow.require('slider').redraw();
+            /*            Webflow.require('slider').redraw();*/
 
             if (state.activePagination.limit === activeLimit && state.activePagination.page === activePage) return;
 
@@ -104,7 +107,8 @@ var mixer = mixitup(containerEl, {
             }, 800);
         }
     }
-});
+};
+
 
 function getRange() {
     var min = Number(minPriceRangeInput.value);
@@ -122,98 +126,104 @@ function getRange() {
     };
 }
 
-function handleRangeInputChange() {
-    mixer.filter(mixer.getState().activeFilter);
-}
-
-function handleMarketTypeInputChange() {
-    var type = String(marketTypeInput.value);
-
-    if(type == 'lettings'){
-        $('#breadcrumb-market').html('LETTINGS');
-        $('#breadcrumb-stoke').html('STOKE-ON-TRENT PROPERTY TO LET');
-        $('#page-header').html('Properties for Rent in Stoke-on-Trent');
-        $('#looking-property').html('LOOKING TO LET YOUR PROPERTY?');
-        changeOptions('minPrice', lettingPrices, true);
-        changeOptions('maxPrice', lettingPrices, false);
-        $('#label-exclude_sold').html('Exclude Let Agreed Properties');
-        $('#btn-book').attr('href', '/lettings-valuation');
-    }else{
-        if(type == 'sales'){
-            $('#breadcrumb-market').html('SALES');
-            $('#breadcrumb-stoke').html('STOKE-ON-TRENT PROPERTY FOR SALE');
-            $('#page-header').html('Properties for Sale in Stoke-on-Trent');
-            $('#looking-property').html('LOOKING TO SELL YOUR PROPERTY?');
-        }else{
-            $('#breadcrumb-market').html('AUCTIONS');
-            $('#breadcrumb-stoke').html('STOKE-ON-TRENT PROPERTY FOR AUCTION');
-            $('#page-header').html('Properties for Auction in Stoke-on-Trent');
-            $('#looking-property').html('LOOKING TO SELL YOUR PROPERTY?');
-        }
-        changeOptions('minPrice', salesPrices, true);
-        changeOptions('maxPrice', salesPrices, false);
-        $('#label-exclude_sold').html('Exclude Sold Properties');
-        $('#btn-book').attr('href', '/sales-valuation');
-    }
-
-    handleRangeInputChange();
-}
-
-function changeOptions(id, selectValues, isFirstSelected){
-    $('#'+id).find('option').remove();
-    $.each(selectValues, function(key, value) {
-        if(!(!isFirstSelected && key=='0')){
-            value = key == '0' ? value : "&pound;" + value;
-            $('#' + id).append($('<option>', {value: key}).html(value));
-        }
-    });
-
-    if(isFirstSelected)
-        $('#'+id).val($('#'+id+' option:first').val());
-    else
-        $('#'+id).val($('#'+id+' option:last').val());
-}
-
-function filterTestResult(testResult, target) {
-    var price = Number(target.dom.el.getAttribute('data-price'));
-    var type = String(target.dom.el.getAttribute('data-type'));
-    var bedroom = Number(target.dom.el.getAttribute('data-bedroom'));
-    var statusSold = Number(target.dom.el.getAttribute('data-status-sold'));
-    var range = getRange();
-
-    if(price>=range.min && price<=range.max && type==range.type
-        && (!range.excludeSold || (range.excludeSold && statusSold==0))
-        && (range.bedroom=='' || (Number(range.bedroom)==bedroom && bedroom>=0 && bedroom<5) || (range.bedroom=='5' && bedroom>=5))) {
-        return testResult;
-    }
-
-    return false;
-}
-
-mixitup.Mixer.registerFilter('testResultEvaluateHideShow', 'range', filterTestResult);
-minPriceRangeInput.addEventListener('change', handleRangeInputChange);
-maxPriceRangeInput.addEventListener('change', handleRangeInputChange);
-bedroomCountInput.addEventListener('change', handleRangeInputChange);
-excludeSoldInput.addEventListener('change', handleRangeInputChange);
-marketTypeInput.addEventListener('change', handleMarketTypeInputChange);
-
-handleMarketTypeInputChange();
-
-selectSort.addEventListener('change', function() {
-    var order = selectSort.value;
-    mixer.sort(order);
-});
 
 $(document).ready(function(){
     $('.category_icons.quickview1').each(function(){
         $(this).click(function(){
             setTimeout(function(){
-                Webflow.ready()
+//                Webflow.ready();
             },500);
         });
     });
 
     $('.w-condition-invisible.w-slide').remove();
+
+    var mixer = mixitup(containerEl, mixerConfig);
+
+    mixitup.Mixer.registerFilter('testResultEvaluateHideShow', 'range', filterTestResult);
+
+    function handleRangeInputChange() {
+        mixer.filter(mixer.getState().activeFilter);
+    }
+
+    function handleMarketTypeInputChange() {
+        var type = String(marketTypeInput.value);
+
+        if(type == 'lettings'){
+            $('#breadcrumb-market').html('LETTINGS');
+            $('#breadcrumb-stoke').html('STOKE-ON-TRENT PROPERTY TO LET');
+            $('#page-header').html('Properties for Rent in Stoke-on-Trent');
+            $('#looking-property').html('LOOKING TO LET YOUR PROPERTY?');
+            changeOptions('minPrice', lettingPrices, true);
+            changeOptions('maxPrice', lettingPrices, false);
+            $('#label-exclude_sold').html('Exclude Let Agreed Properties');
+            $('#btn-book').attr('href', '/lettings-valuation');
+        }else{
+            if(type == 'sales'){
+                $('#breadcrumb-market').html('SALES');
+                $('#breadcrumb-stoke').html('STOKE-ON-TRENT PROPERTY FOR SALE');
+                $('#page-header').html('Properties for Sale in Stoke-on-Trent');
+                $('#looking-property').html('LOOKING TO SELL YOUR PROPERTY?');
+            }else{
+                $('#breadcrumb-market').html('AUCTIONS');
+                $('#breadcrumb-stoke').html('STOKE-ON-TRENT PROPERTY FOR AUCTION');
+                $('#page-header').html('Properties for Auction in Stoke-on-Trent');
+                $('#looking-property').html('LOOKING TO SELL YOUR PROPERTY?');
+            }
+            changeOptions('minPrice', salesPrices, true);
+            changeOptions('maxPrice', salesPrices, false);
+            $('#label-exclude_sold').html('Exclude Sold Properties');
+            $('#btn-book').attr('href', '/sales-valuation');
+        }
+
+        handleRangeInputChange();
+    }
+
+    function changeOptions(id, selectValues, isFirstSelected){
+        $('#'+id).find('option').remove();
+        $.each(selectValues, function(key, value) {
+            if(!(!isFirstSelected && key=='0')){
+                value = key == '0' ? value : "&pound;" + value;
+                $('#' + id).append($('<option>', {value: key}).html(value));
+            }
+        });
+
+        if(isFirstSelected)
+            $('#'+id).val($('#'+id+' option:first').val());
+        else
+            $('#'+id).val($('#'+id+' option:last').val());
+    }
+
+    function filterTestResult(testResult, target) {
+        var price = Number(target.dom.el.getAttribute('data-price'));
+        var type = String(target.dom.el.getAttribute('data-type'));
+        var bedroom = Number(target.dom.el.getAttribute('data-bedroom'));
+        var statusSold = Number(target.dom.el.getAttribute('data-status-sold'));
+        var range = getRange();
+
+        if(price>=range.min && price<=range.max && type==range.type
+            && (!range.excludeSold || (range.excludeSold && statusSold==0))
+            && (range.bedroom=='' || (Number(range.bedroom)==bedroom && bedroom>=0 && bedroom<5) || (range.bedroom=='5' && bedroom>=5))) {
+            return testResult;
+        }
+
+        return false;
+    }
+
+    minPriceRangeInput.addEventListener('change', handleRangeInputChange);
+    maxPriceRangeInput.addEventListener('change', handleRangeInputChange);
+    bedroomCountInput.addEventListener('change', handleRangeInputChange);
+    excludeSoldInput.addEventListener('change', handleRangeInputChange);
+    marketTypeInput.addEventListener('change', handleMarketTypeInputChange);
+
+
+    selectSort.addEventListener('change', function() {
+        var order = selectSort.value;
+        mixer.sort(order);
+    });
+
+    handleMarketTypeInputChange();
+
 });
 
 </script>

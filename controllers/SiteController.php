@@ -66,7 +66,7 @@ class SiteController extends Controller
 
     public function actionSearch()
     {
-        return $this->render('search-result');
+        return $this->render('wf_search-result');
     }
 
     public function actionDetailpage()
