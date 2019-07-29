@@ -82,7 +82,6 @@ marketStatusArray.forEach( function(elem) {
 });
 
 var minPriceTxt = "Min Price";
-var containerEl = $('#mix-container');
 var minPriceRangeInput = document.querySelector('[name="minPrice"]');
 var maxPriceRangeInput = document.querySelector('[name="maxPrice"]');
 var marketTypeInput = document.querySelector('[name="marketType"]');
@@ -100,8 +99,16 @@ var mixerConfig = {
     pagination: {
         limit: activeLimit
     },
-    controls: {
-        live: true
+    classNames: {
+        block: 'mixitup',
+        elementToggle: 'toggle'
+    },
+    layout: {
+        allowNestedTargets: false
+    },
+    selectors: {
+        target: '.prop-item',
+        control: '.mixitup-control'
     },
     callbacks: {
         onMixEnd: function(state) {
@@ -125,53 +132,83 @@ var mixerConfig = {
 function getRange() {
     var min = Number(minPriceRangeInput.value);
     var max = Number(maxPriceRangeInput.value);
-    var type = String(marketTypeInput.value);
+    var marketType = String(marketTypeInput.value);
     var bedroom = String(bedroomCountInput.value);
     var excludeSoldChecked = $('input[name="exclude_sold"]:checked').length == 1;
 
     return {
         min: min,
         max: max,
-        type: type,
+        type: marketType,
         bedroom: bedroom,
         excludeSold: excludeSoldChecked
     };
 }
 
+function filterTestResult(testResult, target) {
+    var price = Number(target.dom.el.getAttribute('data-price'));
+    var propType = String(target.dom.el.getAttribute('data-type'));
+    var bedroom = Number(target.dom.el.getAttribute('data-bedroom'));
+    var statusSold = Number(target.dom.el.getAttribute('data-status-sold'));
+    var range = getRange();
+
+    if(price>=range.min && price<=range.max && propType==range.type
+        && (!range.excludeSold || (range.excludeSold && statusSold==0))
+        && (range.bedroom=='' || (Number(range.bedroom)==bedroom && bedroom>=0 && bedroom<5) || (range.bedroom=='5' && bedroom>=5))) {
+        return testResult;
+    }
+
+    return false;
+}
+
+function changeFltrOptions(id, selectValues, isFirstSelected){
+    $('#'+id).find('option').remove();
+    $.each(selectValues, function(key, value) {
+        if(!(!isFirstSelected && key=='0')){
+            value = key == '0' ? value : "&pound;" + value;
+            $('#' + id).append($('<option>', {value: key}).html(value));
+        }
+    });
+
+    if(isFirstSelected)
+        $('#'+id).val($('#'+id+' option:first').val());
+    else
+        $('#'+id).val($('#'+id+' option:last').val());
+}
+
 
 $(document).ready(function(){
+/*
     $('.category_icons.quickview1').each(function(){
         $(this).click(function(){
             setTimeout(function(){
-//                Webflow.ready();
+                Webflow.ready();
             },500);
         });
     });
-
+*/
     $('.w-condition-invisible.w-slide').remove();
 
-    var mixer = mixitup(containerEl, mixerConfig);
-
-    mixitup.Mixer.registerFilter('testResultEvaluateHideShow', 'range', filterTestResult);
+    var mixerObj = mixitup('#mix-container', mixerConfig);
 
     function handleRangeInputChange() {
-        mixer.filter(mixer.getState().activeFilter);
+        mixerObj.filter(mixerObj.getState().activeFilter);
     }
 
     function handleMarketTypeInputChange() {
-        var type = String(marketTypeInput.value);
+        var marketStatusType = String(marketTypeInput.value);
 
-        if(type == 'lettings'){
+        if(marketStatusType == 'lettings'){
             $('#breadcrumb-market').html('LETTINGS');
             $('#breadcrumb-stoke').html('STOKE-ON-TRENT PROPERTY TO LET');
             $('#page-header').html('Properties for Rent in Stoke-on-Trent');
             $('#looking-property').html('LOOKING TO LET YOUR PROPERTY?');
-            changeOptions('minPrice', lettingPrices, true);
-            changeOptions('maxPrice', lettingPrices, false);
+            changeFltrOptions('minPrice', lettingPrices, true);
+            changeFltrOptions('maxPrice', lettingPrices, false);
             $('#label-exclude_sold').html('Exclude Let Agreed Properties');
             $('#btn-book').attr('href', '/lettings-valuation');
         }else{
-            if(type == 'sales'){
+            if(marketStatusType == 'sales'){
                 $('#breadcrumb-market').html('SALES');
                 $('#breadcrumb-stoke').html('STOKE-ON-TRENT PROPERTY FOR SALE');
                 $('#page-header').html('Properties for Sale in Stoke-on-Trent');
@@ -182,44 +219,13 @@ $(document).ready(function(){
                 $('#page-header').html('Properties for Auction in Stoke-on-Trent');
                 $('#looking-property').html('LOOKING TO SELL YOUR PROPERTY?');
             }
-            changeOptions('minPrice', salesPrices, true);
-            changeOptions('maxPrice', salesPrices, false);
+            changeFltrOptions('minPrice', salesPrices, true);
+            changeFltrOptions('maxPrice', salesPrices, false);
             $('#label-exclude_sold').html('Exclude Sold Properties');
             $('#btn-book').attr('href', '/sales-valuation');
         }
 
         handleRangeInputChange();
-    }
-
-    function changeOptions(id, selectValues, isFirstSelected){
-        $('#'+id).find('option').remove();
-        $.each(selectValues, function(key, value) {
-            if(!(!isFirstSelected && key=='0')){
-                value = key == '0' ? value : "&pound;" + value;
-                $('#' + id).append($('<option>', {value: key}).html(value));
-            }
-        });
-
-        if(isFirstSelected)
-            $('#'+id).val($('#'+id+' option:first').val());
-        else
-            $('#'+id).val($('#'+id+' option:last').val());
-    }
-
-    function filterTestResult(testResult, target) {
-        var price = Number(target.dom.el.getAttribute('data-price'));
-        var type = String(target.dom.el.getAttribute('data-type'));
-        var bedroom = Number(target.dom.el.getAttribute('data-bedroom'));
-        var statusSold = Number(target.dom.el.getAttribute('data-status-sold'));
-        var range = getRange();
-
-        if(price>=range.min && price<=range.max && type==range.type
-            && (!range.excludeSold || (range.excludeSold && statusSold==0))
-            && (range.bedroom=='' || (Number(range.bedroom)==bedroom && bedroom>=0 && bedroom<5) || (range.bedroom=='5' && bedroom>=5))) {
-            return testResult;
-        }
-
-        return false;
     }
 
     minPriceRangeInput.addEventListener('change', handleRangeInputChange);
@@ -231,8 +237,11 @@ $(document).ready(function(){
 
     selectSort.addEventListener('change', function() {
         var order = selectSort.value;
-        mixer.sort(order);
+        mixerObj.sort(order);
     });
+
+    mixitup.Mixer.registerFilter('testResultEvaluateHideShow', 'range', filterTestResult);
+
 
     handleMarketTypeInputChange();
 

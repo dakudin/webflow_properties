@@ -1044,7 +1044,7 @@
             if (typeof self.config.pagination.maxPagers === 'number') {
                 // Restrict max pagers to a minimum of 5. There must always
                 // be a first, last, and one on either side of the active pager.
-                // e.g. « 1 ... 4 5 6 ... 10 »
+                // e.g. Â« 1 ... 4 5 6 ... 10 Â»
 
                 self.config.pagination.maxPagers = Math.max(5, self.config.pagination.maxPagers);
             }
@@ -1571,14 +1571,14 @@
 
                 // Examples:
 
-                // « 1 2 *3* 4 5 »                  maxPagers = 5
-                // « 1 ... 4 *5* 6 ... 10 »         maxPagers = 5
+                // Â« 1 2 *3* 4 5 Â»                  maxPagers = 5
+                // Â« 1 ... 4 *5* 6 ... 10 Â»         maxPagers = 5
 
-                // « 1 ... 6 7 *8* 9 10 »           maxPagers = 6
-                // « 1 ... 3 4 *5* 6 ... 10 »       maxPagers = 6
+                // Â« 1 ... 6 7 *8* 9 10 Â»           maxPagers = 6
+                // Â« 1 ... 3 4 *5* 6 ... 10 Â»       maxPagers = 6
 
-                // « 1 ... 3 4 *5* 6 7 ... 10 »     maxPagers = 7
-                // « *1* 2 3 4 5 6 ... 10 »         maxPagers = 7
+                // Â« 1 ... 3 4 *5* 6 7 ... 10 Â»     maxPagers = 7
+                // Â« *1* 2 3 4 5 6 ... 10 Â»         maxPagers = 7
 
                 // This algorithm ensures that at any time, the active pager
                 // should be surrounded by as many "padding" pagers as possible to equal the
