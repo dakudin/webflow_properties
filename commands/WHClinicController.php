@@ -51,16 +51,20 @@ class WHClinicController extends Controller
         return ExitCode::OK;
     }
 
+    /*
+     *  get reviews by via web client authentication
+     */
     protected function refreshReviews3()
     {
         $client = new \Google_Client();
 
-        $client->setClientId(Yii::$app->params['white_house_clinic']['google_mybusiness_api_client_id']);
-        $client->setClientSecret(Yii::$app->params['white_house_clinic']['google_mybusiness_api_client_secret']);
+        $gmb = Yii::$app->params['white_house_clinic']['GMB_API']['web_client'];
+        $client->setClientId($gmb['client_id']);
+        $client->setClientSecret($gmb['client_secret']);
 
         $client->addScope("https://www.googleapis.com/auth/plus.business.manage");
-        $client->setSubject(Yii::$app->params['white_house_clinic']['google_mybusiness_api_account_email']);
-        $client->refreshToken('1/Fa7O3S_fWNwqYBdKXQKrSR-lsK00zMx-WoPCdewTTNo');
+        $client->setSubject(Yii::$app->params['white_house_clinic']['account_email']);
+        $client->refreshToken($gmb['refresh_token']);
 
         $mybusinessService = new \Google_Service_MyBusiness($client);
 
@@ -89,50 +93,65 @@ class WHClinicController extends Controller
 
     protected function refreshReviews2()
     {
-        $accounts = [
-            'email' => 'jasonhoward@whitehouse-clinic.co.uk',
-            'refresh_token' => '1/Fa7O3S_fWNwqYBdKXQKrSR-lsK00zMx-WoPCdewTTNo'
-            ];
+        $gmb = Yii::$app->params['white_house_clinic']['GMB_API'];
 
         /*$accounts previously populate*/
         /*(GMB - v4)*/
-        $credentials_f = Yii::$app->params['white_house_clinic']['google_mybusiness_api_credential'];
+        $credentials_f = $gmb['credential'];
         $client = new \Google_Client();
-        $client->setApplicationName(Yii::$app->params['white_house_clinic']['google_mybusiness_api_application_name']);
-        $client->setDeveloperKey(Yii::$app->params['white_house_clinic']['google_mybusiness_api_developer_key']);
+        $client->setApplicationName($gmb['application_name']);
+        $client->setDeveloperKey($gmb['developer_key']);
         $client->setAuthConfig($credentials_f);
         $client->setScopes("https://www.googleapis.com/auth/plus.business.manage");
-        $client->setSubject($accounts['email'] );
-        $token = $client->refreshToken($accounts['refresh_token']);
+        $client->setSubject($gmb['web_client']['account_email']);
+        $token = $client->refreshToken($gmb['web_client']['refresh_token']);
         $client->authorize();
 
         $mybusinessService = new \Google_Service_Mybusiness($client);
 
         $locationName = "accounts/#######/locations/########";
         $accounts = $mybusinessService->accounts;
-        $accountList = $accounts->listAccounts();
-        var_dump($accountList);
-        die;
+        $accountsList = $accounts->listAccounts()->getAccounts();
+        $params = ['pageSize' => 100];
 
-        $reviews = $mybusinessService->accounts_locations_reviews;
+        foreach ($accountsList as $accKey => $account) {
+//            var_dump('$account->name', $account->name);
 
-        do{
-            $listReviewsResponse = $reviews->listAccountsLocationsReviews($locationName, array('pageSize' => 100,
-                'pageToken' => $listReviewsResponse->nextPageToken));
+            $locations = $mybusinessService->accounts_locations;
+            $locationsList = $locations->listAccountsLocations($account->name)->getLocations();
+//            var_dump('$locationsList', $locationsList);
 
-            $reviewsList = $listReviewsResponse->getReviews();
-            foreach ($reviewsList as $index => $review) {
-                //Accesing $review Object
-//                $review->createTime;
-//                $review->updateTime;
-//                $review->starRating;
-//                $review->reviewer->displayName;
-//                $review->reviewReply->comment;
-//                $review->getReviewReply()->getComment();
-//                $review->getReviewReply()->getUpdateTime();
+
+            // Final Goal of my Code
+            if (empty($locationsList) === false) {
+                foreach ($locationsList as $locKey => $location) {
+
+                    $reviews = $mybusinessService->accounts_locations_reviews;
+
+                    do {
+                        if(isset($nextPageToken)){
+                            $params['pageToken'] = $nextPageToken;
+                        }
+                        $listReviewsResponse = $reviews->listAccountsLocationsReviews($location->name, $params);
+
+                        $reviewsList = $listReviewsResponse->getReviews();
+                        foreach ($reviewsList as $index => $review) {
+                            //Accesing $review Object
+                            //                $review->createTime;
+                            //                $review->updateTime;
+                            //                $review->starRating;
+                            echo                $review->reviewer->displayName . "\r\n";
+                            //                $review->reviewReply->comment;
+                            //                $review->getReviewReply()->getComment();
+                            //                $review->getReviewReply()->getUpdateTime();
+                        }
+
+                        $nextPageToken = $listReviewsResponse->nextPageToken;
+
+                    } while ($listReviewsResponse->nextPageToken);
+                }
             }
-
-        }while($listReviewsResponse->nextPageToken);
+        }
     }
 
     /**
@@ -141,11 +160,12 @@ class WHClinicController extends Controller
     protected function refreshReviews()
     {
         $pageNumber = 0;
+        $gmb = Yii::$app->params['white_house_clinic']['GMB_API'];
 
         $client = new \Google_Client();
-        putenv('GOOGLE_APPLICATION_CREDENTIALS=' . Yii::$app->params['white_house_clinic']['google_mybusiness_api_credential']);
-        $client->setApplicationName(Yii::$app->params['white_house_clinic']['google_mybusiness_api_application_name']);
-        $client->setDeveloperKey(Yii::$app->params['white_house_clinic']['google_mybusiness_api_developer_key']);
+        putenv('GOOGLE_APPLICATION_CREDENTIALS=' . $gmb['credential']);
+        $client->setApplicationName($gmb['application_name']);
+        $client->setDeveloperKey($gmb['developer_key']);
         $client->useApplicationDefaultCredentials();
         $client->addScope('https://www.googleapis.com/auth/plus.business.manage');
         $gmb = new \Google_Service_MyBusiness( $client );
