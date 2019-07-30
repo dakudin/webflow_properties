@@ -19,7 +19,7 @@ class WHClinicController extends Controller
     /**
      * @var int Number of reviews for getting from Google API
      */
-    private $reviewsPerPage = 10;
+    private $reviewsPerPage = 100;
 
     /**
      * @var WFReviewWorker worker for manipulate WebFlow API.
@@ -27,12 +27,11 @@ class WHClinicController extends Controller
     protected $WFReviewWorker;
 
     /**
-     * This command parse properties from Dezred feed and store to WebFlow site via API
+     * This command parse properties from Google My Business and store to WebFlow site via API
      * @return int Exit code
      */
     public function actionIndex()
     {
-/*
         $this->WFReviewWorker = new WFReviewWorker(
             Yii::$app->params['white_house_clinic']['webflow_api_key'],
             Yii::$app->params['white_house_clinic']['webflow_review_collection'],
@@ -40,10 +39,10 @@ class WHClinicController extends Controller
         );
 
         //load all old reviews
-        $this->WFReviewWorker->loadAllReviews();*/
+        $this->WFReviewWorker->loadAllReviews();
 
         // update reviews and insert new ones
-        $this->refreshReviews3();
+        $this->refreshReviews();
 
         //delete not exists reviews from WebFlow collection
 //        $this->WFReviewWorker->deleteOldReviews();
@@ -54,7 +53,7 @@ class WHClinicController extends Controller
     /*
      *  get reviews by via web client authentication
      */
-    protected function refreshReviews3()
+    protected function refreshReviews()
     {
         $client = new \Google_Client();
 
@@ -66,17 +65,17 @@ class WHClinicController extends Controller
         $client->setSubject($gmb['account_email']);
         $client->refreshToken($gmb['refresh_token']);
 
-        $mybusinessService = new \Google_Service_MyBusiness($client);
+        $myBusinessService = new \Google_Service_MyBusiness($client);
 
-        $accounts = $mybusinessService->accounts;
+/*        $accounts = $mybusinessService->accounts;
         $accountsList = $accounts->listAccounts()->getAccounts();
 
         foreach ($accountsList as $accKey => $account) {
-            var_dump('$account->name', $account->name);
+//            var_dump('$account->name', $account->name);
 
             $locations = $mybusinessService->accounts_locations;
             $locationsList = $locations->listAccountsLocations($account->name)->getLocations();
-            var_dump('$locationsList', $locationsList);
+//            var_dump('$locationsList', $locationsList);
 
 
             // Final Goal of my Code
@@ -88,7 +87,51 @@ class WHClinicController extends Controller
                     var_dump('$reviewsList', $reviewsList);
                 }
             }
+        }*/
+        $accounts = $myBusinessService->accounts;
+        $accountsList = $accounts->listAccounts()->getAccounts();
+        $params = ['pageSize' => 100];
+
+        foreach ($accountsList as $accKey => $account) {
+//            var_dump('$account->name', $account->name);
+
+            $locations = $myBusinessService->accounts_locations;
+            $locationsList = $locations->listAccountsLocations($account->name)->getLocations();
+//            var_dump('$locationsList', $locationsList);
+
+
+            // Final Goal of my Code
+            if (empty($locationsList) === false) {
+                foreach ($locationsList as $locKey => $location) {
+
+                    $reviews = $myBusinessService->accounts_locations_reviews;
+
+                    do {
+                        if(isset($nextPageToken)){
+                            $params['pageToken'] = $nextPageToken;
+                        }
+                        $listReviewsResponse = $reviews->listAccountsLocationsReviews($location->name, $params);
+
+                        $reviewsList = $listReviewsResponse->getReviews();
+                        foreach ($reviewsList as $index => $review) {
+                            //Accesing $review Object
+                            $review->
+                            echo                $review->createTime;
+                            echo                $review->updateTime;
+                            echo                $review->starRating;
+                            echo                $review->reviewer->displayName . "\r\n";
+                            echo                $review->reviewReply->comment;
+                            //                $review->getReviewReply()->getComment();
+                            //                $review->getReviewReply()->getUpdateTime();
+                        }
+
+                        $nextPageToken = $listReviewsResponse->nextPageToken;
+
+                    } while ($listReviewsResponse->nextPageToken);
+                }
+            }
         }
+
     }
 
     protected function refreshReviews2()
@@ -157,7 +200,7 @@ class WHClinicController extends Controller
     /**
      * Get all properties from Google My Business and store their to WebFlow
      */
-    protected function refreshReviews()
+    protected function refreshReviewsSA()
     {
         $pageNumber = 0;
         $gmb = Yii::$app->params['white_house_clinic']['GMB_API'];
@@ -183,8 +226,8 @@ class WHClinicController extends Controller
     {
         foreach($reviews as $review){
             if($review instanceof GoogleReview) {
-                if(!$this->WFPropertyWorker->storeProperty($review)){
-                    echo "Error Dezrez: Cannot store property \r\n";
+                if(!$this->WFReviewWorker->storeReview($review)){
+                    echo "Error GMB: Cannot store review \r\n";
                     var_dump($review);
                 }
             }
