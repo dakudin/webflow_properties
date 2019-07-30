@@ -63,7 +63,7 @@ class WHClinicController extends Controller
         $client->setClientSecret($gmb['client_secret']);
 
         $client->addScope("https://www.googleapis.com/auth/plus.business.manage");
-        $client->setSubject(Yii::$app->params['white_house_clinic']['account_email']);
+        $client->setSubject($gmb['account_email']);
         $client->refreshToken($gmb['refresh_token']);
 
         $mybusinessService = new \Google_Service_MyBusiness($client);
