@@ -87,11 +87,12 @@ class GMyBusinessClient extends Component
             $reviewsList = $listReviewsResponse->getReviews();
             foreach ($reviewsList as $index => $review) {
                 //Accessing $review Object
-                echo                $review->createTime . "\r\n";
-                echo                $review->updateTime . "\r\n";
-                echo                $review->starRating . "\r\n";
-                echo                $review->reviewer->displayName . "\r\n";
-                echo                $review->reviewReply->comment . "\r\n";
+                echo $review->reviewId;
+                echo $review->reviewer->displayName . "\r\n";
+                echo $review->starRating . "\r\n";
+                echo $review->comment . "\r\n";
+                echo $review->createTime . "\r\n";
+
                 //                $review->getReviewReply()->getComment();
                 //                $review->getReviewReply()->getUpdateTime();
                 echo                "==============================\r\n";
