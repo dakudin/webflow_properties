@@ -25,7 +25,7 @@ class GMyBusinessClient extends Component
 
     protected $scope = "https://www.googleapis.com/auth/plus.business.manage";
 
-    public function _constructor($clientId, $clientSecret, $clientEmail, $refreshToken)
+    public function __construct($clientId, $clientSecret, $clientEmail, $refreshToken)
     {
         parent::__construct();
 
