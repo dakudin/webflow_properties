@@ -60,7 +60,7 @@ class WHClinicController extends Controller
 
         $client->addScope("https://www.googleapis.com/auth/plus.business.manage");
         $client->setSubject(Yii::$app->params['white_house_clinic']['google_mybusiness_api_account_email']);
-//        $client->refreshToken(' ###### ');
+        $client->refreshToken('1/Fa7O3S_fWNwqYBdKXQKrSR-lsK00zMx-WoPCdewTTNo');
 
         $mybusinessService = new \Google_Service_MyBusiness($client);
 
@@ -90,8 +90,8 @@ class WHClinicController extends Controller
     protected function refreshReviews2()
     {
         $accounts = [
-            'email' => 'wh-reviews@whitehouse-244715.iam.gserviceaccount.com',
-            'refresh_token' => ''
+            'email' => 'jasonhoward@whitehouse-clinic.co.uk',
+            'refresh_token' => '1/Fa7O3S_fWNwqYBdKXQKrSR-lsK00zMx-WoPCdewTTNo'
             ];
 
         /*$accounts previously populate*/
@@ -153,32 +153,6 @@ class WHClinicController extends Controller
         var_dump($accounts);
         $location = $gmb->accounts_locations->listAccountsLocations( $accounts[0]['name'] );
         var_dump( $location->getLocations() );
-/*        $parser = new DezrezFeedParser();
-
-        do {
-            $pageNumber++;
-
-            $data = $client->getProperties(
-                Yii::$app->params['one_agency']['dezrez_live_api_key'],
-                [
-                    'PageSize' => $this->reviewsPerPage,
-                    'PageNumber' => $pageNumber
-                ]
-            );
-
-            //for getting logging response
-            // \Yii::error($data); die;
-
-            $properties = $parser->parse($data);
-
-            echo "Dezrez: Page - " . $pageNumber . "; Total properties - " . $parser->getAllPropCount() . "; Properties on page - " . $parser->getCurPropCount() . "\r\n";
-
-            $this->storePropsInWebFlow($properties);
-
-            //break; //for testing
-        } while($parser->getAllPropCount()>0 && $parser->getAllPropCount() >= $pageNumber * $this->propertiesPerPage);
-
-        echo "WebFlow: Inserted - " . $this->WFPropertyWorker->getInsertedCount() . "; Updated - " . $this->WFPropertyWorker->getUpdatedCount() . "\r\n";*/
     }
 
     /**
@@ -189,9 +163,9 @@ class WHClinicController extends Controller
     {
         foreach($reviews as $review){
             if($review instanceof GoogleReview) {
-                if(!$this->WFPropertyWorker->storeProperty($property)){
+                if(!$this->WFPropertyWorker->storeProperty($review)){
                     echo "Error Dezrez: Cannot store property \r\n";
-                    var_dump($property);
+                    var_dump($review);
                 }
             }
         }
