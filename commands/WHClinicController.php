@@ -8,6 +8,7 @@
 
 namespace app\commands;
 
+use app\components\GMyBusinessClient;
 use Yii;
 use yii\console\Controller;
 use app\models\GoogleReview;
@@ -55,6 +56,16 @@ class WHClinicController extends Controller
      */
     protected function refreshReviews()
     {
+        $gmb = Yii::$app->params['white_house_clinic']['GMB_API']['web_client'];
+        $gmbClient = new GMyBusinessClient(
+            $gmb['client_id'],
+            $gmb['client_secret'],
+            $gmb['account_email'],
+            $gmb['refresh_token']
+        );
+
+        $gmbClient->getAllReviews();
+/*
         $client = new \Google_Client();
 
         $gmb = Yii::$app->params['white_house_clinic']['GMB_API']['web_client'];
@@ -67,7 +78,7 @@ class WHClinicController extends Controller
 
         $myBusinessService = new \Google_Service_MyBusiness($client);
 
-/*        $accounts = $mybusinessService->accounts;
+        $accounts = $mybusinessService->accounts;
         $accountsList = $accounts->listAccounts()->getAccounts();
 
         foreach ($accountsList as $accKey => $account) {
@@ -88,49 +99,6 @@ class WHClinicController extends Controller
                 }
             }
         }*/
-        $accounts = $myBusinessService->accounts;
-        $accountsList = $accounts->listAccounts()->getAccounts();
-        $params = ['pageSize' => 100];
-
-        foreach ($accountsList as $accKey => $account) {
-//            var_dump('$account->name', $account->name);
-
-            $locations = $myBusinessService->accounts_locations;
-            $locationsList = $locations->listAccountsLocations($account->name)->getLocations();
-//            var_dump('$locationsList', $locationsList);
-
-
-            // Final Goal of my Code
-            if (empty($locationsList) === false) {
-                foreach ($locationsList as $locKey => $location) {
-
-                    $reviews = $myBusinessService->accounts_locations_reviews;
-
-                    do {
-                        if(isset($nextPageToken)){
-                            $params['pageToken'] = $nextPageToken;
-                        }
-                        $listReviewsResponse = $reviews->listAccountsLocationsReviews($location->name, $params);
-
-                        $reviewsList = $listReviewsResponse->getReviews();
-                        foreach ($reviewsList as $index => $review) {
-                            //Accesing $review Object
-                            $review->
-                            echo                $review->createTime;
-                            echo                $review->updateTime;
-                            echo                $review->starRating;
-                            echo                $review->reviewer->displayName . "\r\n";
-                            echo                $review->reviewReply->comment;
-                            //                $review->getReviewReply()->getComment();
-                            //                $review->getReviewReply()->getUpdateTime();
-                        }
-
-                        $nextPageToken = $listReviewsResponse->nextPageToken;
-
-                    } while ($listReviewsResponse->nextPageToken);
-                }
-            }
-        }
 
     }
 

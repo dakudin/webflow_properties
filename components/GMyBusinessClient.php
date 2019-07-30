@@ -27,11 +27,11 @@ class GMyBusinessClient extends Component
 
     public function _constructor($clientId, $clientSecret, $clientEmail, $refreshToken)
     {
-        $this->client = new \Google_Client();
+        parent::__construct();
 
+        $this->client = new \Google_Client();
         $this->client->setClientId($clientId);
         $this->client->setClientSecret($clientSecret);
-
         $this->client->addScope($this->scope);
         $this->client->setSubject($clientEmail);
         $this->client->refreshToken($refreshToken);
@@ -40,53 +40,66 @@ class GMyBusinessClient extends Component
     /*
      *  get reviews by via web client authentication
      */
-    protected function refreshReviews()
+    public function getAllReviews()
     {
 
         $this->myBusinessService = new \Google_Service_MyBusiness($this->client);
+        $this->refreshAccounts();
+    }
+
+    protected function refreshAccounts()
+    {
         $accounts = $this->myBusinessService->accounts;
         $accountsList = $accounts->listAccounts()->getAccounts();
-        $params = ['pageSize' => 100];
 
         foreach ($accountsList as $accKey => $account) {
 //            var_dump('$account->name', $account->name);
+            $this->refreshLocations($account);
+        }
+    }
 
-            $locations = $this->myBusinessService->accounts_locations;
-            $locationsList = $locations->listAccountsLocations($account->name)->getLocations();
+    protected function refreshLocations($account)
+    {
+        $locations = $this->myBusinessService->accounts_locations;
+        $locationsList = $locations->listAccountsLocations($account->name)->getLocations();
 //            var_dump('$locationsList', $locationsList);
 
-
-            // Final Goal of my Code
-            if (empty($locationsList) === false) {
-                foreach ($locationsList as $locKey => $location) {
-
-                    $reviews = $this->myBusinessService->accounts_locations_reviews;
-
-                    do {
-                        if(isset($nextPageToken)){
-                            $params['pageToken'] = $nextPageToken;
-                        }
-                        $listReviewsResponse = $reviews->listAccountsLocationsReviews($location->name, $params);
-
-                        $reviewsList = $listReviewsResponse->getReviews();
-                        foreach ($reviewsList as $index => $review) {
-                            //Accesing $review Object
-                            $review->
-                            echo                $review->createTime;
-                            echo                $review->updateTime;
-                            echo                $review->starRating;
-                            echo                $review->reviewer->displayName . "\r\n";
-                            echo                $review->reviewReply->comment;
-                            //                $review->getReviewReply()->getComment();
-                            //                $review->getReviewReply()->getUpdateTime();
-                        }
-
-                        $nextPageToken = $listReviewsResponse->nextPageToken;
-
-                    } while ($listReviewsResponse->nextPageToken);
-                }
+        if (empty($locationsList) === false) {
+            foreach ($locationsList as $locKey => $location) {
+                $this->refreshReviews($location);
             }
         }
+
+    }
+
+    protected function refreshReviews($location)
+    {
+        $params = ['pageSize' => 100];
+
+        $reviews = $this->myBusinessService->accounts_locations_reviews;
+
+        do {
+            if(isset($nextPageToken)){
+                $params['pageToken'] = $nextPageToken;
+            }
+            $listReviewsResponse = $reviews->listAccountsLocationsReviews($location->name, $params);
+
+            $reviewsList = $listReviewsResponse->getReviews();
+            foreach ($reviewsList as $index => $review) {
+                //Accessing $review Object
+                echo                $review->createTime . "\r\n";
+                echo                $review->updateTime . "\r\n";
+                echo                $review->starRating . "\r\n";
+                echo                $review->reviewer->displayName . "\r\n";
+                echo                $review->reviewReply->comment . "\r\n";
+                //                $review->getReviewReply()->getComment();
+                //                $review->getReviewReply()->getUpdateTime();
+                echo                "==============================\r\n";
+            }
+
+            $nextPageToken = $listReviewsResponse->nextPageToken;
+
+        } while ($listReviewsResponse->nextPageToken);
 
     }
 
