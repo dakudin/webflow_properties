@@ -116,7 +116,7 @@ class WFReviewWorkerBase extends WFWorkerBase
     }
 
     /**
-     * Store item as property in WebFlow collection (detect if it need to insert or update)
+     * Store item as review in WebFlow collection (detect if it need to insert or update)
      * @param GoogleReview $review
      * @return bool
      */
@@ -137,7 +137,7 @@ class WFReviewWorkerBase extends WFWorkerBase
             $isInserted = true;
         }
 
-        // if WebFlow cannot store property
+        // if WebFlow cannot store review
         if (array_key_exists($this->fieldId, $wfItem) === FALSE) {
             $success = false;
         }

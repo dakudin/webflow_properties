@@ -36,14 +36,15 @@ class WFReviewWorker extends WFReviewWorkerBase
      */
     protected function fillReview(GoogleReview $review, $googleReviewId)
     {
+        $commentInOneLine = str_replace(["\r","\n"], '', $review->comment);
         $item = [
             '_archived' => false,
             '_draft' => false,
             'review-id' => $googleReviewId,
             'stars' => static::getWFStarByGoogleStar($review->starRating),
             'review-full-text' => $review->comment,
-            'review-text-desktop' => StringHelper::truncate($review->comment, static::$reviewDesktopLength, '...'),
-            'review-text-mobile' => StringHelper::truncate($review->comment, static::$reviewMobileLength, '...'),
+            'review-text-desktop' => StringHelper::truncate($commentInOneLine, static::$reviewDesktopLength, '...'),
+            'review-text-mobile' => StringHelper::truncate($commentInOneLine, static::$reviewMobileLength, '...'),
             'creation-date' => $review->createTime, //\DateTime::createFromFormat('Y-m-d\TH:i:s.uP', $review->createTime)->format('m/d/Y'),
             'clinic-location' => $review->locationName,
             'location-address' => $review->locationAddress,
