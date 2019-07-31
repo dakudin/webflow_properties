@@ -23,7 +23,7 @@ class GoogleReview extends Model
 
     public $reviewerName;
 
-    public $reviewerPhotoUrl;
+//    public $reviewerPhotoUrl;
 
     public $reviewerIsAnonimous;
 
@@ -49,7 +49,7 @@ class GoogleReview extends Model
     {
         return [
             // id, roleType, marketStatus and body are required
-            [['reviewId', 'reviewerName', 'reviewerIsAnonimous', 'starRating', 'comment', 'createTime', 'updateTime'], 'required'],
+            [['reviewId', 'reviewerName', 'reviewerIsAnonimous', 'starRating', 'comment', 'createTime', 'locationName'], 'required'],
             ['reviewerIsAnonimous', 'boolean'],
 
             ['starRating', 'in', 'range' => [static::STAR_RATING_UNSPECIFIED, static::STAR_ONE,

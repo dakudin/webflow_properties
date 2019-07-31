@@ -7,10 +7,11 @@
 
 namespace app\components;
 
+use app\models\GoogleReview;
 use Yii;
 use yii\base\Component;
-use app\models\GMBLocation;
-use app\models\GMBReview;
+//use app\models\GMBLocation;
+//use app\models\GMBReview;
 
 /**
  * Client provide interface for Google My Business API.
@@ -46,7 +47,6 @@ class GMyBusinessClient extends Component
      */
     public function refreshAllReviews()
     {
-
         $this->myBusinessService = new \Google_Service_MyBusiness($this->client);
         $this->refreshAccounts();
     }
@@ -60,6 +60,7 @@ class GMyBusinessClient extends Component
 //            var_dump('$account->name', $account->name);
             $this->refreshLocations($account);
         }
+        var_dump($this->locations);
     }
 
     protected function refreshLocations($account)
@@ -71,24 +72,17 @@ class GMyBusinessClient extends Component
 
         if (empty($locationsList) === false) {
             foreach ($locationsList as $locKey => $location) {
-                $ourLocation = new GMBLocation();
-                $ourLocation->name = $location->ame;
-                $ourLocation->locationName = $location->locationName;
-                $ourLocation->primaryPhone = $location->primaryPhone;
-                $ourLocation->reviews = [];
-
-                $this->locations[] = $ourLocation;
                 $this->getReviews($location);
             }
         }
-
     }
 
+    /*
+     * https://developers.google.com/my-business/reference/rest/v4/accounts.locations
+     */
     protected function getReviews($location)
     {
-        $ourReviews = [];
         $params = ['pageSize' => 100];
-
         $reviews = $this->myBusinessService->accounts_locations_reviews;
 
         do {
@@ -99,18 +93,19 @@ class GMyBusinessClient extends Component
 
             $reviewsList = $listReviewsResponse->getReviews();
             foreach ($reviewsList as $index => $review) {
-                $ourReview = new GMBReview();
-                $ourReview->
-                //Accessing $review Object
-                echo $review->reviewId;
-                echo $review->reviewer->displayName . "\r\n";
-                echo $review->starRating . "\r\n";
-                echo $review->comment . "\r\n";
-                echo $review->createTime . "\r\n";
-
-                //                $review->getReviewReply()->getComment();
-                //                $review->getReviewReply()->getUpdateTime();
-                echo                "==============================\r\n";
+                $googleReview = new GoogleReview();
+                $googleReview->locationStoreCode = $location->storeCode;
+                $googleReview->locationName = $location->locationName;
+                $googleReview->locationPrimaryPhone = $location->primaryPhone;
+                $googleReview->locationAddress = implode(', ', $location->address->addressLines);
+                $googleReview->reviewId = $review->reviewId;
+                $googleReview->reviewerName = $review->reviewer->displayName;
+                $googleReview->reviewerIsAnonimous = $review->reviewer->isAnonymous;
+                $googleReview->starRating = $review->starRating;
+                $googleReview->comment = $review->comment;
+                $googleReview->createTime = $review->createTime;
+                // $review->getReviewReply()->getComment();
+                $this->locations[] = $googleReview;
             }
 
             $nextPageToken = $listReviewsResponse->nextPageToken;
