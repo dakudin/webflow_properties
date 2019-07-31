@@ -64,42 +64,7 @@ class WHClinicController extends Controller
             $gmb['refresh_token']
         );
 
-        $gmbClient->getAllReviews();
-/*
-        $client = new \Google_Client();
-
-        $gmb = Yii::$app->params['white_house_clinic']['GMB_API']['web_client'];
-        $client->setClientId($gmb['client_id']);
-        $client->setClientSecret($gmb['client_secret']);
-
-        $client->addScope("https://www.googleapis.com/auth/plus.business.manage");
-        $client->setSubject($gmb['account_email']);
-        $client->refreshToken($gmb['refresh_token']);
-
-        $myBusinessService = new \Google_Service_MyBusiness($client);
-
-        $accounts = $mybusinessService->accounts;
-        $accountsList = $accounts->listAccounts()->getAccounts();
-
-        foreach ($accountsList as $accKey => $account) {
-//            var_dump('$account->name', $account->name);
-
-            $locations = $mybusinessService->accounts_locations;
-            $locationsList = $locations->listAccountsLocations($account->name)->getLocations();
-//            var_dump('$locationsList', $locationsList);
-
-
-            // Final Goal of my Code
-            if (empty($locationsList)===false) {
-                foreach ($locationsList as $locKey => $location) {
-                    $reviews = $mybusinessService->accounts_locations_reviews;
-                    $listReviewsResponse = $reviews->listAccountsLocationsReviews($location->name);
-                    $reviewsList = $listReviewsResponse->getReviews();
-                    var_dump('$reviewsList', $reviewsList);
-                }
-            }
-        }*/
-
+        $gmbClient->refreshAllReviews();
     }
 
     protected function refreshReviews2()

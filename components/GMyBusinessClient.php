@@ -9,6 +9,8 @@ namespace app\components;
 
 use Yii;
 use yii\base\Component;
+use app\models\GMBLocation;
+use app\models\GMBReview;
 
 /**
  * Client provide interface for Google My Business API.
@@ -25,6 +27,8 @@ class GMyBusinessClient extends Component
 
     protected $scope = "https://www.googleapis.com/auth/plus.business.manage";
 
+    protected $locations;
+
     public function __construct($clientId, $clientSecret, $clientEmail, $refreshToken)
     {
         parent::__construct();
@@ -40,7 +44,7 @@ class GMyBusinessClient extends Component
     /*
      *  get reviews by via web client authentication
      */
-    public function getAllReviews()
+    public function refreshAllReviews()
     {
 
         $this->myBusinessService = new \Google_Service_MyBusiness($this->client);
@@ -60,20 +64,29 @@ class GMyBusinessClient extends Component
 
     protected function refreshLocations($account)
     {
+        $this->locations = [];
         $locations = $this->myBusinessService->accounts_locations;
         $locationsList = $locations->listAccountsLocations($account->name)->getLocations();
 //            var_dump('$locationsList', $locationsList);
 
         if (empty($locationsList) === false) {
             foreach ($locationsList as $locKey => $location) {
-                $this->refreshReviews($location);
+                $ourLocation = new GMBLocation();
+                $ourLocation->name = $location->ame;
+                $ourLocation->locationName = $location->locationName;
+                $ourLocation->primaryPhone = $location->primaryPhone;
+                $ourLocation->reviews = [];
+
+                $this->locations[] = $ourLocation;
+                $this->getReviews($location);
             }
         }
 
     }
 
-    protected function refreshReviews($location)
+    protected function getReviews($location)
     {
+        $ourReviews = [];
         $params = ['pageSize' => 100];
 
         $reviews = $this->myBusinessService->accounts_locations_reviews;
@@ -86,6 +99,8 @@ class GMyBusinessClient extends Component
 
             $reviewsList = $listReviewsResponse->getReviews();
             foreach ($reviewsList as $index => $review) {
+                $ourReview = new GMBReview();
+                $ourReview->
                 //Accessing $review Object
                 echo $review->reviewId;
                 echo $review->reviewer->displayName . "\r\n";
