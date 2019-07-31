@@ -97,7 +97,7 @@ class GMyBusinessClient extends Component
                 $googleReview->locationStoreCode = $location->storeCode;
                 $googleReview->locationName = $location->locationName;
                 $googleReview->locationPrimaryPhone = $location->primaryPhone;
-                $googleReview->locationAddress = $this->getLocationAddress($location->address));
+                $googleReview->locationAddress = $this->getLocationAddress($location->address);
                 $googleReview->reviewId = $review->reviewId;
                 $googleReview->reviewerName = $review->reviewer->displayName;
                 $googleReview->reviewerIsAnonimous = $review->reviewer->isAnonymous;
