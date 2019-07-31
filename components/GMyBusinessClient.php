@@ -97,7 +97,7 @@ class GMyBusinessClient extends Component
                 $googleReview->locationStoreCode = $location->storeCode;
                 $googleReview->locationName = $location->locationName;
                 $googleReview->locationPrimaryPhone = $location->primaryPhone;
-                $googleReview->locationAddress = implode(', ', $location->address->addressLines);
+                $googleReview->locationAddress = $this->getLocationAddress($location->address));
                 $googleReview->reviewId = $review->reviewId;
                 $googleReview->reviewerName = $review->reviewer->displayName;
                 $googleReview->reviewerIsAnonimous = $review->reviewer->isAnonymous;
@@ -112,6 +112,16 @@ class GMyBusinessClient extends Component
 
         } while ($listReviewsResponse->nextPageToken);
 
+    }
+
+    protected function getLocationAddress($location)
+    {
+        $address = implode(', ', $location->address->addressLines);
+
+        $address .= ', ' . $location->address->locality . ' '
+            . $location->address->postalCode . ', ';
+
+        return $address;
     }
 
 }
