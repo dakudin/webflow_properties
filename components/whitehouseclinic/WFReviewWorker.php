@@ -14,9 +14,9 @@ use yii\helpers\StringHelper;
 
 class WFReviewWorker extends WFReviewWorkerBase
 {
-    protected static $reviewDesktopLength = 170;
+    protected static $reviewDesktopLength = 167;
 
-    protected static $reviewMobileLength = 140;
+    protected static $reviewMobileLength = 137;
 
     /**
      * @param array $apiKey
@@ -44,7 +44,7 @@ class WFReviewWorker extends WFReviewWorkerBase
             'review-full-text' => $review->comment,
             'review-text-desktop' => StringHelper::truncate($review->comment, static::$reviewDesktopLength, '...'),
             'review-text-mobile' => StringHelper::truncate($review->comment, static::$reviewMobileLength, '...'),
-            'creation-date' => \DateTime::createFromFormat('Y-m-d\TH:i:s.uP', $review->createTime)->format('m/d/Y'),
+            'creation-date' => $review->createTime, //\DateTime::createFromFormat('Y-m-d\TH:i:s.uP', $review->createTime)->format('m/d/Y'),
             'clinic-location' => $review->locationName,
             'location-address' => $review->locationAddress,
             'location-primaryphone' => $review->locationPrimaryPhone,
