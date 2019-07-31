@@ -39,18 +39,19 @@ class WFReviewWorker extends WFReviewWorkerBase
         $item = [
             '_archived' => false,
             '_draft' => false,
-            'reviewid' => $googleReviewId,
+            'review-id' => $googleReviewId,
             'stars' => static::getWFStarByGoogleStar($review->starRating),
             'review-full-text' => $review->comment,
             'review-text-desktop' => StringHelper::truncate($review->comment, static::$reviewDesktopLength, '...'),
             'review-text-mobile' => StringHelper::truncate($review->comment, static::$reviewMobileLength, '...'),
+            'creation-date' => \DateTime::createFromFormat('Y-m-d', $review->createTime),
             'clinic-location' => $review->locationName,
             'location-address' => $review->locationAddress,
             'location-primaryphone' => $review->locationPrimaryPhone,
             'name' => $review->reviewerName,
             'slug' => $googleReviewId,
         ];
-
+var_dump($item); die;
         return $item;
     }
 
@@ -60,7 +61,6 @@ class WFReviewWorker extends WFReviewWorkerBase
         {
             case GoogleReview::STAR_FIVE :
                 return '5 stars';
-
             case GoogleReview::STAR_FOUR :
                 return '4 stars';
             case GoogleReview::STAR_THREE :

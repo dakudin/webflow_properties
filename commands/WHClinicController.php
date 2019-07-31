@@ -65,6 +65,8 @@ class WHClinicController extends Controller
         );
 
         $gmbClient->refreshAllReviews();
+
+        $this->storeReviewsIntoWebFlow($gmbClient->getReviews());
     }
 
     protected function refreshReviews2()

@@ -33,7 +33,7 @@ class GoogleReview extends Model
 
     public $createTime;
 
-    public $updateTime;
+//    public $updateTime;
 
     //https://developers.google.com/my-business/reference/rest/v4/accounts.locations#Location
     //https://developers.google.com/my-business/reference/rest/v4/PostalAddress

@@ -100,7 +100,7 @@ class WFReviewWorkerBase extends WFWorkerBase
                 return false;
 
             foreach ($this->reviewCollection->getItems() as $item) {
-                $this->_wfItems[$item['reviewid']] = [
+                $this->_wfItems[$item['review-id']] = [
                     'id' => $item['_id'],
                     'flagUpdated' => false,
                 ];

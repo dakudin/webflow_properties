@@ -28,7 +28,7 @@ class GMyBusinessClient extends Component
 
     protected $scope = "https://www.googleapis.com/auth/plus.business.manage";
 
-    protected $locations;
+    protected $reviews;
 
     public function __construct($clientId, $clientSecret, $clientEmail, $refreshToken)
     {
@@ -51,6 +51,11 @@ class GMyBusinessClient extends Component
         $this->refreshAccounts();
     }
 
+    public function getReviews()
+    {
+        return $this->reviews;
+    }
+
     protected function refreshAccounts()
     {
         $accounts = $this->myBusinessService->accounts;
@@ -60,19 +65,18 @@ class GMyBusinessClient extends Component
 //            var_dump('$account->name', $account->name);
             $this->refreshLocations($account);
         }
-        var_dump($this->locations);
     }
 
     protected function refreshLocations($account)
     {
-        $this->locations = [];
+        $this->reviews = [];
         $locations = $this->myBusinessService->accounts_locations;
         $locationsList = $locations->listAccountsLocations($account->name)->getLocations();
 //            var_dump('$locationsList', $locationsList);
 
         if (empty($locationsList) === false) {
             foreach ($locationsList as $locKey => $location) {
-                $this->getReviews($location);
+                $this->getGMBReviews($location);
             }
         }
     }
@@ -80,7 +84,7 @@ class GMyBusinessClient extends Component
     /*
      * https://developers.google.com/my-business/reference/rest/v4/accounts.locations
      */
-    protected function getReviews($location)
+    protected function getGMBReviews($location)
     {
         $params = ['pageSize' => 100];
         $reviews = $this->myBusinessService->accounts_locations_reviews;
@@ -105,7 +109,7 @@ class GMyBusinessClient extends Component
                 $googleReview->comment = $review->comment;
                 $googleReview->createTime = $review->createTime;
                 // $review->getReviewReply()->getComment();
-                $this->locations[] = $googleReview;
+                $this->reviews[] = $googleReview;
             }
 
             $nextPageToken = $listReviewsResponse->nextPageToken;
@@ -119,7 +123,7 @@ class GMyBusinessClient extends Component
         $address = implode(', ', $location->address->addressLines);
 
         $address .= ', ' . $location->address->locality . ' '
-            . $location->address->postalCode . ', ';
+            . $location->address->postalCode;
 
         return $address;
     }
