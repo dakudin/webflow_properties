@@ -44,14 +44,14 @@ class WFReviewWorker extends WFReviewWorkerBase
             'review-full-text' => $review->comment,
             'review-text-desktop' => StringHelper::truncate($review->comment, static::$reviewDesktopLength, '...'),
             'review-text-mobile' => StringHelper::truncate($review->comment, static::$reviewMobileLength, '...'),
-            'creation-date' => \DateTime::createFromFormat('Y-m-d', $review->createTime),
+            'creation-date' => \DateTime::createFromFormat('Y-m-d\TH:i:s.uP', $review->createTime)->format('m/d/Y'),
             'clinic-location' => $review->locationName,
             'location-address' => $review->locationAddress,
             'location-primaryphone' => $review->locationPrimaryPhone,
             'name' => $review->reviewerName,
             'slug' => $googleReviewId,
         ];
-var_dump($item); die;
+
         return $item;
     }
 
