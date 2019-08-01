@@ -132,7 +132,7 @@ class WFWorkerBase extends Component
      */
     protected function insertWFItem($collectionId, $sourceItemId, $item)
     {
-        echo "----------insert property-------------".$sourceItemId."\r\n";
+        echo "----------insert item-------------".$sourceItemId."\r\n";
 
         $result = $this->_webFlowClient->addCollectionItem(
             $this->_apiKey,

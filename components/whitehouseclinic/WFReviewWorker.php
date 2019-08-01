@@ -36,7 +36,7 @@ class WFReviewWorker extends WFReviewWorkerBase
      */
     protected function fillReview(GoogleReview $review, $googleReviewId)
     {
-        $commentInOneLine = str_replace(["\r","\n"], '', $review->comment);
+        $commentInOneLine = str_replace(["\r","\n"], ' ', $review->comment);
         $item = [
             '_archived' => false,
             '_draft' => false,
