@@ -10,6 +10,6 @@ return [
     ],
     'white_house_clinic' => [
         'webflow_review_collection' => 'Reviews',
-        'webflow_published_to_live' => false,
+        'webflow_published_to_live' => true,
     ],
 ];
