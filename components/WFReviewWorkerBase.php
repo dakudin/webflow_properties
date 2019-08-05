@@ -125,7 +125,7 @@ class WFReviewWorkerBase extends WFWorkerBase
         $googleReviewId = (string)$review->reviewId;
         $item = $this->fillReview($review, $googleReviewId);
 
-        $success = false;
+        $success = true;
         $isInserted = false;
         //try to update/insert WebFlow item
         echo "----------store review-------------" . $googleReviewId . "\r\n";

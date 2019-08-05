@@ -46,7 +46,9 @@ class WHClinicController extends Controller
         $this->refreshReviews();
 
         //delete not exists reviews from WebFlow collection
-//        $this->WFReviewWorker->deleteOldReviews();
+        $this->WFReviewWorker->deleteOldReviews();
+
+        echo "WebFlow: Inserted - " . $this->WFReviewWorker->getInsertedCount() . "; Updated - " . $this->WFReviewWorker->getUpdatedCount() . "\r\n";
 
         return ExitCode::OK;
     }
