@@ -42,6 +42,7 @@ class WFReviewWorker extends WFReviewWorkerBase
             '_draft' => false,
             'review-id' => $googleReviewId,
             'stars' => static::getWFStarByGoogleStar($review->starRating),
+            '4-5-stars-only' => static::isWFStarEqualTo4or5($review->starRating),
             'review-full-text' => $review->comment,
             'review-text-desktop' => StringHelper::truncate($commentInOneLine, static::$reviewDesktopLength, '...'),
             'review-text-mobile' => StringHelper::truncate($commentInOneLine, static::$reviewMobileLength, '...'),
@@ -73,5 +74,10 @@ class WFReviewWorker extends WFReviewWorkerBase
         }
 
         return '';
+    }
+
+    protected static function isWFStarEqualTo4or5($star)
+    {
+        return $star==GoogleReview::STAR_FIVE || $star==GoogleReview::STAR_FOUR;
     }
 }
