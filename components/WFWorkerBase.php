@@ -194,7 +194,7 @@ class WFWorkerBase extends Component
      */
     protected function patchWFItem($collectionId, $sourceItemId, $itemId, $item)
     {
-//        echo "----------patch item-------------".$sourceItemId."\r\n";
+        echo "----------patch item-------------".$sourceItemId."\r\n";
 
         $result = $this->_webFlowClient->patchCollectionItem(
             $this->_apiKey,
@@ -203,6 +203,12 @@ class WFWorkerBase extends Component
             $this->_publishToLiveSite, // set to true for publishing to live site
             $item
         );
+
+        if($sourceItemId==15869945){
+            var_dump($item);
+            echo "\r\n----------------------------------------------\r\n";
+            var_dump($result);
+        }
 
         return $result;
     }

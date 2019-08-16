@@ -145,6 +145,10 @@ class WFPropertyWorker extends WFWorkerBase
             // need to update item or insert a new one
             if (array_key_exists($dezrezPropertyId, $this->_wfItems)) {
                 $wfItem = $this->updateWFItem($this->_propertyCollection->getId(), $dezrezPropertyId, $this->_wfItems[$dezrezPropertyId]['id'], $item);
+
+                if($dezrezPropertyId==15869945){
+                    $wfItem = $this->patchWFItem($this->_propertyCollection->getId(), $dezrezPropertyId, $this->_wfItems[$dezrezPropertyId]['id'], ['pdf-brochure' => $item['pdf-brochure']]);
+                }
             } else {
                 $wfItem = $this->insertWFItem($this->_propertyCollection->getId(), $dezrezPropertyId, $item);
                 $isInserted = true;
