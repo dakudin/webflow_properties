@@ -28,7 +28,7 @@ class WHClinicController extends Controller
     protected $WFReviewWorker;
 
     /**
-     * This command parse properties from Google My Business and store to WebFlow site via API
+     * This command parse reviews from Google My Business and store to WebFlow site via API
      * @return int Exit code
      */
     public function actionIndex()
@@ -48,7 +48,7 @@ class WHClinicController extends Controller
         //delete not exists reviews from WebFlow collection
         $this->WFReviewWorker->deleteOldReviews();
 
-        echo "WebFlow: Inserted - " . $this->WFReviewWorker->getInsertedCount() . "; Updated - " . $this->WFReviewWorker->getUpdatedCount() . "\r\n";
+        echo "WebFlow WHClinic reviews: Inserted - " . $this->WFReviewWorker->getInsertedCount() . "; Updated - " . $this->WFReviewWorker->getUpdatedCount() . "\r\n";
 
         return ExitCode::OK;
     }
@@ -56,7 +56,7 @@ class WHClinicController extends Controller
     /*
      *  get reviews by via web client authentication
      */
-    protected function refreshReviews()
+    private function refreshReviews()
     {
         $gmb = Yii::$app->params['white_house_clinic']['GMB_API']['web_client'];
         $gmbClient = new GMyBusinessClient(
@@ -71,7 +71,7 @@ class WHClinicController extends Controller
         $this->storeReviewsIntoWebFlow($gmbClient->getReviews());
     }
 
-    protected function refreshReviews2()
+    private function refreshReviews2()
     {
         $gmb = Yii::$app->params['white_house_clinic']['GMB_API'];
 
@@ -137,7 +137,7 @@ class WHClinicController extends Controller
     /**
      * Get all properties from Google My Business and store their to WebFlow
      */
-    protected function refreshReviewsSA()
+    private function refreshReviewsSA()
     {
         $pageNumber = 0;
         $gmb = Yii::$app->params['white_house_clinic']['GMB_API'];
@@ -164,7 +164,7 @@ class WHClinicController extends Controller
         foreach($reviews as $review){
             if($review instanceof GoogleReview) {
                 if(!$this->WFReviewWorker->storeReview($review)){
-                    echo "Error GMB: Cannot store review \r\n";
+                    echo "Error WHClinic GMB: Cannot store review \r\n";
                     var_dump($review);
                 }
             }

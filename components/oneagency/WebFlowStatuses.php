@@ -29,6 +29,14 @@ class WebFlowStatuses
     const STATUS_FOR_SALE = 'for-sale';
 
     /**
+     * Slugs of lettings price terms
+     */
+    const PRICE_PER_DAY  = 'pday';
+    const PRICE_PER_WEEK = 'pw';
+    const PRICE_PER_MONTH = 'pcm';
+    const PRICE_PER_YEAR = 'pyear';
+
+    /**
      * Slug from property collection for getting filtering role types
      */
     const FILTERING_CATEGORY = 'filtering-category';

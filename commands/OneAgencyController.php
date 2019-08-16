@@ -9,10 +9,13 @@ namespace app\commands;
 
 use app\components\DezrezFeedParser;
 use app\components\oneagency\WFPropertyWorker;
+use app\components\GMyBusinessClient;
+use app\components\oneagency\WFReviewWorker;
 use Yii;
 use app\components\DezrezClient;
 use yii\console\Controller;
 use app\models\Property;
+use app\models\GoogleReview;
 use yii\console\ExitCode;
 
 /**
@@ -20,7 +23,7 @@ use yii\console\ExitCode;
  *
  * @author Kudin Dmitry <dakudin@gmail.com>
  */
-class ParserController extends Controller
+class OneAgencyController extends Controller
 {
     /**
      * @var int Number of properties for getting from Dezrez API
@@ -33,10 +36,20 @@ class ParserController extends Controller
     protected $WFPropertyWorker;
 
     /**
+     * @var int Number of reviews for getting from Google API
+     */
+    private $reviewsPerPage = 100;
+
+    /**
+     * @var WFReviewWorker worker for manipulate WebFlow API.
+     */
+    protected $WFReviewWorker;
+
+    /**
      * This command parse properties from Dezred feed and store to WebFlow site via API
      * @return int Exit code
      */
-    public function actionIndex()
+    public function actionParseProperties()
     {
         $this->WFPropertyWorker = new WFPropertyWorker(
             Yii::$app->params['one_agency']['webflow_api_key'],
@@ -56,6 +69,50 @@ class ParserController extends Controller
         $this->WFPropertyWorker->setOldPropertiesAsNotInFeed();
 
         return ExitCode::OK;
+    }
+
+    /**
+     * This command parse reviews from Google My Business and store to WebFlow site via API
+     * @return int Exit code
+     */
+    public function actionParseReviews()
+    {
+        $this->WFReviewWorker = new WFReviewWorker(
+            Yii::$app->params['one_agency']['webflow_api_key'],
+            Yii::$app->params['one_agency']['webflow_review_collection'],
+            Yii::$app->params['one_agency']['webflow_published_to_live']
+        );
+
+        //load all old reviews
+        $this->WFReviewWorker->loadAllReviews();
+
+        // update reviews and insert new ones
+        $this->refreshReviews();
+
+        //delete not exists reviews from WebFlow collection
+        $this->WFReviewWorker->deleteOldReviews();
+
+        echo "WebFlow OneAgency reviews: Inserted - " . $this->WFReviewWorker->getInsertedCount() . "; Updated - " . $this->WFReviewWorker->getUpdatedCount() . "\r\n";
+
+        return ExitCode::OK;
+    }
+
+    /*
+     *  get reviews by via web client authentication
+     */
+    private function refreshReviews()
+    {
+        $gmb = Yii::$app->params['one_agency']['GMB_API']['web_client'];
+        $gmbClient = new GMyBusinessClient(
+            $gmb['client_id'],
+            $gmb['client_secret'],
+            $gmb['account_email'],
+            $gmb['refresh_token']
+        );
+
+        $gmbClient->refreshAllReviews();
+
+        $this->storeReviewsIntoWebFlow($gmbClient->getReviews());
     }
 
     /**
@@ -106,6 +163,22 @@ class ParserController extends Controller
                    echo "Error Dezrez: Cannot store property \r\n";
                    var_dump($property);
                }
+            }
+        }
+    }
+
+    /**
+     * Get pack of parsed reviews and store their into WebFlow
+     * @param array $reviews
+     */
+    private function storeReviewsIntoWebFlow(array $reviews)
+    {
+        foreach($reviews as $review){
+            if($review instanceof GoogleReview) {
+                if(!$this->WFReviewWorker->storeReview($review)){
+                    echo "Error OneAgency GMB: Cannot store review \r\n";
+                    var_dump($review);
+                }
             }
         }
     }

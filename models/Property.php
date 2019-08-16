@@ -22,12 +22,18 @@ class Property extends Model
     const STATUS_SSTC = 'SSTC';
     const STATUS_FOR_SALE = 'For Sale';
 
+    const PRICE_PER_DAY  = 'pday';
+    const PRICE_PER_WEEK = 'pw';
+    const PRICE_PER_MONTH = 'pcm';
+    const PRICE_PER_YEAR = 'pyear';
+
     public $id;
     public $name;
     public $roleType;
     public $marketStatus;
     public $price;
     public $priceText;
+    public $priceType;
     public $numberOfRooms;
     public $numberOfBath;
     public $fullDescription;

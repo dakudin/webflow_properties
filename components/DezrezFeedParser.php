@@ -155,6 +155,7 @@ class DezrezFeedParser extends Component
         $property->price = $dezrezProperty['Price']['PriceValue'];
 //        $property->priceText = utf8_encode(money_format('%n', $property->price));
         $property->priceText = number_format($property->price, 0, '.', ',');
+//        $property->priceType = $this->getPriceType($property, $dezrezProperty['Price']['PriceType']);
         $property->numberOfRooms = $dezrezProperty['RoomCountsDescription']['Bedrooms'];
         $property->numberOfBath = $dezrezProperty['RoomCountsDescription']['Bathrooms'];
         $property->shortDescription = $this->fixTextProperty($dezrezProperty['SummaryTextDescription']);
@@ -392,7 +393,8 @@ class DezrezFeedParser extends Component
      * @param array $dezrezProperty
      * @return bool|string
      */
-    protected function getMarketStatus(Property $property, $dezrezProperty){
+    protected function getMarketStatus(Property $property, $dezrezProperty)
+    {
         $roleStatus = $dezrezProperty['RoleStatus']['SystemName'];
         $roleFlags = [];
 
@@ -422,5 +424,16 @@ class DezrezFeedParser extends Component
             return Property::STATUS_LET_AGREED;
 
         return false;
+    }
+
+    /**
+     * Analise Dezrez property price type for lettings property and return market status for WebFlow property
+     * @param Property $property
+     * @param array $dezrezProperty
+     * @return bool|string
+     */
+    protected function getPriceType(Property $property, $dezrezProperty)
+    {
+
     }
 }

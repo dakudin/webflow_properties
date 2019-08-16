@@ -163,4 +163,39 @@ class WFReviewWorkerBase extends WFWorkerBase
     {
         return [];
     }
+
+    /*
+     * Get WebFlow review rate by Google review rate
+     * return empty string if rate isn't detected
+     * @param $star string
+     * @return string
+     */
+    protected static function getWFStarByGoogleStar($star)
+    {
+        switch($star)
+        {
+            case GoogleReview::STAR_FIVE :
+                return '5 stars';
+            case GoogleReview::STAR_FOUR :
+                return '4 stars';
+            case GoogleReview::STAR_THREE :
+                return '3 stars';
+            case GoogleReview::STAR_TWO :
+                return '2 stars';
+            case GoogleReview::STAR_ONE :
+                return '1 star';
+        }
+
+        return '';
+    }
+
+    /*
+     * Detect if review's rate equal to 4 or 5
+     * @param $star string
+     * @return boolean
+     */
+    protected static function isWFStarEqualTo4or5($star)
+    {
+        return $star==GoogleReview::STAR_FIVE || $star==GoogleReview::STAR_FOUR;
+    }
 }

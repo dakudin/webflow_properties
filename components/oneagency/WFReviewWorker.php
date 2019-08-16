@@ -2,11 +2,11 @@
 
 /**
  * Created by Kudin Dmitry
- * Date: 20.06.2019
- * Time: 8:57
+ * Date: 14.08.2019
+ * Time: 14:57
  */
 
-namespace app\components\whitehouseclinic;
+namespace app\components\oneagency;
 
 use app\components\WFReviewWorkerBase;
 use app\models\GoogleReview;
@@ -56,4 +56,5 @@ class WFReviewWorker extends WFReviewWorkerBase
 
         return $item;
     }
+
 }

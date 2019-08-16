@@ -260,6 +260,7 @@ class WFPropertyWorker extends WFWorkerBase
             'slug' => $dezrezPropertyId,
             'propertyid-2' => $dezrezPropertyId,
             'property-status' => $this->webFlowStatuses->getWebFlowMarketStatus($property->marketStatus),
+//            'rental-price-term' =>
             'rent-or-sale-price' => $property->price,
             'asking-price-text' => $property->priceText,
             'number-of-rooms' => $property->numberOfRooms,
