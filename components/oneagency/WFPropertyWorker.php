@@ -147,6 +147,7 @@ class WFPropertyWorker extends WFWorkerBase
                 $wfItem = $this->updateWFItem($this->_propertyCollection->getId(), $dezrezPropertyId, $this->_wfItems[$dezrezPropertyId]['id'], $item);
 
                 if($dezrezPropertyId==15869945){
+                    $wfItem = $this->patchWFItem($this->_propertyCollection->getId(), $dezrezPropertyId, $this->_wfItems[$dezrezPropertyId]['id'], ['pdf-brochure' => '']);
                     $wfItem = $this->patchWFItem($this->_propertyCollection->getId(), $dezrezPropertyId, $this->_wfItems[$dezrezPropertyId]['id'], ['pdf-brochure' => $item['pdf-brochure']]);
                 }
             } else {
