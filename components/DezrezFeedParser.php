@@ -329,14 +329,17 @@ class DezrezFeedParser extends Component
     {
         $address = '';
 
-        if($feedAddress['OrganizationName']!='')
-            $address = $feedAddress['OrganizationName'] . ', ';
+// do not show organization name
+//        if($feedAddress['OrganizationName']!='')
+//            $address = $feedAddress['OrganizationName'] . ', ';
+
 // do not show house number
 //        if($feedAddress['Number']!='')
 //            $address .= $feedAddress['Number'] . ', ';
 
-        if($feedAddress['BuildingName']!='')
-            $address .= $feedAddress['BuildingName'] . ', ';
+// do not show building name
+//        if($feedAddress['BuildingName']!='')
+//            $address .= $feedAddress['BuildingName'] . ', ';
 
         if($feedAddress['Street']!='')
             $address .= $feedAddress['Street'] . ', ';
