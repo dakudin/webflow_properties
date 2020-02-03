@@ -6,4 +6,7 @@ h1,h2,h3,h4,h5,h6{font-family:SofiaProLight,sans-serif}
 #OBapp #pagination .page-link.locked:after{content:'\e804';position:absolute;right:10px;margin-top:2px;font-family:SofiaProLight;font-style:normal;font-weight:400;speak:none;font-variant:normal;text-transform:none}
 #OBapp #pagination .page-link.active:hover{background:#588ca7;}
 #OBapp #pagination .page-link.selected{background:#588ca7}
-#OBapp button[type=submit]{background:#44bd99;}
+#OBapp button[type=submit]{background:#44bd99; font-family: SofiaProSemiBold,Arial,sans-serif; font-size: 13px; font-weight: 600; text-transform: uppercase; border-radius: 0; padding: 17px 10px;}
+#OBapp button[type="submit"].submit-large {font-size: 13px; letter-spacing: 1px;}
+#OBapp a {color: #00334e;}
+#OBapp #details label.mandatory {font-family: SofiaProSemiBold,Arial,sans-serif; font-weight: 600;}
