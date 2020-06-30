@@ -140,7 +140,7 @@ class WFPropertyWorker extends WFWorkerBase
             return false;
         }
 
-        echo "WebFlow properties count before update (collection - " . $collectionId . "): " . count($this->_wfItems) . "\r\n";
+        echo "WebFlow properties count before update: " . count($this->_wfItems) . "\r\n";
 
         return true;
     }
