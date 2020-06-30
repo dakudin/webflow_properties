@@ -8,6 +8,7 @@
 namespace app\components\oneagency;
 
 use Yii;
+use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
 use app\models\Property;
 use app\components\WFWorkerBase;
@@ -138,6 +139,8 @@ class WFPropertyWorker extends WFWorkerBase
         if(!$this->loadPropertiesFromCollection($this->_lettingsPropertyCollection, $this->_lettingsPropertyIdSlug)){
             return false;
         }
+
+        echo "WebFlow properties count before update (collection - " . $collectionId . "): " . count($this->_wfItems) . "\r\n";
 
         return true;
     }
@@ -285,7 +288,7 @@ class WFPropertyWorker extends WFWorkerBase
             '_archived' => false,
             '_draft' => false,
             'name' => $property->name,
-            'slug' => $dezrezPropertyId,
+            'slug' => $this->getPropertySlug($dezrezPropertyId, $property->name),
             'propertyid' => $dezrezPropertyId,
             'property-status' => $this->webFlowStatuses->getWebFlowMarketStatus($property->marketStatus),
             'asking-price' => $property->price,
@@ -313,6 +316,11 @@ class WFPropertyWorker extends WFWorkerBase
             $item['pdf-brochure'] = $property->brochure;
 
         return $item;
+    }
+
+    protected function getPropertySlug($dezrezPropertyId, $propertyName)
+    {
+        return 'in-' . Inflector::slug(implode('-', $propertyName . '-' . $dezrezPropertyId));
     }
 
     /**
@@ -398,8 +406,6 @@ class WFPropertyWorker extends WFWorkerBase
             $offset += $this->_itemsPerPage;
         } while ($propertyCollection->getItemsTotal()>0
         && $propertyCollection->getItemsTotal() > $propertyCollection->getItemsOffset() + $propertyCollection->getItemsCount());
-
-        echo "WebFlow properties count before update (collection - " . $collectionId . "): " . count($this->_wfItems) . "\r\n";
 
         return true;
     }
