@@ -54,7 +54,10 @@ class OneAgencyController extends Controller
         $this->WFPropertyWorker = new WFPropertyWorker(
             Yii::$app->params['one_agency']['webflow_api_key'],
             Yii::$app->params['one_agency']['webflow_role_type_collection'],
-            Yii::$app->params['one_agency']['webflow_properties_collection'],
+            Yii::$app->params['one_agency']['webflow_sales_collection']['collection_name'],
+            Yii::$app->params['one_agency']['webflow_sales_collection']['property_id_slug'],
+            Yii::$app->params['one_agency']['webflow_lettings_collection']['collection_name'],
+            Yii::$app->params['one_agency']['webflow_lettings_collection']['property_id_slug'],
             Yii::$app->params['one_agency']['webflow_property_status_collection'],
             Yii::$app->params['one_agency']['webflow_published_to_live']
         );

@@ -38,9 +38,24 @@ class WFPropertyWorker extends WFWorkerBase
     protected $_roleTypeCollectionName;
 
     /**
-     * @var string WebFlow collection name of properties
+     * @var string WebFlow collection name of sales properties
      */
-    protected $_propertyCollectionName;
+    protected $_salesCollectionName;
+
+    /**
+     * @var string WebFlow property ID slug in sales collection
+     */
+    protected $_salesPropertyIdSlug;
+
+    /**
+     * @var string WebFlow collection name of lettings properties
+     */
+    protected $_lettingsCollectionName;
+
+    /**
+     * @var string WebFlow property ID slug in lettings collection
+     */
+    protected $_lettingsPropertyIdSlug;
 
     /**
      * @var string WebFlow collection name of property statuses
@@ -53,9 +68,14 @@ class WFPropertyWorker extends WFWorkerBase
     protected $_roleTypeCollection;
 
     /**
-     * @var WebFlowCollection WebFlow collection of properties
+     * @var WebFlowCollection WebFlow collection of sales properties
      */
-    protected $_propertyCollection;
+    protected $_salesPropertyCollection;
+
+    /**
+     * @var WebFlowCollection WebFlow collection of lettings properties
+     */
+    protected $_lettingsPropertyCollection;
 
     /**
      * @var WebFlowCollection WebFlow collection of property statuses
@@ -76,18 +96,25 @@ class WFPropertyWorker extends WFWorkerBase
     /**
      * @param array $apiKey
      * @param $roleTypeCollectionName
-     * @param $propertyCollectionName
+     * @param $salesCollectionName
+     * @param $salesPropertyIdSlug
+     * @param $lettingsCollectionName
+     * @param $lettingsPropertyIdSlug
      * @param $propertyStatusCollectionName
      * @param $publishToLiveSite
      * @throws \Exception
      */
-    public function __construct($apiKey, $roleTypeCollectionName, $propertyCollectionName,
+    public function __construct($apiKey, $roleTypeCollectionName, $salesCollectionName, $salesPropertyIdSlug,
+                                $lettingsCollectionName, $lettingsPropertyIdSlug,
                                 $propertyStatusCollectionName, $publishToLiveSite)
     {
         parent::__construct($apiKey, $publishToLiveSite);
 
         $this->_roleTypeCollectionName = $roleTypeCollectionName;
-        $this->_propertyCollectionName = $propertyCollectionName;
+        $this->_salesCollectionName = $salesCollectionName;
+        $this->_salesPropertyIdSlug = $salesPropertyIdSlug;
+        $this->_lettingsCollectionName = $lettingsCollectionName;
+        $this->_lettingsPropertyIdSlug = $lettingsPropertyIdSlug;
         $this->_propertyStatusCollectionName = $propertyStatusCollectionName;
 
         if(!$this->prepareWFClient()){
@@ -103,24 +130,14 @@ class WFPropertyWorker extends WFWorkerBase
     public function loadAllProperties()
     {
         $this->_wfItems = [];
-        $offset = 0;
 
-        do {
-            if(!$this->_propertyCollection->loadItems($this->_apiKey, $this->_itemsPerPage, $offset))
-                return false;
+        if(!$this->loadPropertiesFromCollection($this->_salesPropertyCollection, $this->_salesPropertyIdSlug)){
+            return false;
+        }
 
-            foreach($this->_propertyCollection->getItems() as $item){
-                $this->_wfItems[$item['propertyid-2']] = [
-                    'id' => $item['_id'],
-                    'flagUpdated' => false,
-                ];
-            }
-
-            $offset += $this->_itemsPerPage;
-        } while ($this->_propertyCollection->getItemsTotal()>0
-            && $this->_propertyCollection->getItemsTotal() > $this->_propertyCollection->getItemsOffset() + $this->_propertyCollection->getItemsCount());
-
-        echo "WebFlow properties count before update: " . count($this->_wfItems) . "\r\n";
+        if(!$this->loadPropertiesFromCollection($this->_lettingsPropertyCollection, $this->_lettingsPropertyIdSlug)){
+            return false;
+        }
 
         return true;
     }
@@ -135,6 +152,7 @@ class WFPropertyWorker extends WFWorkerBase
         $dezrezPropertyId = (string)$property->id;
         $item = $this->fillProperty($property, $dezrezPropertyId);
         $imagesToUpload = $this->countImagesForUpload($property, $item);
+        $propertyCollectionId = $this->getPropertyCollectionIDByPropertyType($property);
 
         $success = false;
         $isInserted = false;
@@ -144,14 +162,14 @@ class WFPropertyWorker extends WFWorkerBase
             echo "----------store property-------------".$dezrezPropertyId." (attempt $i)\r\n";
             // need to update item or insert a new one
             if (array_key_exists($dezrezPropertyId, $this->_wfItems)) {
-                $wfItem = $this->updateWFItem($this->_propertyCollection->getId(), $dezrezPropertyId, $this->_wfItems[$dezrezPropertyId]['id'], $item);
+                $wfItem = $this->updateWFItem($propertyCollectionId, $dezrezPropertyId, $this->_wfItems[$dezrezPropertyId]['id'], $item);
 
-                if($dezrezPropertyId==15869945){
-                    $wfItem = $this->patchWFItem($this->_propertyCollection->getId(), $dezrezPropertyId, $this->_wfItems[$dezrezPropertyId]['id'], ['pdf-brochure-2' => '']);
-                    $wfItem = $this->patchWFItem($this->_propertyCollection->getId(), $dezrezPropertyId, $this->_wfItems[$dezrezPropertyId]['id'], ['pdf-brochure-2' => $item['pdf-brochure-2']]);
-                }
+/*                if($dezrezPropertyId==15869945){
+                    $wfItem = $this->patchWFItem($propertyCollectionId, $dezrezPropertyId, $this->_wfItems[$dezrezPropertyId]['id'], ['pdf-brochure' => '']);
+                    $wfItem = $this->patchWFItem($propertyCollectionId, $dezrezPropertyId, $this->_wfItems[$dezrezPropertyId]['id'], ['pdf-brochure' => $item['pdf-brochure']]);
+                }*/
             } else {
-                $wfItem = $this->insertWFItem($this->_propertyCollection->getId(), $dezrezPropertyId, $item);
+                $wfItem = $this->insertWFItem($propertyCollectionId, $dezrezPropertyId, $item);
                 $isInserted = true;
             }
 
@@ -189,7 +207,7 @@ class WFPropertyWorker extends WFWorkerBase
         foreach($this->_wfItems as $wfItemId=>$wfItemData) {
             if (!$wfItemData['flagUpdated']){
                 $item = $this->patchWFItem(
-                    $this->_propertyCollection->getId(),
+                    $wfItemData['collectionID'],
                     $wfItemId,
                     $wfItemData['id'],
                     [
@@ -234,9 +252,13 @@ class WFPropertyWorker extends WFWorkerBase
                 $this->_roleTypeCollection = new WebFlowCollection($collection['_id'], $collection['name'] ,$collection['slug'], $this->_webFlowClient);
                 if(!$this->_roleTypeCollection->loadItems($this->_apiKey))
                     return false;
-            }elseif($collection['name']==$this->_propertyCollectionName){
-                $this->_propertyCollection = new WebFlowCollection($collection['_id'], $collection['name'] ,$collection['slug'], $this->_webFlowClient);
-                if(!$this->_propertyCollection->loadFields($this->_apiKey))
+            }elseif($collection['name']==$this->_salesCollectionName){
+                $this->_salesPropertyCollection = new WebFlowCollection($collection['_id'], $collection['name'] ,$collection['slug'], $this->_webFlowClient);
+                if(!$this->_salesPropertyCollection->loadFields($this->_apiKey))
+                    return false;
+            }elseif($collection['name']==$this->_lettingsCollectionName){
+                $this->_lettingsPropertyCollection = new WebFlowCollection($collection['_id'], $collection['name'] ,$collection['slug'], $this->_webFlowClient);
+                if(!$this->_lettingsPropertyCollection->loadFields($this->_apiKey))
                     return false;
             }elseif($collection['name']==$this->_propertyStatusCollectionName){
                 $this->_propertyStatusCollection = new WebFlowCollection($collection['_id'], $collection['name'] ,$collection['slug'], $this->_webFlowClient);
@@ -245,7 +267,7 @@ class WFPropertyWorker extends WFWorkerBase
             }
         }
 
-        $this->webFlowStatuses = new WebFlowStatuses($this->_roleTypeCollection, $this->_propertyStatusCollection, $this->_propertyCollection);
+        $this->webFlowStatuses = new WebFlowStatuses($this->_roleTypeCollection, $this->_propertyStatusCollection, $this->_salesPropertyCollection);
 
         return true;
     }
@@ -263,7 +285,7 @@ class WFPropertyWorker extends WFWorkerBase
             '_draft' => false,
             'name' => $property->name,
             'slug' => $dezrezPropertyId,
-            'propertyid-2' => $dezrezPropertyId,
+            'propertyid' => $dezrezPropertyId,
             'property-status' => $this->webFlowStatuses->getWebFlowMarketStatus($property->marketStatus),
 //            'rental-price-term' =>
             'rent-or-sale-price' => $property->price,
@@ -273,12 +295,12 @@ class WFPropertyWorker extends WFWorkerBase
             'property-description' => $property->fullDescription,
             'short-description' => StringHelper::truncate($property->shortDescription, static::SHORT_DESCRIPTION_LENGTH, '...'),
             'short-description-mobile' => StringHelper::truncate($property->shortDescription, static::SHORT_DESCRIPTION_MOBILE_LENGTH, '...'),
-            'property-type-2' => $property->propertyType,
+            'property-type' => $property->propertyType,
             'property-address' => $property->address,
             'filtering-category' => $this->webFlowStatuses->getWebFlowFilteredCategory($property->roleType),
             'role-type' => $this->webFlowStatuses->getWebFlowRoleType($property->roleType),
             'featured-property' => $property->featured,
-            'shortcut-show-2' => $this->webFlowStatuses->getShowShortcutValue($property->marketStatus),
+            'shortcut-show' => $this->webFlowStatuses->getShowShortcutValue($property->marketStatus),
         ];
 
         if (!empty($property->floorPlanImageUrl))
@@ -288,7 +310,7 @@ class WFPropertyWorker extends WFWorkerBase
             $item['epc-rating'] = $property->epc;
 
         if (!empty($property->brochure))
-            $item['pdf-brochure-2'] = $property->brochure;
+            $item['pdf-brochure'] = $property->brochure;
 
         return $item;
     }
@@ -347,5 +369,51 @@ class WFPropertyWorker extends WFWorkerBase
         }
 
         return $image . '&width=' . static::MAX_IMAGE_WIDTH;
+    }
+
+    /**
+     * Get all old items from WebFlow collection. Store properties id for detecting which ones need to delete
+     * after inserting/updating
+     * @param WebFlowCollection $propertyCollection
+     * @param $propertyIdSlug
+     * @return bool
+     */
+    private function loadPropertiesFromCollection(WebFlowCollection $propertyCollection, $propertyIdSlug)
+    {
+        $offset = 0;
+
+        $collectionId = $propertyCollection->getId();
+        do {
+            if(!$propertyCollection->loadItems($this->_apiKey, $this->_itemsPerPage, $offset))
+                return false;
+
+            foreach($propertyCollection->getItems() as $item){
+                $this->_wfItems[$item[$propertyIdSlug]] = [
+                    'id' => $item['_id'],
+                    'collectionID' => $collectionId,
+                    'flagUpdated' => false,
+                ];
+            }
+
+            $offset += $this->_itemsPerPage;
+        } while ($propertyCollection->getItemsTotal()>0
+        && $propertyCollection->getItemsTotal() > $propertyCollection->getItemsOffset() + $propertyCollection->getItemsCount());
+
+        echo "WebFlow properties count before update (collection - " . $collectionId . "): " . count($this->_wfItems) . "\r\n";
+
+        return true;
+    }
+
+    /**
+     * @param Property $property
+     * @return string
+     */
+    private function getPropertyCollectionIDByPropertyType(Property $property)
+    {
+        if($property->roleType == Property::ROLE_TYPE_LET){
+            return $this->_lettingsPropertyCollection->getId();
+        }
+
+        return $this->_salesPropertyCollection->getId();
     }
 }

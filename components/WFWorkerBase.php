@@ -171,11 +171,11 @@ class WFWorkerBase extends Component
             $item
         );
 
-        if($sourceItemId==15869945){
+/*        if($sourceItemId==15869945){
             var_dump($item);
             echo "\r\n----------------------------------------------\r\n";
             var_dump($result);
-        }
+        }*/
 
         if(array_key_exists($this->fieldId, $result) !== FALSE){
             $this->_wfItems[$sourceItemId]['flagUpdated'] = true;
@@ -204,11 +204,11 @@ class WFWorkerBase extends Component
             $item
         );
 
-        if($sourceItemId==15869945){
+/*        if($sourceItemId==15869945){
             var_dump($item);
             echo "\r\n----------------------------------------------\r\n";
             var_dump($result);
-        }
+        }*/
 
         return $result;
     }

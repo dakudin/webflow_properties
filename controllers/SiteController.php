@@ -9,6 +9,7 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use SoapClient;
 
 class SiteController extends Controller
 {
@@ -62,6 +63,35 @@ class SiteController extends Controller
     public function actionIndex()
     {
         return ''; //$this->render('index');
+    }
+
+    public function actionSoap()
+    {
+        $wsdl = 'http://185.121.204.45/MHT/CalmAPI/ContentService.asmx?WSDL';
+/*
+        $client = new SoapClient($wsdl);
+        $result = $client->Search([
+            'dbname' => 'Catalog',
+            'ElementSet' => 'DC',
+            'Expr' => 'test',
+        ]);
+
+        $sessionID = ($client->__getCookies())['ASP.NET_SessionId'][0];
+
+        $client->__setCookie('ASP.NET_SessionId', $sessionID);
+
+        $result = $client->Overview([
+            'dbname' => 'Catalog',
+            'ElementSet' => 'DC',
+            'Expr' => 'test',
+
+            "Elements" => 'Title, Date',
+            "xfrom"     => 0,
+            "n"         => 10
+        ]);
+*/
+        $result = 'rrr';
+        return $this->render('soap_search', ['response' => $result]);
     }
 
     public function actionSearch()
