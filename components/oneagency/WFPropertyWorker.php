@@ -288,7 +288,7 @@ class WFPropertyWorker extends WFWorkerBase
             '_archived' => false,
             '_draft' => false,
             'name' => $property->name,
-            'slug' => $this->getPropertySlug($dezrezPropertyId, $property->name),
+            'slug' => $this->getPropertySlug($dezrezPropertyId, $property->address),
             'propertyid' => $dezrezPropertyId,
             'property-status' => $this->webFlowStatuses->getWebFlowMarketStatus($property->marketStatus),
             'asking-price' => $property->price,
