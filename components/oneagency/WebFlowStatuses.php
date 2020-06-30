@@ -97,9 +97,14 @@ class WebFlowStatuses
     protected $statusForSaleId;
 
     public function __construct(WebFlowCollection $roleTypeCollection, WebFlowCollection $propertyStatusCollection,
-                                WebFlowCollection $propertyCollection)
+                                WebFlowCollection $salesPropertyCollection, WebFlowCollection $lettingsPropertyCollection)
     {
-        $this->fillFilteredRoleTypes($propertyCollection);
+        //fill WF filtered role types ids for sales collection
+        $this->fillFilteredRoleTypes($salesPropertyCollection, static::ROLE_TYPE_SALE);
+
+        //fill WF filtered role types ids for sales collection
+        $this->fillFilteredRoleTypes($lettingsPropertyCollection, static::ROLE_TYPE_LET);
+
         $this->fillRoleTypes($roleTypeCollection);
         $this->fillStatuses($propertyStatusCollection);
 
@@ -153,9 +158,9 @@ class WebFlowStatuses
     public function getWebFlowFilteredCategory($roleType)
     {
         switch ($roleType) {
-            case Property::ROLE_TYPE_LET : return $this->filteredTypeLetId;
-            case Property::ROLE_TYPE_SALE : return $this->filteredTypeSaleId;
-            case Property::ROLE_TYPE_AUCTION : return $this->filteredTypeAuctionId;
+            case Property::ROLE_TYPE_LET : return $this->filteredTypeLetId[static::ROLE_TYPE_LET];
+            case Property::ROLE_TYPE_SALE : return $this->filteredTypeSaleId[static::ROLE_TYPE_SALE];
+            case Property::ROLE_TYPE_AUCTION : return $this->filteredTypeAuctionId[static::ROLE_TYPE_SALE];
         }
 
         return false;
@@ -179,7 +184,7 @@ class WebFlowStatuses
         $this->roleTypeSaleId = static::getIDbyParam($roleTypes->getItems(), 'slug', '_id', static::ROLE_TYPE_SALE);
     }
 
-    protected function fillFilteredRoleTypes(WebFlowCollection $roleTypes)
+    protected function fillFilteredRoleTypes(WebFlowCollection $roleTypes, $roleType)
     {
         foreach($roleTypes->getFields() as $field){
             if($field['slug'] == static::FILTERING_CATEGORY){
@@ -189,11 +194,11 @@ class WebFlowStatuses
         }
     }
 
-    protected function setFilteredRoleTypes(array $items)
+    protected function setFilteredRoleTypes(array $items, $roleType)
     {
-        $this->filteredTypeAuctionId = static::getIDbyParam($items, 'name', 'id', static::ROLE_TYPE_AUCTION);
-        $this->filteredTypeLetId = static::getIDbyParam($items, 'name', 'id', static::ROLE_TYPE_LET);
-        $this->filteredTypeSaleId = static::getIDbyParam($items, 'name', 'id', static::ROLE_TYPE_SALE);
+        $this->filteredTypeAuctionId[$roleType] = static::getIDbyParam($items, 'name', 'id', static::ROLE_TYPE_AUCTION);
+        $this->filteredTypeLetId[$roleType] = static::getIDbyParam($items, 'name', 'id', static::ROLE_TYPE_LET);
+        $this->filteredTypeSaleId[$roleType] = static::getIDbyParam($items, 'name', 'id', static::ROLE_TYPE_SALE);
     }
 
     protected function fillStatuses(WebFlowCollection $statuses)

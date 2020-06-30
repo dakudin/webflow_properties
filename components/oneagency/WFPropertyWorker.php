@@ -30,7 +30,7 @@ class WFPropertyWorker extends WFWorkerBase
      * slug for field 'In feed'
      * if filed is true that property exists in feed, false otherwise
      */
-    const FIELD_IN_FEED_SLUG = 'in-feed-3';
+    const FIELD_IN_FEED_SLUG = 'in-feed';
 
     /**
      * @var string WebFlow collection name of Role types
@@ -267,7 +267,8 @@ class WFPropertyWorker extends WFWorkerBase
             }
         }
 
-        $this->webFlowStatuses = new WebFlowStatuses($this->_roleTypeCollection, $this->_propertyStatusCollection, $this->_salesPropertyCollection);
+        $this->webFlowStatuses = new WebFlowStatuses($this->_roleTypeCollection, $this->_propertyStatusCollection,
+            $this->_salesPropertyCollection, $this->_lettingsPropertyCollection);
 
         return true;
     }
@@ -287,8 +288,7 @@ class WFPropertyWorker extends WFWorkerBase
             'slug' => $dezrezPropertyId,
             'propertyid' => $dezrezPropertyId,
             'property-status' => $this->webFlowStatuses->getWebFlowMarketStatus($property->marketStatus),
-//            'rental-price-term' =>
-            'rent-or-sale-price' => $property->price,
+            'asking-price' => $property->price,
             'asking-price-text' => $property->priceText,
             'number-of-rooms' => $property->numberOfRooms,
             'number-of-baths' => $property->numberOfBath,
