@@ -188,7 +188,7 @@ class WebFlowStatuses
     {
         foreach($roleTypes->getFields() as $field){
             if($field['slug'] == static::FILTERING_CATEGORY){
-                $this->setFilteredRoleTypes($field['validations']['options']);
+                $this->setFilteredRoleTypes($field['validations']['options'], $roleType);
                 break;
             }
         }
