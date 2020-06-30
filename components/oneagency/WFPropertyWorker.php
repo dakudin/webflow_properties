@@ -320,7 +320,7 @@ class WFPropertyWorker extends WFWorkerBase
 
     protected function getPropertySlug($dezrezPropertyId, $propertyName)
     {
-        return 'in-' . Inflector::slug(implode('-', $propertyName . '-' . $dezrezPropertyId));
+        return 'in-' . Inflector::slug($propertyName . '-' . $dezrezPropertyId);
     }
 
     /**
