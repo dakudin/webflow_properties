@@ -81,6 +81,11 @@ marketStatusArray.forEach( function(elem) {
     elem.parentElement.setAttribute('data-status-sold', status);
 });
 
+const moveItems = document.querySelectorAll('.to-be-moved');
+moveItems.forEach( function(move) {
+   document.getElementById('mix-container').appendChild(move);
+});
+
 var minPriceTxt = "Min Price";
 var minPriceRangeInput = document.querySelector('[name="minPrice"]');
 var maxPriceRangeInput = document.querySelector('[name="maxPrice"]');
@@ -242,9 +247,7 @@ $(document).ready(function(){
 
     mixitup.Mixer.registerFilter('testResultEvaluateHideShow', 'range', filterTestResult);
 
-
     handleMarketTypeInputChange();
-
 });
 
 JS;
