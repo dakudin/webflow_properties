@@ -119,8 +119,6 @@ var mixerConfig = {
         onMixEnd: function(state) {
             $('.blog-count').text(state.totalMatching);
 
-/*            Webflow.require('slider').redraw();*/
-
             if (state.activePagination.limit === activeLimit && state.activePagination.page === activePage) return;
 
             activePage = state.activePagination.page;
@@ -132,7 +130,6 @@ var mixerConfig = {
         }
     }
 };
-
 
 function getRange() {
     var min = Number(minPriceRangeInput.value);
@@ -181,19 +178,8 @@ function changeFltrOptions(id, selectValues, isFirstSelected){
         $('#'+id).val($('#'+id+' option:last').val());
 }
 
-
 $(document).ready(function(){
-/*
-    $('.category_icons.quickview1').each(function(){
-        $(this).click(function(){
-            setTimeout(function(){
-                Webflow.ready();
-            },500);
-        });
-    });
-*/
     $('.w-condition-invisible.w-slide').remove();
-
     var mixerObj = mixitup('#mix-container', mixerConfig);
 
     function handleRangeInputChange() {

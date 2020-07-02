@@ -66,9 +66,6 @@ function loadSimilar(){
     var curPropertyType = $('#current-prop-type').html();
     var curPropertyBeds = Number($('#current-prop-beds').html());
     var currentPropertyId = $('#current-prop-id').html();
-/*    var curMarkerStatusText = $('#cur-marker-status').html();
-    var curMarkerStatusIsNotVisible = $('#cur-marker-status').hasClass(invisibleClass);
-*/
 
     $('.property-item').each(function(){
         var itemPropertyId = $(this).find('div.item-property_id').html();
@@ -96,7 +93,6 @@ function loadSimilar(){
                 carouselItem.find('h2.text-prop-name').html(itemPropertyImage.html());
                 carouselItem.find('div.text-price-value').html($(this).find('div.item-prop-price').html());
                 carouselItem.find('div.text-prop-address').html($(this).find('div.item-prop-address').html());
-/*                carouselImage.first().first().html(curMarkerStatusText); */
                 carouselItem.addClass('item-updated');
 
                 carouselImageMobile.attr('href', itemPropertyImage.attr('href'));
@@ -106,13 +102,6 @@ function loadSimilar(){
                 carouselItemMobile.find('div.text-prop-address').html($(this).find('div.item-prop-address').html());
                 carouselItemMobile.addClass('item-updated');
                 itemsFilled++;
-/*
-                if(curMarkerStatusIsNotVisible){
-                    carouselImage.first().addClass(invisibleClass);
-                }else{
-                    carouselImage.first().removeClass(invisibleClass);
-                }
-*/
             }else{
                 carouselUrl.attr('href', '');
                 carouselImage.attr('style', '');
