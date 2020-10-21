@@ -23,7 +23,7 @@ class GoogleReview extends Model
 
     public $reviewerName;
 
-//    public $reviewerPhotoUrl;
+    public $reviewerPhotoUrl;
 
     public $reviewerIsAnonimous;
 

@@ -135,7 +135,7 @@ class WHClinicController extends Controller
     }
 
     /**
-     * Get all properties from Google My Business and store their to WebFlow
+     * Get all reviews from Google My Business and store their to WebFlow
      */
     private function refreshReviewsSA()
     {

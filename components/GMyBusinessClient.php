@@ -112,6 +112,7 @@ class GMyBusinessClient extends Component
                 $googleReview->reviewId = $review->reviewId;
                 $googleReview->reviewerName = $review->reviewer->displayName;
                 $googleReview->reviewerIsAnonimous = $review->reviewer->isAnonymous;
+                $googleReview->reviewerPhotoUrl = $review->reviewer->profilePhotoUrl;
                 $googleReview->starRating = $review->starRating;
                 $googleReview->comment = $review->comment;
                 $googleReview->createTime = $review->createTime;
