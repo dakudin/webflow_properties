@@ -121,7 +121,7 @@ class GMyBusinessClient extends Component
             }
 
             $nextPageToken = $listReviewsResponse->nextPageToken;
-            echo "Location: " . $location->name . " / Average rating: " . $listReviewsResponse->averageRating . "/ Review count: " . $listReviewsResponse->totalReviewCount . "\r\n";
+            echo "Location: " . $location->locationName . " / Average rating: " . $listReviewsResponse->averageRating . "/ Review count: " . $listReviewsResponse->totalReviewCount . "\r\n";
 
         } while ($listReviewsResponse->nextPageToken);
 
