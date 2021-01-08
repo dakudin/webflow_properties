@@ -34,6 +34,11 @@ class WFPropertyWorker extends WFWorkerBase
     const FIELD_IN_FEED_SLUG = 'in-feed';
 
     /**
+     * @var string domain name
+     */
+    protected $domainName;
+
+    /**
      * @var string WebFlow collection name of Role types
      */
     protected $_roleTypeCollectionName;
@@ -102,12 +107,13 @@ class WFPropertyWorker extends WFWorkerBase
      * @param $lettingsCollectionName
      * @param $lettingsPropertyIdSlug
      * @param $propertyStatusCollectionName
+     * @param $domainName
      * @param $publishToLiveSite
      * @throws \Exception
      */
     public function __construct($apiKey, $roleTypeCollectionName, $salesCollectionName, $salesPropertyIdSlug,
                                 $lettingsCollectionName, $lettingsPropertyIdSlug,
-                                $propertyStatusCollectionName, $publishToLiveSite)
+                                $propertyStatusCollectionName, $domainName, $publishToLiveSite)
     {
         parent::__construct($apiKey, $publishToLiveSite);
 
@@ -117,6 +123,7 @@ class WFPropertyWorker extends WFWorkerBase
         $this->_lettingsCollectionName = $lettingsCollectionName;
         $this->_lettingsPropertyIdSlug = $lettingsPropertyIdSlug;
         $this->_propertyStatusCollectionName = $propertyStatusCollectionName;
+        $this->domainName = $domainName;
 
         if(!$this->prepareWFClient()){
             throw new \Exception('Error - cannot prepare WebFlow client');
@@ -313,7 +320,7 @@ class WFPropertyWorker extends WFWorkerBase
             $item['epc-rating'] = $property->epc;
 
         if (!empty($property->videoTour))
-            $item['video-viewings'] = $property->videoTour;
+            $item['video-viewings'] = $this->fixPropertyVideoTour($property->videoTour);
 
         if (!empty($property->brochure))
             $item['pdf-brochure'] = $property->brochure;
@@ -324,6 +331,31 @@ class WFPropertyWorker extends WFWorkerBase
     protected function getPropertySlug($dezrezPropertyId, $propertyName)
     {
         return 'in-' . Inflector::slug($propertyName . '-' . $dezrezPropertyId);
+    }
+
+    /**
+     * Convert original Youtube url to embed
+     * original url example - https://www.youtube.com/watch?v=mEsKQIW0EGQ&feature=youtu.be
+     * converted url example - https://www.youtube.com/embed/mEsKQIW0EGQ?wmode=opaque&autoplay=1&widget_referrer=https%3A%2F%2Foneagency.co.uk%2F&enablejsapi=1&origin=https%3A%2F%2Fcdn.embedly.com&widgetid=1
+     * @param $videoUrl
+     * @return string
+     */
+    protected function fixPropertyVideoTour($videoUrl)
+    {
+        if(empty($videoUrl)) return $videoUrl;
+
+        $matches = null;
+        $returnValue = preg_match('/v=(.*)&/', $videoUrl, $matches);
+
+        if(isset($matches[1])){
+            $videoUrl =
+                'https://www.youtube.com/embed/' . $matches[1]
+                .'?wmode=opaque&autoplay=1&widget_referrer=https%3A%2F%2F'
+                .$this->domainName
+                .'%2F&enablejsapi=1&origin=https%3A%2F%2Fcdn.embedly.com&widgetid=1';
+        }
+
+        return $videoUrl;
     }
 
     /**

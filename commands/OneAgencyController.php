@@ -59,6 +59,7 @@ class OneAgencyController extends Controller
             Yii::$app->params['one_agency']['webflow_lettings_collection']['collection_name'],
             Yii::$app->params['one_agency']['webflow_lettings_collection']['property_id_slug'],
             Yii::$app->params['one_agency']['webflow_property_status_collection'],
+            Yii::$app->params['one_agency']['domain_name'],
             Yii::$app->params['one_agency']['webflow_published_to_live']
         );
 
