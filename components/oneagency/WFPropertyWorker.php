@@ -352,7 +352,9 @@ class WFPropertyWorker extends WFWorkerBase
                 'https://www.youtube.com/embed/' . $matches[1]
                 .'?wmode=opaque&autoplay=1&widget_referrer=https%3A%2F%2F'
                 .$this->domainName
-                .'%2F&enablejsapi=1&origin=https%3A%2F%2Fcdn.embedly.com&widgetid=1';
+                .'%2F&enablejsapi=1&origin=https%3A%2F%2F'
+                .$this->domainName
+                .'&widgetid=1';
         }
 
         return $videoUrl;
