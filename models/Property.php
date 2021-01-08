@@ -45,6 +45,7 @@ class Property extends Model
     public $epc;
     public $brochure;
     public $featured;
+    public $videoTour;
 
 
     /**

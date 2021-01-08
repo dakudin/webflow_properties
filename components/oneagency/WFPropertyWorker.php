@@ -312,6 +312,9 @@ class WFPropertyWorker extends WFWorkerBase
         if (!empty($property->epc))
             $item['epc-rating'] = $property->epc;
 
+        if (!empty($property->videoTour))
+            $item['video-viewings'] = $property->videoTour;
+
         if (!empty($property->brochure))
             $item['pdf-brochure'] = $property->brochure;
 

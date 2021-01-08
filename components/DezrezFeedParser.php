@@ -50,12 +50,17 @@ class DezrezFeedParser extends Component
     const EPC_FIELD_NAME = 'EPC';
 
     /**
-     * field name for detecting EPC rating image url
+     * field name for detecting Virtual Tour url
+     */
+    const VIRTUAL_TOUR_FIELD_NAME = 'VirtualTour';
+
+    /**
+     * field name for detecting Brochure url
      */
     const BROCHURE_FIELD_NAME = 'Brochure';
 
     /**
-     * field name for detecting EPC rating image url
+     * field name for detecting Featured flag
      */
     const FEATURED_FLAG_NAME = 'Featured';
 
@@ -169,6 +174,8 @@ class DezrezFeedParser extends Component
         $property->epc = $this->getEPC($dezrezProperty['EPC']);
         if(empty($property->epc))
             $property->epc = $this->getEPCinDocuments($dezrezProperty['Documents']);
+
+        $property->videoTour = $this->getVideoTour($dezrezProperty['Documents']);
 
         $property->brochure = $this->getBrochure($dezrezProperty['Documents']);
 
@@ -304,6 +311,23 @@ class DezrezFeedParser extends Component
 
         return '';
     }
+
+    /**
+     * @param array $documents
+     * @return string
+     */
+    protected function getVideoTour(array $documents)
+    {
+        foreach($documents as $document){
+            if($document['DocumentSubType']['SystemName'] == self::VIRTUAL_TOUR_FIELD_NAME
+                && $document['DocumentType']['SystemName'] == 'Link'
+            )
+                return $document['Url'];
+        }
+
+        return '';
+    }
+
 
     /**
      * @param array $documents
