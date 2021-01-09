@@ -337,24 +337,52 @@ class WFPropertyWorker extends WFWorkerBase
      * Convert original Youtube url to embed
      * original url example - https://www.youtube.com/watch?v=mEsKQIW0EGQ&feature=youtu.be
      * converted url example - https://www.youtube.com/embed/mEsKQIW0EGQ?wmode=opaque&autoplay=1&widget_referrer=https%3A%2F%2Foneagency.co.uk%2F&enablejsapi=1&origin=https%3A%2F%2Fcdn.embedly.com&widgetid=1
+     * "url" => "https://www.youtube.com/watch?v=mEsKQIW0EGQ&feature=youtu.be",
+     * "metadata" =>
+     *   [
+     *       "width" => 854,
+     *       "height" => 480,
+     *       "html"] => "<iframe class="embedly-embed" src="//cdn.embedly.com/widgets/media.html?src=https%3A%2F%2Fwww.youtube.com%2Fembed%2FmEsKQIW0EGQ%3Ffeature%3Doembed&display_name=YouTube&url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DmEsKQIW0EGQ&image=https%3A%2F%2Fi.ytimg.com%2Fvi%2FmEsKQIW0EGQ%2Fhqdefault.jpg&key=c4e54deccf4d4ec997a64902e9a30300&type=text%2Fhtml&schema=youtube" width="854" height="480" scrolling="no" title="YouTube embed" frameborder="0" allow="autoplay; fullscreen" allowfullscreen="true"></iframe>",
+     *       "aspectRatio" => 0,
+     *       "title" => "Video Viewing",
+     *       "provider_name" => "YouTube",
+     *       "type" => "video",
+     *       "thumbnail_url" => "https://i.ytimg.com/vi/mEsKQIW0EGQ/hqdefault.jpg",
+     *       "author_name" => "OneAgency"
+     *  ]
+     *
      * @param $videoUrl
-     * @return string
+     * @return string|array
      */
     protected function fixPropertyVideoTour($videoUrl)
     {
         if(empty($videoUrl)) return $videoUrl;
 
         $matches = null;
-        $returnValue = preg_match('/v=(.*)&/', $videoUrl, $matches);
+        $returnValue = preg_match('/(?:youtube(?:-nocookie)?\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})\W/', $videoUrl, $matches);
 
         if(isset($matches[1])){
-            $videoUrl =
-                'https://www.youtube.com/embed/' . $matches[1]
-                .'?wmode=opaque&autoplay=1&widget_referrer=https%3A%2F%2F'
-                .$this->domainName
-                .'%2F&enablejsapi=1&origin=https%3A%2F%2F'
-                .$this->domainName
-                .'&widgetid=1';
+            $videoUrl = [
+                "url" => $videoUrl,
+                "metadata" =>
+                    [
+                        "width" => 854,
+                        "height" => 480,
+                        "html" => '<iframe class="embedly-embed" src="//cdn.embedly.com/widgets/media.html?src=https%3A%2F%2Fwww.youtube.com%2Fembed%2F'
+                            . $matches[1]
+                            . '%3Ffeature%3Doembed&display_name=YouTube&url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D'
+                            . $matches[1]
+                            . '&image=https%3A%2F%2Fi.ytimg.com%2Fvi%2F'
+                            . $matches[1]
+                            . '%2Fhqdefault.jpg&key=c4e54deccf4d4ec997a64902e9a30300&type=text%2Fhtml&schema=youtube" width="854" height="480" scrolling="no" title="YouTube embed" frameborder="0" allow="autoplay; fullscreen" allowfullscreen="true"></iframe>',
+                        "aspectRatio" => 0,
+                        "title" => "Video Viewing",
+                        "provider_name" => "YouTube",
+                        "type" => "video",
+                        "thumbnail_url" => 'https://i.ytimg.com/vi/' . $matches[1] . '/hqdefault.jpg',
+                        "author_name" => "OneAgency"
+                    ]
+            ];
         }
 
         return $videoUrl;
