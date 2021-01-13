@@ -19,7 +19,7 @@ use app\models\GoogleReview;
 use yii\console\ExitCode;
 
 /**
- * This command parse remote feed and store data to webflow web server by its api.
+ * This command parse remote feed and store data to webflow web server by its API.
  *
  * @author Kudin Dmitry <dakudin@gmail.com>
  */

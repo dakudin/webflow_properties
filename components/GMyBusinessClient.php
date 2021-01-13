@@ -18,8 +18,6 @@ use yii\base\Component;
  *
  * @author Kudin Dmitry <dakudin@gmail.com>
  *
- * https://console.developers.google.com/apis/api/mybusiness.googleapis.com/overview?project=whitehouse-244715 link to the GMB project
- * https://console.developers.google.com/iam-admin/iam?project=whitehouse-244715 admin panel of the project
  * https://github.com/googleapis/google-api-php-client A PHP client library for accessing Google APIs
  * https://developers.google.com/identity/protocols/OAuth2ServiceAccount Using OAuth 2.0 for Server to Server Applications
  * https://developers.google.com/my-business/content/location-data#list_all_locations Google My Business API Guide

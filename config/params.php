@@ -15,6 +15,8 @@ return [
         'webflow_property_status_collection' => 'Property Statuses',
         'webflow_published_to_live' => true,
         'domain_name' => 'www.oneagencygroup.co.uk', //www.oneagencygroup.co.uk // oneagency.webflow.io
+
+        'webflow_review_collection' => '',
     ],
     'white_house_clinic' => [
         'webflow_review_collection' => 'Reviews',

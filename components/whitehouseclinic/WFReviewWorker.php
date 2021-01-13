@@ -4,6 +4,8 @@
  * Created by Kudin Dmitry
  * Date: 20.06.2019
  * Time: 8:57
+ * https://console.developers.google.com/apis/api/mybusiness.googleapis.com/overview?project=whitehouse-244715 link to the GMB project
+ * https://console.developers.google.com/iam-admin/iam?project=whitehouse-244715 admin panel of the project
  */
 
 namespace app\components\whitehouseclinic;

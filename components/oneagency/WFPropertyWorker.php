@@ -17,6 +17,9 @@ use app\components\WebFlowCollection;
 /**
  * Class provide interface for inserting and updating properties via WebFlow API.
  *
+ * https://console.developers.google.com/apis/api/mybusiness.googleapis.com/overview?project=oneagency-301113&authuser=2&pli=1&folder=&organizationId=
+ * https://developers.google.com/my-business/content/basic-setup
+ *
  * @author Kudin Dmitry <dakudin@gmail.com>
  */
 class WFPropertyWorker extends WFWorkerBase
