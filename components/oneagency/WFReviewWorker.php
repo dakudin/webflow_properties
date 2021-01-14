@@ -43,7 +43,7 @@ class WFReviewWorker extends WFReviewWorkerBase
             'review-id' => $googleReviewId,
             'stars' => static::getWFStarByGoogleStar($review->starRating),
             '4-5-stars-only' => static::isWFStarEqualTo4or5($review->starRating),
-            'review-full-text' => "“" . $review->comment . "”",
+            'review-full-text' => "“" . $commentInOneLine . "”",
             'review-text-desktop' => "“" . StringHelper::truncate($commentInOneLine, static::$reviewDesktopLength, '...') . "”",
             'review-text-mobile' => "“" . StringHelper::truncate($commentInOneLine, static::$reviewMobileLength, '...') . "”",
             'creation-date' => $review->createTime, //\DateTime::createFromFormat('Y-m-d\TH:i:s.uP', $review->createTime)->format('m/d/Y'),
