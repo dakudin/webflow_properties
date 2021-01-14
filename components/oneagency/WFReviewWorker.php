@@ -47,11 +47,10 @@ class WFReviewWorker extends WFReviewWorkerBase
             'review-text-desktop' => "“" . StringHelper::truncate($commentInOneLine, static::$reviewDesktopLength, '...') . "”",
             'review-text-mobile' => "“" . StringHelper::truncate($commentInOneLine, static::$reviewMobileLength, '...') . "”",
             'creation-date' => $review->createTime, //\DateTime::createFromFormat('Y-m-d\TH:i:s.uP', $review->createTime)->format('m/d/Y'),
-            'clinic-location' => $review->locationName,
+            'location-name' => $review->locationName,
             'location-address' => $review->locationAddress,
             'location-primaryphone' => $review->locationPrimaryPhone,
             'name' => $review->reviewerName,
-            'anonymous-profile' => $review->reviewerIsAnonimous,
             'profile-image' => $review->reviewerIsAnonimous ? '' : $review->reviewerPhotoUrl,
             'slug' => $googleReviewId,
         ];
