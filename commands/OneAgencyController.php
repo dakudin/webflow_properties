@@ -111,7 +111,8 @@ class OneAgencyController extends Controller
             $gmb['client_id'],
             $gmb['client_secret'],
             $gmb['account_email'],
-            $gmb['refresh_token']
+            $gmb['refresh_token'],
+            Yii::$app->params['one_agency']['domain_name']
         );
 
         $gmbClient->refreshAllReviews();

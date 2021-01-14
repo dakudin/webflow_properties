@@ -63,7 +63,8 @@ class WHClinicController extends Controller
             $gmb['client_id'],
             $gmb['client_secret'],
             $gmb['account_email'],
-            $gmb['refresh_token']
+            $gmb['refresh_token'],
+            Yii::$app->params['white_house_clinic']['domain_name']
         );
 
         $gmbClient->refreshAllReviews();

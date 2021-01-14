@@ -14,12 +14,12 @@ return [
         ],
         'webflow_property_status_collection' => 'Property Statuses',
         'webflow_published_to_live' => true,
-        'domain_name' => 'www.oneagencygroup.co.uk', //www.oneagencygroup.co.uk // oneagency.webflow.io
-
-        'webflow_review_collection' => '',
+        'domain_name' => 'oneagencygroup.co.uk',
+        'webflow_review_collection' => 'Reviews',
     ],
     'white_house_clinic' => [
         'webflow_review_collection' => 'Reviews',
         'webflow_published_to_live' => true,
+        'domain_name' => 'whitehouse-clinic.co.uk',
     ],
 ];

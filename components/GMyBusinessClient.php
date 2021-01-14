@@ -35,7 +35,9 @@ class GMyBusinessClient extends Component
 
     protected $reviews;
 
-    public function __construct($clientId, $clientSecret, $clientEmail, $refreshToken)
+    protected $locationDomain;
+
+    public function __construct($clientId, $clientSecret, $clientEmail, $refreshToken, $locationDomain)
     {
         parent::__construct();
 
@@ -45,6 +47,7 @@ class GMyBusinessClient extends Component
         $this->client->addScope($this->scope);
         $this->client->setSubject($clientEmail);
         $this->client->refreshToken($refreshToken);
+        $this->locationDomain = $locationDomain;
     }
 
     /*
@@ -81,7 +84,10 @@ class GMyBusinessClient extends Component
 
         if (empty($locationsList) === false) {
             foreach ($locationsList as $locKey => $location) {
-                $this->getGMBReviews($location);
+                //if location from specified domain get reviews
+                if(strpos($location->websiteUrl, $this->locationDomain) !== FALSE) {
+                    $this->getGMBReviews($location);
+                }
             }
         }
     }
