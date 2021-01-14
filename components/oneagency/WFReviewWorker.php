@@ -36,16 +36,16 @@ class WFReviewWorker extends WFReviewWorkerBase
      */
     protected function fillReview(GoogleReview $review, $googleReviewId)
     {
-        $commentInOneLine = str_replace(["\r","\n"], ' ', $review->comment);
+        $commentInOneLine = trim(str_replace(["\r","\n"], ' ', $review->comment));
         $item = [
             '_archived' => false,
             '_draft' => false,
             'review-id' => $googleReviewId,
             'stars' => static::getWFStarByGoogleStar($review->starRating),
             '4-5-stars-only' => static::isWFStarEqualTo4or5($review->starRating),
-            'review-full-text' => "“" . $commentInOneLine . "”",
-            'review-text-desktop' => "“" . StringHelper::truncate($commentInOneLine, static::$reviewDesktopLength, '...') . "”",
-            'review-text-mobile' => "“" . StringHelper::truncate($commentInOneLine, static::$reviewMobileLength, '...') . "”",
+            'review-full-text' => empty($commentInOneLine) ? '' : "“" . $commentInOneLine . "”",
+            'review-text-desktop' => empty($commentInOneLine) ? '' : "“" . StringHelper::truncate($commentInOneLine, static::$reviewDesktopLength, '...') . "”",
+            'review-text-mobile' => empty($commentInOneLine) ? '' : "“" . StringHelper::truncate($commentInOneLine, static::$reviewMobileLength, '...') . "”",
             'creation-date' => $review->createTime, //\DateTime::createFromFormat('Y-m-d\TH:i:s.uP', $review->createTime)->format('m/d/Y'),
             'location-name' => $review->locationName,
             'location-address' => $review->locationAddress,
