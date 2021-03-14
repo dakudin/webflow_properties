@@ -362,7 +362,8 @@ class WFPropertyWorker extends WFWorkerBase
         if(empty($videoUrl)) return $videoUrl;
 
         $matches = null;
-        $returnValue = preg_match('/(?:youtube(?:-nocookie)?\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})\W/', $videoUrl, $matches);
+//        $returnValue = preg_match('/(?:youtube(?:-nocookie)?\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})\W/', $videoUrl, $matches);
+        $returnValue = preg_match('/^(?:https?://)?(?:www\.)?(?:youtu\.be/|youtube\.com(?:/embed/|/v/|/watch\?v=|/watch\?.+&v=))([\w-]{11})(?:.+)?$/', $videoUrl, $matches);
 
         if(isset($matches[1])){
             $videoUrl = [
