@@ -85,6 +85,9 @@ class OneAgencyController extends Controller
             Yii::$app->params['one_agency']['webflow_api_key'],
             Yii::$app->params['one_agency']['webflow_review_collection'],
             Yii::$app->params['one_agency']['webflow_review_stats_collection']['collection_name'],
+            Yii::$app->params['one_agency']['webflow_review_stats_collection']['total-reviews'],
+            Yii::$app->params['one_agency']['webflow_review_stats_collection']['overall-rating'],
+            Yii::$app->params['one_agency']['webflow_review_stats_collection']['google-reviews'],
             Yii::$app->params['one_agency']['webflow_published_to_live']
         );
 
@@ -118,7 +121,8 @@ class OneAgencyController extends Controller
 
         $gmbClient->refreshAllReviews();
 
-        var_dump($gmbClient->getReviewStats());
+        $this->storeReviewStatsIntoWebFlow($gmbClient->getTotalReviewCount(), $gmbClient->getAverageRating());
+
         return;
 
         $this->storeReviewsIntoWebFlow($gmbClient->getReviews());
@@ -191,4 +195,17 @@ class OneAgencyController extends Controller
             }
         }
     }
+
+    /**
+     * Get pack of parsed reviews and store their into WebFlow
+     * @param $totalReviews
+     * @param $averageRating
+     */
+    private function storeReviewStatsIntoWebFlow($totalReviews, $averageRating)
+    {
+        if(!$this->WFReviewWorker->storeReviewStats($totalReviews, $averageRating)){
+            echo "Error OneAgency GMB: Cannot store review stats\r\n";
+        }
+    }
+
 }

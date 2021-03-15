@@ -37,18 +37,40 @@ class WFReviewWorkerBase extends WFWorkerBase
     protected $reviewStatsCollection;
 
     /**
+     * @var string WebFlow slug of total review field
+     */
+    protected $totalReviewsFieldSlug;
+
+    /**
+     * @var string WebFlow slug of overall rating field
+     */
+    protected $overallRatingFieldSlug;
+
+    /**
+     * @var string WebFlow slug of review stats item
+     */
+    protected $reviewStatsItemSlug;
+
+    /**
      * @param array $apiKey
      * @param $reviewCollectionName
      * @param $reviewStatsCollectionName
+     * @param $totalReviewsFieldSlug
+     * @param $overallRatingFieldSlug
+     * @param $reviewStatsItemSlug
      * @param $publishToLiveSite
      * @throws \Exception
      */
-    public function __construct($apiKey, $reviewCollectionName, $reviewStatsCollectionName, $publishToLiveSite)
+    public function __construct($apiKey, $reviewCollectionName, $reviewStatsCollectionName, $totalReviewsFieldSlug,
+                                $overallRatingFieldSlug, $reviewStatsItemSlug, $publishToLiveSite)
     {
         parent::__construct($apiKey, $publishToLiveSite);
 
         $this->reviewCollectionName = $reviewCollectionName;
         $this->reviewStatsCollectionName = $reviewStatsCollectionName;
+        $this->totalReviewsFieldSlug = $totalReviewsFieldSlug;
+        $this->overallRatingFieldSlug = $overallRatingFieldSlug;
+        $this->reviewStatsItemSlug = $reviewStatsItemSlug;
 
         $this->prepareWFClient();
     }
@@ -128,8 +150,29 @@ class WFReviewWorkerBase extends WFWorkerBase
         return $success;
     }
 
-     /**
+    /**
+     * Update item as review stats in WebFlow collection
+     * @param $totalReviews
+     * @param $averageRating
+     * @return bool
+     */
+    public function storeReviewStats($totalReviews, $averageRating)
+    {
+        $statsItems = $this->reviewStatsCollection->getItems();
+        if(!(is_array($statsItems) && $statsItems[0]))
+            return false;
+
+        $item = $this->fillReviewStats($totalReviews, $averageRating);
+
+        echo "----------update review stats-------------\r\n";
+        $wfItem = $this->updateWFItem($this->reviewStatsCollection->getId(), '',  $statsItems[0][$this->fieldId], $item);
+
+        return array_key_exists($this->fieldId, $wfItem);
+    }
+
+    /**
      * Prepare WebFlow client for first use. Load collections with old reviews IDs
+     * @throws \Exception
      */
     protected function prepareWFClient()
     {
@@ -151,7 +194,6 @@ class WFReviewWorkerBase extends WFWorkerBase
         if (!is_array($collections))
             throw new \Exception("Cannot get WF collection list");
 
-var_dump($collections);
         foreach ($collections as $collection) {
             if ($collection['name'] == $this->reviewCollectionName) {
                 $this->reviewCollection = new WebFlowCollection($collection['_id'], $collection['name'] ,$collection['slug'], $this->_webFlowClient);
@@ -168,12 +210,6 @@ var_dump($this->reviewStatsCollection); die;
         return true;
     }
 
-    private function loadCollection(WebFlowCollection $wfCollection)
-    {
-        if (!$wfCollection->loadFields($this->_apiKey))
-            throw new \Exception("Cannot load WF collection fields of collection id: $id, name: $name, slug: $slug");
-    }
-
     /**
      * Need to realize this method in child class for filling webflow item with data
      * @param GoogleReview $review
@@ -183,6 +219,26 @@ var_dump($this->reviewStatsCollection); die;
     protected function fillReview(GoogleReview $review, $googleReviewId)
     {
         return [];
+    }
+
+    /**
+     * Need to realize this method in child class for filling webflow item with data
+     * @param $totalReviews
+     * @param $averageRating
+     * @return array
+     */
+    protected function fillReviewStats($totalReviews, $averageRating)
+    {
+        return [];
+    }
+
+    /*
+     * Round total reviews down to 5 (177->175 / 175->175 / 171->170)
+     */
+    protected function getStatsTotalReviews($totalReviews)
+    {
+        $totalReviews = (round($totalReviews)%5 === 0) ? round($totalReviews) : round(($totalReviews+5/2)/5)*5-5;
+        return $totalReviews > 0 ? $totalReviews : 1;
     }
 
     /*

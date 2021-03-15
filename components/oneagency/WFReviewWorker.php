@@ -22,12 +22,17 @@ class WFReviewWorker extends WFReviewWorkerBase
      * @param array $apiKey
      * @param $reviewCollectionName
      * @param $reviewStatsCollectionName
+     * @param $totalReviewsFieldSlug
+     * @param $overallRatingFieldSlug
+     * @param $reviewStatsItemSlug
      * @param $publishToLiveSite
      * @throws \Exception
      */
-    public function __construct($apiKey, $reviewCollectionName, $reviewStatsCollectionName, $publishToLiveSite)
+    public function __construct($apiKey, $reviewCollectionName, $reviewStatsCollectionName, $totalReviewsFieldSlug,
+                                $overallRatingFieldSlug, $reviewStatsItemSlug, $publishToLiveSite)
     {
-        parent::__construct($apiKey, $reviewCollectionName, $reviewStatsCollectionName, $publishToLiveSite);
+        parent::__construct($apiKey, $reviewCollectionName, $reviewStatsCollectionName, $totalReviewsFieldSlug,
+            $overallRatingFieldSlug, $reviewStatsItemSlug, $publishToLiveSite);
     }
 
     /**
@@ -54,6 +59,22 @@ class WFReviewWorker extends WFReviewWorkerBase
             'name' => $review->reviewerName,
             'profile-image' => $review->reviewerIsAnonimous ? '' : $review->reviewerPhotoUrl,
             'slug' => $googleReviewId,
+        ];
+
+        return $item;
+    }
+
+    protected function fillReviewStats($totalReviews, $averageRating)
+    {
+        $item = [
+            '_archived' => false,
+            '_draft' => false,
+            $this->totalReviewsFieldSlug => $this->getStatsTotalReviews($totalReviews),
+            $this->overallRatingFieldSlug => $averageRating,
+            'slug' => $this->reviewStatsItemSlug,
+//      ["name"]=> "Google Reviews"
+//    ["_id"]=> "604f35624fc50cd870dca323"
+
         ];
 
         return $item;

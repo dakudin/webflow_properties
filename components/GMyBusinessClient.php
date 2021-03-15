@@ -73,8 +73,12 @@ class GMyBusinessClient extends Component
         return $this->reviews;
     }
 
-    public function getReviewStats(){
-        return $this->locations;
+    public function getAverageRating(){
+        return $this->averageRating;
+    }
+
+    public function getTotalReviewCount(){
+        return $this->totalReviewCount;
     }
 
     protected function refreshAccounts()
@@ -104,6 +108,8 @@ class GMyBusinessClient extends Component
                 }
             }
         }
+
+        $this->countReviewStats();
     }
 
     /*
@@ -120,12 +126,12 @@ class GMyBusinessClient extends Component
             }
             $listReviewsResponse = $reviews->listAccountsLocationsReviews($location->name, $params);
 
-            $this->addReviewStats($location, $listReviewsResponse->averageRating, $listReviewsResponse->totalReviewCount);
-
             $reviewsList = $listReviewsResponse->getReviews();
             foreach ($reviewsList as $index => $review) {
                 $this->addReview($location, $review);
             }
+
+            $this->addReviewStats($location, $listReviewsResponse->averageRating, $listReviewsResponse->totalReviewCount);
 
             $nextPageToken = $listReviewsResponse->nextPageToken;
             echo "Location: " . $location->locationName . " / Average rating: " . $listReviewsResponse->averageRating . "/ Review count: " . $listReviewsResponse->totalReviewCount . "\r\n";
@@ -150,6 +156,31 @@ class GMyBusinessClient extends Component
         }
 
         $this->locations[$location->name] = $reviewStat;
+    }
+
+    /*
+     * Count average rating and total reviews count
+     */
+    private function countReviewStats()
+    {
+        $this->averageRating = 5;
+        $this->totalReviewCount = 0;
+        $totalReviewCount = 0;
+        $averageRating = 0;
+        $i = 0;
+
+        foreach ($this->locations as $location){
+            if($location instanceof GoogleLocation){
+                $totalReviewCount += $location->totalReviewCount;
+                $averageRating += $location->reviewAverageRating;
+                $i++;
+            }
+        }
+
+        if($i>0){
+            $this->totalReviewCount = $totalReviewCount;
+            $this->averageRating = round($averageRating / $i, 1);
+        }
     }
 
     protected function addReview($location, $review)

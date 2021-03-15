@@ -177,7 +177,7 @@ class WFWorkerBase extends Component
             var_dump($result);
         }*/
 
-        if(array_key_exists($this->fieldId, $result) !== FALSE){
+        if($sourceItemId && array_key_exists($this->fieldId, $result) !== FALSE){
             $this->_wfItems[$sourceItemId]['flagUpdated'] = true;
         }
 
