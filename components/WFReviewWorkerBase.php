@@ -151,14 +151,15 @@ class WFReviewWorkerBase extends WFWorkerBase
         if (!is_array($collections))
             throw new \Exception("Cannot get WF collection list");
 
+var_dump($collections);
         foreach ($collections as $collection) {
             if ($collection['name'] == $this->reviewCollectionName) {
                 $this->reviewCollection = new WebFlowCollection($collection['_id'], $collection['name'] ,$collection['slug'], $this->_webFlowClient);
                 if(!$this->reviewCollection->loadFields($this->_apiKey))
-                    throw new \Exception("Cannot get WF collection fields");
+                    throw new \Exception("Cannot get WF collection $this->reviewCollectionName fields");
             }
             if ($collection['name'] == $this->reviewStatsCollectionName) {
-                $this->reviewCollection = new WebFlowCollection($collection['_id'], $collection['name'] ,$collection['slug'], $this->_webFlowClient);
+                $this->reviewStatsCollection = new WebFlowCollection($collection['_id'], $collection['name'] ,$collection['slug'], $this->_webFlowClient);
                 if(!$this->reviewStatsCollection->loadFields($this->_apiKey))
                     throw new \Exception("Cannot get WF collection fields");
             }
