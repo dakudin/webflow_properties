@@ -23,12 +23,13 @@ class WFReviewWorker extends WFReviewWorkerBase
     /**
      * @param array $apiKey
      * @param $reviewCollectionName
+     * @param $reviewStatsCollectionName
      * @param $publishToLiveSite
      * @throws \Exception
      */
-    public function __construct($apiKey, $reviewCollectionName, $publishToLiveSite)
+    public function __construct($apiKey, $reviewCollectionName, $reviewStatsCollectionName, $publishToLiveSite)
     {
-        parent::__construct($apiKey, $reviewCollectionName, $publishToLiveSite);
+        parent::__construct($apiKey, $reviewCollectionName, $reviewStatsCollectionName, $publishToLiveSite);
     }
 
     /**

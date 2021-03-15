@@ -34,3 +34,6 @@ tests/_support/_generated
 
 log.txt
 properties44.json
+parser.log
+views/site/soap_search.php
+web/js/soapclient.js

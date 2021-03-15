@@ -84,6 +84,7 @@ class OneAgencyController extends Controller
         $this->WFReviewWorker = new WFReviewWorker(
             Yii::$app->params['one_agency']['webflow_api_key'],
             Yii::$app->params['one_agency']['webflow_review_collection'],
+            Yii::$app->params['one_agency']['webflow_review_stats_collection'],
             Yii::$app->params['one_agency']['webflow_published_to_live']
         );
 
@@ -116,6 +117,9 @@ class OneAgencyController extends Controller
         );
 
         $gmbClient->refreshAllReviews();
+
+        var_dump($gmbClient->getReviewStats());
+        return;
 
         $this->storeReviewsIntoWebFlow($gmbClient->getReviews());
     }

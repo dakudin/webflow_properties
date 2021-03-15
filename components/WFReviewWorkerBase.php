@@ -26,21 +26,31 @@ class WFReviewWorkerBase extends WFWorkerBase
      */
     protected $reviewCollection;
 
+    /*
+     * @var string WebFlow collection name of reviews stats
+     */
+    protected $reviewStatsCollectionName;
+
+    /**
+     * @var WebFlowCollection WebFlow collection of reviews stats
+     */
+    protected $reviewStatsCollection;
+
     /**
      * @param array $apiKey
      * @param $reviewCollectionName
+     * @param $reviewStatsCollectionName
      * @param $publishToLiveSite
      * @throws \Exception
      */
-    public function __construct($apiKey, $reviewCollectionName, $publishToLiveSite)
+    public function __construct($apiKey, $reviewCollectionName, $reviewStatsCollectionName, $publishToLiveSite)
     {
         parent::__construct($apiKey, $publishToLiveSite);
 
         $this->reviewCollectionName = $reviewCollectionName;
+        $this->reviewStatsCollectionName = $reviewStatsCollectionName;
 
-        if (!$this->prepareWFClient()) {
-            throw new \Exception('Error - cannot prepare WebFlow client');
-        }
+        $this->prepareWFClient();
     }
 
     /**
@@ -48,41 +58,6 @@ class WFReviewWorkerBase extends WFWorkerBase
      */
     public function deleteOldReviews(){
         $this->deleteOldItems($this->reviewCollection->getId());
-    }
-
-        /**
-     * Prepare WebFlow client for first use. Load collections with old reviews IDs
-     * @return bool
-     */
-    protected function prepareWFClient()
-    {
-        if (!$this->getSiteId()) return false;
-        if (!$this->loadCollections()) return false;
-
-        return true;
-    }
-
-    /**
-     * Load Web Flow collections with reviews
-     * @return bool
-     */
-    protected function loadCollections()
-    {
-        $collections = $this->_webFlowClient->getSiteCollections($this->_apiKey, $this->_siteId);
-
-        if (!is_array($collections)) return false;
-
-        foreach ($collections as $collection) {
-            if ($collection['name'] == $this->reviewCollectionName) {
-                $this->reviewCollection = new WebFlowCollection($collection['_id'], $collection['name'], $collection['slug'], $this->_webFlowClient);
-                if (!$this->reviewCollection->loadFields($this->_apiKey))
-                    return false;
-
-                break;
-            }
-        }
-
-        return true;
     }
 
     /**
@@ -108,7 +83,7 @@ class WFReviewWorkerBase extends WFWorkerBase
 
             $offset += $this->_itemsPerPage;
         } while ($this->reviewCollection->getItemsTotal() > 0
-            && $this->reviewCollection->getItemsTotal() > $this->reviewCollection->getItemsOffset() + $this->reviewCollection->getItemsCount());
+        && $this->reviewCollection->getItemsTotal() > $this->reviewCollection->getItemsOffset() + $this->reviewCollection->getItemsCount());
 
         echo "WebFlow reviews count before update: " . count($this->_wfItems) . "\r\n";
 
@@ -151,6 +126,47 @@ class WFReviewWorkerBase extends WFWorkerBase
             echo "Warning: review `" . $googleReviewId . "` wasn't saved properly \r\n";
 
         return $success;
+    }
+
+     /**
+     * Prepare WebFlow client for first use. Load collections with old reviews IDs
+     */
+    protected function prepareWFClient()
+    {
+        if (!$this->getSiteId())
+            throw new \Exception("Cannot get Web Flow site id for getting collections");
+
+        $this->loadCollections();
+    }
+
+    /**
+     * Load Web Flow collections with reviews
+     * @return bool
+     */
+    protected function loadCollections()
+    {
+        $collections = $this->_webFlowClient->getSiteCollections($this->_apiKey, $this->_siteId);
+
+        if (!is_array($collections))
+            throw new \Exception("Cannot get WF collection list");
+
+        foreach ($collections as $collection) {
+            if ($collection['name'] == $this->reviewCollectionName) {
+                $this->loadCollection($collection['_id'], $collection['name'], $collection['slug'], $this->reviewCollection);
+            }
+            if ($collection['name'] == $this->reviewStatsCollectionName) {
+                $this->loadCollection($collection['_id'], $collection['name'], $collection['slug'], $this->reviewStatsCollection);
+            }
+        }
+var_dump($this->reviewStatsCollection); die;
+        return true;
+    }
+
+    private function loadCollection($id, $name, $slug, WebFlowCollection $wfCollection)
+    {
+        $wfCollection = new WebFlowCollection($id, $name, $slug, $this->_webFlowClient);
+        if (!$wfCollection->loadFields($this->_apiKey))
+            throw new \Exception("Cannot load WF collection fields of collection id: $id, name: $name, slug: $slug");
     }
 
     /**

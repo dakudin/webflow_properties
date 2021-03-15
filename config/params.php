@@ -16,9 +16,11 @@ return [
         'webflow_published_to_live' => true,
         'domain_name' => 'oneagencygroup.co.uk',
         'webflow_review_collection' => 'Reviews',
+        'webflow_review_stats_collection' => 'Reviews Stats',
     ],
     'white_house_clinic' => [
         'webflow_review_collection' => 'Reviews',
+        'webflow_review_stats_collection' => 'Reviews Stats',
         'webflow_published_to_live' => true,
         'domain_name' => 'whitehouse-clinic.co.uk',
     ],

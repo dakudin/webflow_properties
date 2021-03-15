@@ -36,6 +36,7 @@ class WHClinicController extends Controller
         $this->WFReviewWorker = new WFReviewWorker(
             Yii::$app->params['white_house_clinic']['webflow_api_key'],
             Yii::$app->params['white_house_clinic']['webflow_review_collection'],
+            Yii::$app->params['white_house_clinic']['webflow_review_stats_collection'],
             Yii::$app->params['white_house_clinic']['webflow_published_to_live']
         );
 

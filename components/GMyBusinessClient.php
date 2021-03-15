@@ -7,6 +7,7 @@
 
 namespace app\components;
 
+use app\models\GoogleLocation;
 use app\models\GoogleReview;
 use Yii;
 use yii\base\Component;
@@ -35,7 +36,13 @@ class GMyBusinessClient extends Component
 
     protected $reviews;
 
+    protected $locations;
+
     protected $locationDomain;
+
+    protected $averageRating;
+
+    protected $totalReviewCount;
 
     public function __construct($clientId, $clientSecret, $clientEmail, $refreshToken, $locationDomain)
     {
@@ -48,6 +55,8 @@ class GMyBusinessClient extends Component
         $this->client->setSubject($clientEmail);
         $this->client->refreshToken($refreshToken);
         $this->locationDomain = $locationDomain;
+        $this->averageRating = 5;
+        $this->totalReviewCount = 0;
     }
 
     /*
@@ -64,6 +73,10 @@ class GMyBusinessClient extends Component
         return $this->reviews;
     }
 
+    public function getReviewStats(){
+        return $this->locations;
+    }
+
     protected function refreshAccounts()
     {
         $accounts = $this->myBusinessService->accounts;
@@ -77,6 +90,7 @@ class GMyBusinessClient extends Component
 
     protected function refreshLocations($account)
     {
+        $this->locations = [];
         $this->reviews = [];
         $locations = $this->myBusinessService->accounts_locations;
         $locationsList = $locations->listAccountsLocations($account->name)->getLocations();
@@ -106,29 +120,54 @@ class GMyBusinessClient extends Component
             }
             $listReviewsResponse = $reviews->listAccountsLocationsReviews($location->name, $params);
 
+            $this->addReviewStats($location, $listReviewsResponse->averageRating, $listReviewsResponse->totalReviewCount);
+
             $reviewsList = $listReviewsResponse->getReviews();
             foreach ($reviewsList as $index => $review) {
-                $googleReview = new GoogleReview();
-                $googleReview->locationStoreCode = $location->storeCode;
-                $googleReview->locationName = $location->locationName;
-                $googleReview->locationPrimaryPhone = $location->primaryPhone;
-                $googleReview->locationAddress = $this->getLocationAddress($location);
-                $googleReview->reviewId = $review->reviewId;
-                $googleReview->reviewerName = $review->reviewer->displayName;
-                $googleReview->reviewerIsAnonimous = $review->reviewer->isAnonymous;
-                $googleReview->reviewerPhotoUrl = $review->reviewer->profilePhotoUrl;
-                $googleReview->starRating = $review->starRating;
-                $googleReview->comment = $review->comment;
-                $googleReview->createTime = $review->createTime;
-                // $review->getReviewReply()->getComment();
-                $this->reviews[] = $googleReview;
+                $this->addReview($location, $review);
             }
 
             $nextPageToken = $listReviewsResponse->nextPageToken;
             echo "Location: " . $location->locationName . " / Average rating: " . $listReviewsResponse->averageRating . "/ Review count: " . $listReviewsResponse->totalReviewCount . "\r\n";
 
         } while ($listReviewsResponse->nextPageToken);
+    }
 
+    protected function addReviewStats($location, $averageRating, $totalReviewCount)
+    {
+        if(key_exists($location->name, $this->locations))
+            return;
+
+        $reviewStat = new GoogleLocation();
+        $reviewStat->name = $location->name;
+        $reviewStat->locationName = $location->locationName;
+        $reviewStat->reviewAverageRating = $averageRating;
+        $reviewStat->totalReviewCount = $totalReviewCount;
+        if(!$reviewStat->validate()){
+            echo "Error on validation location: " . $location->locationName . " review stats\r\n";
+            print_r($reviewStat->getErrors());
+            throw new \Exception( "Error on validation location: " . $location->locationName . " review stats" );
+        }
+
+        $this->locations[$location->name] = $reviewStat;
+    }
+
+    protected function addReview($location, $review)
+    {
+        $googleReview = new GoogleReview();
+        $googleReview->locationStoreCode = $location->storeCode;
+        $googleReview->locationName = $location->locationName;
+        $googleReview->locationPrimaryPhone = $location->primaryPhone;
+        $googleReview->locationAddress = $this->getLocationAddress($location);
+        $googleReview->reviewId = $review->reviewId;
+        $googleReview->reviewerName = $review->reviewer->displayName;
+        $googleReview->reviewerIsAnonimous = $review->reviewer->isAnonymous;
+        $googleReview->reviewerPhotoUrl = $review->reviewer->profilePhotoUrl;
+        $googleReview->starRating = $review->starRating;
+        $googleReview->comment = $review->comment;
+        $googleReview->createTime = $review->createTime;
+        // $review->getReviewReply()->getComment();
+        $this->reviews[] = $googleReview;
     }
 
     protected function getLocationAddress($location)
