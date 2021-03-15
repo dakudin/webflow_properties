@@ -78,6 +78,7 @@ class OneAgencyController extends Controller
     /**
      * This command parse reviews from Google My Business and store to WebFlow site via API
      * @return int Exit code
+     * @throws \Exception
      */
     public function actionParseReviews()
     {
@@ -85,9 +86,9 @@ class OneAgencyController extends Controller
             Yii::$app->params['one_agency']['webflow_api_key'],
             Yii::$app->params['one_agency']['webflow_review_collection'],
             Yii::$app->params['one_agency']['webflow_review_stats_collection']['collection_name'],
-            Yii::$app->params['one_agency']['webflow_review_stats_collection']['total-reviews'],
-            Yii::$app->params['one_agency']['webflow_review_stats_collection']['overall-rating'],
-            Yii::$app->params['one_agency']['webflow_review_stats_collection']['google-reviews'],
+            Yii::$app->params['one_agency']['webflow_review_stats_collection']['review_count_slug'],
+            Yii::$app->params['one_agency']['webflow_review_stats_collection']['review_avg_rating_slug'],
+            Yii::$app->params['one_agency']['webflow_review_stats_collection']['stat_item_slug'],
             Yii::$app->params['one_agency']['webflow_published_to_live']
         );
 
