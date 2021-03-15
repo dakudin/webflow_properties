@@ -160,7 +160,7 @@ var_dump($collections);
             }
             if ($collection['name'] == $this->reviewStatsCollectionName) {
                 $this->reviewStatsCollection = new WebFlowCollection($collection['_id'], $collection['name'] ,$collection['slug'], $this->_webFlowClient);
-                if(!$this->reviewStatsCollection->loadFields($this->_apiKey))
+                if(!$this->reviewStatsCollection->loadItems($this->_apiKey))
                     throw new \Exception("Cannot get WF collection fields");
             }
         }
