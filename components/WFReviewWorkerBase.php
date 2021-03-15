@@ -142,6 +142,7 @@ class WFReviewWorkerBase extends WFWorkerBase
     /**
      * Load Web Flow collections with reviews
      * @return bool
+     * @throws \Exception
      */
     protected function loadCollections()
     {
@@ -152,19 +153,22 @@ class WFReviewWorkerBase extends WFWorkerBase
 
         foreach ($collections as $collection) {
             if ($collection['name'] == $this->reviewCollectionName) {
-                $this->loadCollection($collection['_id'], $collection['name'], $collection['slug'], $this->reviewCollection);
+                $this->reviewCollection = new WebFlowCollection($collection['_id'], $collection['name'] ,$collection['slug'], $this->_webFlowClient);
+                if(!$this->reviewCollection->loadFields($this->_apiKey))
+                    throw new \Exception("Cannot get WF collection fields");
             }
             if ($collection['name'] == $this->reviewStatsCollectionName) {
-                $this->loadCollection($collection['_id'], $collection['name'], $collection['slug'], $this->reviewStatsCollection);
+                $this->reviewCollection = new WebFlowCollection($collection['_id'], $collection['name'] ,$collection['slug'], $this->_webFlowClient);
+                if(!$this->reviewStatsCollection->loadFields($this->_apiKey))
+                    throw new \Exception("Cannot get WF collection fields");
             }
         }
 var_dump($this->reviewStatsCollection); die;
         return true;
     }
 
-    private function loadCollection($id, $name, $slug, WebFlowCollection $wfCollection)
+    private function loadCollection(WebFlowCollection $wfCollection)
     {
-        $wfCollection = new WebFlowCollection($id, $name, $slug, $this->_webFlowClient);
         if (!$wfCollection->loadFields($this->_apiKey))
             throw new \Exception("Cannot load WF collection fields of collection id: $id, name: $name, slug: $slug");
     }
