@@ -70,7 +70,7 @@ class WFReviewWorker extends WFReviewWorkerBase
         $item = [
             '_archived' => false,
             '_draft' => false,
-            $this->totalReviewsFieldSlug => $this->getStatsTotalReviews($totalReviews),
+            $this->totalReviewsFieldSlug => $totalReviews, //$this->getStatsTotalReviews($totalReviews),
             $this->overallRatingFieldSlug => $averageRating,
             'slug' => $this->reviewStatsItemSlug,
             'name' => $this->reviewStatsItemName,
