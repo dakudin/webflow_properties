@@ -13,7 +13,7 @@ return [
             'property_id_slug' => 'propertyid'
         ],
         'webflow_property_status_collection' => 'Property Statuses',
-        'webflow_published_to_live' => false,
+        'webflow_published_to_live' => true,
         'domain_name' => 'oneagencygroup.co.uk',
         'webflow_review_collection' => 'Reviews',
         'webflow_review_stats_collection' => [
