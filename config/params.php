@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'adminEmail' => 'admin@example.com',
+    'adminEmail' => 'dakudin@gmail.com',
     'one_agency' => [
         'webflow_role_type_collection' => 'Role types',
         'webflow_sales_collection' => [
@@ -13,7 +13,7 @@ return [
             'property_id_slug' => 'propertyid'
         ],
         'webflow_property_status_collection' => 'Property Statuses',
-        'webflow_published_to_live' => true,
+        'webflow_published_to_live' => false,
         'domain_name' => 'oneagencygroup.co.uk',
         'webflow_review_collection' => 'Reviews',
         'webflow_review_stats_collection' => [
