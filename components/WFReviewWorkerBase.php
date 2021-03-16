@@ -159,15 +159,16 @@ class WFReviewWorkerBase extends WFWorkerBase
     public function storeReviewStats($totalReviews, $averageRating)
     {
         $statsItems = $this->reviewStatsCollection->getItems();
-var_dump($statsItems);
+//var_dump($statsItems);
         if(!(is_array($statsItems) && $statsItems[0]))
             return false;
 
         $item = $this->fillReviewStats($totalReviews, $averageRating);
 var_dump($item);
         echo "----------update review stats-------------\r\n";
+die;
         $wfItem = $this->updateWFItem($this->reviewStatsCollection->getId(), '',  $statsItems[0][$this->fieldId], $item);
-
+var_dump($wfItem);
         return array_key_exists($this->fieldId, $wfItem);
     }
 
@@ -207,7 +208,7 @@ var_dump($item);
                     throw new \Exception("Cannot get WF collection fields");
             }
         }
-var_dump($this->reviewStatsCollection); die;
+//var_dump($this->reviewStatsCollection); die;
         return true;
     }
 

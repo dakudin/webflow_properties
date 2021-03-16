@@ -48,6 +48,7 @@ class OneAgencyController extends Controller
     /**
      * This command parse properties from Dezred feed and store to WebFlow site via API
      * @return int Exit code
+     * @throws \Exception
      */
     public function actionParseProperties()
     {
@@ -124,7 +125,7 @@ class OneAgencyController extends Controller
 
         $this->storeReviewStatsIntoWebFlow($gmbClient->getTotalReviewCount(), $gmbClient->getAverageRating());
 
-        return;
+return;
 
         $this->storeReviewsIntoWebFlow($gmbClient->getReviews());
     }
@@ -204,6 +205,7 @@ class OneAgencyController extends Controller
      */
     private function storeReviewStatsIntoWebFlow($totalReviews, $averageRating)
     {
+echo "New totalReviews: $totalReviews, averageRating: $averageRating \r\n";
         if(!$this->WFReviewWorker->storeReviewStats($totalReviews, $averageRating)){
             echo "Error OneAgency GMB: Cannot store review stats\r\n";
         }

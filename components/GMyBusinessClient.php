@@ -134,6 +134,7 @@ class GMyBusinessClient extends Component
             $this->addReviewStats($location, $listReviewsResponse->averageRating, $listReviewsResponse->totalReviewCount);
 
             $nextPageToken = $listReviewsResponse->nextPageToken;
+
             echo "Location: " . $location->locationName . " / Average rating: " . $listReviewsResponse->averageRating . "/ Review count: " . $listReviewsResponse->totalReviewCount . "\r\n";
 
         } while ($listReviewsResponse->nextPageToken);
@@ -176,11 +177,14 @@ class GMyBusinessClient extends Component
                 $i++;
             }
         }
+echo "New totalReviews: $totalReviewCount, averageRating: $averageRating \r\n";
 
         if($i>0){
             $this->totalReviewCount = $totalReviewCount;
             $this->averageRating = round($averageRating / $i, 1);
         }
+echo "New totalReviews: $this->totalReviewCount, averageRating: $this->averageRating \r\n";
+
     }
 
     protected function addReview($location, $review)
