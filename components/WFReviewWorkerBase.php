@@ -169,7 +169,7 @@ class WFReviewWorkerBase extends WFWorkerBase
 //var_dump($statsItems);
         if(!(is_array($statsItems) && $statsItems[0]))
             return false;
-echo "WorkerBase: Fill stats: $totalReviews, $averageRating";
+echo "WorkerBase: Fill stats: $totalReviews, $averageRating\r\n";
         $item = $this->fillReviewStats($totalReviews, $averageRating);
 var_dump($item);
         echo "----------update review stats-------------\r\n";

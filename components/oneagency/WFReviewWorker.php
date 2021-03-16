@@ -67,6 +67,7 @@ class WFReviewWorker extends WFReviewWorkerBase
 
     protected function fillReviewStats($totalReviews, $averageRating)
     {
+echo "WFReviewWorker: Fill stats: $totalReviews, $averageRating \r\n";
         $item = [
             '_archived' => false,
             '_draft' => false,
