@@ -30,8 +30,8 @@ class GoogleLocation extends Model
     {
         return [
             [['name', 'locationName', 'reviewAverageRating', 'totalReviewCount'], 'required'],
-            ['reviewAverageRating', 'min' => 1, 'max' => 5], //, 'numberPattern' => '/[1-5]\.?[0-9]$/'
-            ['totalReviewCount', 'integerOnly'],
+            ['reviewAverageRating', 'integer', 'min' => 1, 'max' => 5], //, 'numberPattern' => '/[1-5]\.?[0-9]$/'
+            ['totalReviewCount', 'integer'],
         ];
     }
 /*
