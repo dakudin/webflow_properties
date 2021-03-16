@@ -76,7 +76,7 @@ class WFReviewWorker extends WFReviewWorkerBase
             'name' => $this->reviewStatsItemName,
 //    ["_id"]=> "604f35624fc50cd870dca323"
         ];
-
+var_dump($item);
         return $item;
     }
 }
