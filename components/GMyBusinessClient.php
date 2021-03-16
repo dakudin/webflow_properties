@@ -142,8 +142,9 @@ class GMyBusinessClient extends Component
 
     protected function addReviewStats($location, $averageRating, $totalReviewCount)
     {
-        if(key_exists($location->name, $this->locations))
-            return;
+        if(key_exists($location->name, $this->locations)) return;
+
+        if(!$averageRating || !$totalReviewCount) return;
 
         $reviewStat = new GoogleLocation();
         $reviewStat->name = $location->name;

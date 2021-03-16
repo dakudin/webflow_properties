@@ -30,16 +30,8 @@ class GoogleLocation extends Model
     {
         return [
             [['name', 'locationName', 'reviewAverageRating', 'totalReviewCount'], 'required'],
-            ['reviewAverageRating', 'integer', 'min' => 1, 'max' => 5], //, 'numberPattern' => '/[1-5]\.?[0-9]$/'
+            ['reviewAverageRating', 'integer', 'min' => 1, 'max' => 5],
             ['totalReviewCount', 'integer'],
         ];
     }
-/*
-    public function validateTotalReviewCount($attribute, $params, $validator)
-    {
-        if(!($attribute == intval($attribute) || $attribute - 0.5 == intval($attribute))) {
-            $this->addError($attribute, 'Total review count The country must be either "USA" or "Indonesia".');
-        }
-    }
-*/
 }
