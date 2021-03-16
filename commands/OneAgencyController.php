@@ -90,6 +90,7 @@ class OneAgencyController extends Controller
             Yii::$app->params['one_agency']['webflow_review_stats_collection']['review_count_slug'],
             Yii::$app->params['one_agency']['webflow_review_stats_collection']['review_avg_rating_slug'],
             Yii::$app->params['one_agency']['webflow_review_stats_collection']['stat_item_slug'],
+            Yii::$app->params['one_agency']['webflow_review_stats_collection']['stat_item_name'],
             Yii::$app->params['one_agency']['webflow_published_to_live']
         );
 

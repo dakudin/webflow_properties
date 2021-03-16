@@ -40,6 +40,7 @@ class WHClinicController extends Controller
             Yii::$app->params['white_house_clinic']['webflow_review_stats_collection']['total-reviews'],
             Yii::$app->params['white_house_clinic']['webflow_review_stats_collection']['overall-rating'],
             Yii::$app->params['white_house_clinic']['webflow_review_stats_collection']['google-reviews'],
+            Yii::$app->params['white_house_clinic']['webflow_review_stats_collection']['stat_item_name'],
             Yii::$app->params['white_house_clinic']['webflow_published_to_live']
         );
 

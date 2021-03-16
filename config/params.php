@@ -21,6 +21,7 @@ return [
             'review_count_slug' => 'total-reviews',
             'review_avg_rating_slug' => 'overall-rating',
             'stat_item_slug' => 'google-reviews',
+            'stat_item_name' => 'Google Reviews',
         ],
     ],
     'white_house_clinic' => [
@@ -30,6 +31,7 @@ return [
             'review_count_slug' => 'total-reviews',
             'review_avg_rating_slug' => 'overall-rating',
             'stat_item_slug' => 'google-reviews',
+            'stat_item_name' => 'Google Reviews',
         ],
         'webflow_published_to_live' => true,
         'domain_name' => 'whitehouse-clinic.co.uk',

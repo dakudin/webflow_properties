@@ -25,14 +25,15 @@ class WFReviewWorker extends WFReviewWorkerBase
      * @param $totalReviewsFieldSlug
      * @param $overallRatingFieldSlug
      * @param $reviewStatsItemSlug
+     * @param $reviewStatsItemName
      * @param $publishToLiveSite
      * @throws \Exception
      */
     public function __construct($apiKey, $reviewCollectionName, $reviewStatsCollectionName, $totalReviewsFieldSlug,
-                                $overallRatingFieldSlug, $reviewStatsItemSlug, $publishToLiveSite)
+                                $overallRatingFieldSlug, $reviewStatsItemSlug, $reviewStatsItemName, $publishToLiveSite)
     {
         parent::__construct($apiKey, $reviewCollectionName, $reviewStatsCollectionName, $totalReviewsFieldSlug,
-            $overallRatingFieldSlug, $reviewStatsItemSlug, $publishToLiveSite);
+            $overallRatingFieldSlug, $reviewStatsItemSlug, $reviewStatsItemName, $publishToLiveSite);
     }
 
     /**
@@ -72,9 +73,8 @@ class WFReviewWorker extends WFReviewWorkerBase
             $this->totalReviewsFieldSlug => $this->getStatsTotalReviews($totalReviews),
             $this->overallRatingFieldSlug => $averageRating,
             'slug' => $this->reviewStatsItemSlug,
-//      ["name"]=> "Google Reviews"
+            'name' => $this->reviewStatsItemName,
 //    ["_id"]=> "604f35624fc50cd870dca323"
-
         ];
 
         return $item;

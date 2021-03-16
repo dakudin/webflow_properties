@@ -52,17 +52,23 @@ class WFReviewWorkerBase extends WFWorkerBase
     protected $reviewStatsItemSlug;
 
     /**
+     * @var string WebFlow name of review stats item
+     */
+    protected $reviewStatsItemName;
+
+    /**
      * @param array $apiKey
      * @param $reviewCollectionName
      * @param $reviewStatsCollectionName
      * @param $totalReviewsFieldSlug
      * @param $overallRatingFieldSlug
      * @param $reviewStatsItemSlug
+     * @param $reviewStatsItemName
      * @param $publishToLiveSite
      * @throws \Exception
      */
     public function __construct($apiKey, $reviewCollectionName, $reviewStatsCollectionName, $totalReviewsFieldSlug,
-                                $overallRatingFieldSlug, $reviewStatsItemSlug, $publishToLiveSite)
+                                $overallRatingFieldSlug, $reviewStatsItemSlug, $reviewStatsItemName, $publishToLiveSite)
     {
         parent::__construct($apiKey, $publishToLiveSite);
 
@@ -71,6 +77,7 @@ class WFReviewWorkerBase extends WFWorkerBase
         $this->totalReviewsFieldSlug = $totalReviewsFieldSlug;
         $this->overallRatingFieldSlug = $overallRatingFieldSlug;
         $this->reviewStatsItemSlug = $reviewStatsItemSlug;
+        $this->reviewStatsItemName = $reviewStatsItemName;
 
         $this->prepareWFClient();
     }
