@@ -177,14 +177,11 @@ class GMyBusinessClient extends Component
                 $i++;
             }
         }
-echo "New totalReviews: $totalReviewCount, averageRating: $averageRating \r\n";
 
         if($i>0){
             $this->totalReviewCount = $totalReviewCount;
             $this->averageRating = round($averageRating / $i, 1);
         }
-echo "New totalReviews: $this->totalReviewCount, averageRating: $this->averageRating \r\n";
-
     }
 
     protected function addReview($location, $review)

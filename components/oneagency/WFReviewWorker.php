@@ -67,7 +67,6 @@ class WFReviewWorker extends WFReviewWorkerBase
 
     protected function fillReviewStats($totalReviews, $averageRating)
     {
-echo "WFReviewWorker: Fill stats: $totalReviews, $averageRating \r\n";
         $item = [
             '_archived' => false,
             '_draft' => false,
@@ -75,9 +74,8 @@ echo "WFReviewWorker: Fill stats: $totalReviews, $averageRating \r\n";
             $this->overallRatingFieldSlug => $averageRating,
             'slug' => $this->reviewStatsItemSlug,
             'name' => $this->reviewStatsItemName,
-//    ["_id"]=> "604f35624fc50cd870dca323"
         ];
-var_dump($item);
+
         return $item;
     }
 }

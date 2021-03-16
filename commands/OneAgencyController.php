@@ -126,8 +126,6 @@ class OneAgencyController extends Controller
 
         $this->storeReviewStatsIntoWebFlow($gmbClient->getTotalReviewCount(), $gmbClient->getAverageRating());
 
-return;
-
         $this->storeReviewsIntoWebFlow($gmbClient->getReviews());
     }
 
@@ -206,7 +204,6 @@ return;
      */
     private function storeReviewStatsIntoWebFlow($totalReviews, $averageRating)
     {
-echo "New totalReviews: $totalReviews, averageRating: $averageRating \r\n";
         if(!$this->WFReviewWorker->storeReviewStats($totalReviews, $averageRating)){
             echo "Error OneAgency GMB: Cannot store review stats\r\n";
         }
