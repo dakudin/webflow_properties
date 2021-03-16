@@ -56,4 +56,25 @@ class GoogleReview extends Model
                 static::STAR_TWO, static::STAR_THREE, static::STAR_FOUR, static::STAR_FIVE]],
         ];
     }
+
+    public function getStarRatingAsNumber(){
+        switch ($this->starRating){
+            case static::STAR_ONE :
+                return 1;
+                break;
+            case static::STAR_TWO :
+                return 2;
+                break;
+            case static::STAR_THREE :
+                return 3;
+                break;
+            case static::STAR_FOUR :
+                return 4;
+                break;
+            case static::STAR_FIVE :
+                return 5;
+                break;
+        }
+        return false;
+    }
 }

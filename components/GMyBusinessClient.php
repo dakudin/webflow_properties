@@ -168,20 +168,25 @@ class GMyBusinessClient extends Component
         $this->averageRating = 5;
         $this->totalReviewCount = 0;
         $totalReviewCount = 0;
+        $ratedReviewCount = 0;
         $averageRating = 0;
-        $i = 0;
 
-        foreach ($this->locations as $location){
-            if($location instanceof GoogleLocation){
-                $totalReviewCount += $location->totalReviewCount;
-                $averageRating += $location->reviewAverageRating;
-                $i++;
-            }
+        foreach ($this->reviews as $review){
+            if(!$review instanceof GoogleReview) continue;
+
+            $totalReviewCount++;
+
+            if($review->starRating == GoogleReview::STAR_RATING_UNSPECIFIED) continue;
+
+            $ratedReviewCount++;
+            $averageRating += $review->getStarRatingAsNumber();
         }
 
-        if($i>0){
+        $this->totalReviewCount = $totalReviewCount;
+
+        if($ratedReviewCount>0){
             $this->totalReviewCount = $totalReviewCount;
-            $this->averageRating = round($averageRating / $i, 1);
+            $this->averageRating = round($averageRating / $ratedReviewCount, 1);
         }
     }
 
