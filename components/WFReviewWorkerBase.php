@@ -166,7 +166,7 @@ class WFReviewWorkerBase extends WFWorkerBase
         $item = $this->fillReviewStats($totalReviews, $averageRating);
 var_dump($item);
         echo "----------update review stats-------------\r\n";
-die;
+
         $wfItem = $this->updateWFItem($this->reviewStatsCollection->getId(), '',  $statsItems[0][$this->fieldId], $item);
 var_dump($wfItem);
         return array_key_exists($this->fieldId, $wfItem);
