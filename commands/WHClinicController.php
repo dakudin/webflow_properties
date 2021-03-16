@@ -37,9 +37,9 @@ class WHClinicController extends Controller
             Yii::$app->params['white_house_clinic']['webflow_api_key'],
             Yii::$app->params['white_house_clinic']['webflow_review_collection'],
             Yii::$app->params['white_house_clinic']['webflow_review_stats_collection']['collection_name'],
-            Yii::$app->params['white_house_clinic']['webflow_review_stats_collection']['total-reviews'],
-            Yii::$app->params['white_house_clinic']['webflow_review_stats_collection']['overall-rating'],
-            Yii::$app->params['white_house_clinic']['webflow_review_stats_collection']['google-reviews'],
+            Yii::$app->params['white_house_clinic']['webflow_review_stats_collection']['review_count_slug'],
+            Yii::$app->params['white_house_clinic']['webflow_review_stats_collection']['review_avg_rating_slug'],
+            Yii::$app->params['white_house_clinic']['webflow_review_stats_collection']['stat_item_slug'],
             Yii::$app->params['white_house_clinic']['webflow_review_stats_collection']['stat_item_name'],
             Yii::$app->params['white_house_clinic']['webflow_published_to_live']
         );
@@ -73,6 +73,8 @@ class WHClinicController extends Controller
         );
 
         $gmbClient->refreshAllReviews();
+
+        $this->storeReviewStatsIntoWebFlow($gmbClient->getTotalReviewCount(), $gmbClient->getAverageRating());
 
         $this->storeReviewsIntoWebFlow($gmbClient->getReviews());
     }
@@ -174,6 +176,18 @@ class WHClinicController extends Controller
                     var_dump($review);
                 }
             }
+        }
+    }
+
+    /**
+     * Get pack of parsed reviews and store their into WebFlow
+     * @param $totalReviews
+     * @param $averageRating
+     */
+    private function storeReviewStatsIntoWebFlow($totalReviews, $averageRating)
+    {
+        if(!$this->WFReviewWorker->storeReviewStats($totalReviews, $averageRating)){
+            echo "Error WHClinic GMB: Cannot store review stats\r\n";
         }
     }
 
