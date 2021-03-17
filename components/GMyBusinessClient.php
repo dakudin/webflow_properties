@@ -186,7 +186,7 @@ class GMyBusinessClient extends Component
 
         if($ratedReviewCount>0){
             $this->totalReviewCount = $totalReviewCount;
-            $this->averageRating = round($averageRating / $ratedReviewCount, 1);
+            $this->averageRating = round($averageRating / $ratedReviewCount, 1, PHP_ROUND_HALF_UP);
         }
     }
 
