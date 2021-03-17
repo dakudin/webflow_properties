@@ -33,7 +33,7 @@ return [
             'stat_item_slug' => 'google-reviews',
             'stat_item_name' => 'Google Reviews',
         ],
-        'webflow_published_to_live' => true,
+        'webflow_published_to_live' => false,
         'domain_name' => 'whitehouse-clinic.co.uk',
     ],
 ];
