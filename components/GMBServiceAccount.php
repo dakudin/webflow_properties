@@ -10,6 +10,7 @@ class GMBServiceAccount extends GMyBusinessClient
             'api_format_v2' => true // To enable more detailed error messages in responses, such as absent required fields
         ]);
         $this->client->setAuthConfig($credentials);
+        $this->client->addScope($this->scope);
         $this->client->useApplicationDefaultCredentials();
 
         $this->locationDomain = $locationDomain;
