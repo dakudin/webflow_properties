@@ -69,7 +69,7 @@ die();
     {
         // $gmb = Yii::$app->params['anvilba']['GMB_API']['web_client'];
         $gmbClient = new GMBServiceAccount(
-            __DIR__ . '/' . Yii::$app->params['anvilba']['GMB_API']['credential'],
+            Yii::getAlias('@app') . '/components/anvilba/' . Yii::$app->params['anvilba']['GMB_API']['credential'],
             Yii::$app->params['anvilba']['domain_name']
         );
 
