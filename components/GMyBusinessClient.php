@@ -30,6 +30,18 @@ class GMyBusinessClient extends Component
 {
     protected $client;
 
+    /*
+     * Object of the MyBusinessAccountManagement service
+     *
+     * @var Google_Service_MyBusinessAccountManagement
+     */
+    protected $myBusinessAccount;
+
+    /*
+     * Object of the MyBusiness service
+     *
+     * @var Google_Service_MyBusiness
+     */
     protected $myBusinessService;
 
     protected $scope = "https://www.googleapis.com/auth/business.manage"; //"https://www.googleapis.com/auth/plus.business.manage";
@@ -59,6 +71,9 @@ class GMyBusinessClient extends Component
         $this->locationDomain = $locationDomain;
         $this->averageRating = 5;
         $this->totalReviewCount = 0;
+
+        $this->myBusinessService = new \Google_Service_MyBusiness($this->client);
+        $this->myBusinessAccount = new \Google_Service_MyBusinessAccountManagement($this->client);
     }
 
     /*
@@ -66,7 +81,6 @@ class GMyBusinessClient extends Component
      */
     public function refreshAllReviews()
     {
-        $this->myBusinessService = new \Google_Service_MyBusiness($this->client);
         $this->refreshAccounts();
     }
 
@@ -85,7 +99,7 @@ class GMyBusinessClient extends Component
 
     protected function refreshAccounts()
     {
-        $accounts = $this->myBusinessService->accounts;
+        $accounts = $this->myBusinessAccount->accounts;
         $accountsList = $accounts->listAccounts()->getAccounts();
 
         foreach ($accountsList as $accKey => $account) {
