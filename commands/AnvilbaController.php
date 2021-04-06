@@ -6,7 +6,7 @@
 
 namespace app\commands;
 
-use app\components\GMyBusinessClient;
+use app\components\GMBServiceAccount;
 use app\components\anvilba\WFReviewWorker;
 use Yii;
 use yii\console\Controller;
@@ -67,12 +67,9 @@ die();
      */
     private function refreshReviews()
     {
-        $gmb = Yii::$app->params['anvilba']['GMB_API']['web_client'];
-        $gmbClient = new GMyBusinessClient(
-            $gmb['client_id'],
-            $gmb['client_secret'],
-            $gmb['account_email'],
-            $gmb['refresh_token'],
+        // $gmb = Yii::$app->params['anvilba']['GMB_API']['web_client'];
+        $gmbClient = new GMBServiceAccount(
+            __DIR__ . '/' . Yii::$app->params['anvilba']['GMB_API']['credential'],
             Yii::$app->params['anvilba']['domain_name']
         );
 
