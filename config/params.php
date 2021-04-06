@@ -36,4 +36,16 @@ return [
         'webflow_published_to_live' => true,
         'domain_name' => 'whitehouse-clinic.co.uk',
     ],
+    'anvilba' => [
+        'webflow_review_collection' => 'Reviews',
+        'webflow_review_stats_collection' => [
+            'collection_name' => 'Reviews stats',
+            'review_count_slug' => 'total-reviews',
+            'review_avg_rating_slug' => 'overall-rating',
+            'stat_item_slug' => 'google-reviews',
+            'stat_item_name' => 'Google Reviews',
+        ],
+        'webflow_published_to_live' => true,
+        'domain_name' => '', //anvilba.co.uk
+    ],
 ];

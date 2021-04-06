@@ -87,7 +87,7 @@ class GMyBusinessClient extends Component
         $accountsList = $accounts->listAccounts()->getAccounts();
 
         foreach ($accountsList as $accKey => $account) {
-//            var_dump('$account->name', $account->name);
+            var_dump('$account->name', $account->name);
             $this->refreshLocations($account);
         }
     }
@@ -98,7 +98,7 @@ class GMyBusinessClient extends Component
         $this->reviews = [];
         $locations = $this->myBusinessService->accounts_locations;
         $locationsList = $locations->listAccountsLocations($account->name)->getLocations();
-//            var_dump('$locationsList', $locationsList);
+            var_dump('$locationsList', $locationsList);
 
         if (empty($locationsList) === false) {
             foreach ($locationsList as $locKey => $location) {
