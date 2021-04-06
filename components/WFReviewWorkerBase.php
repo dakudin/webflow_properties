@@ -79,7 +79,7 @@ class WFReviewWorkerBase extends WFWorkerBase
         $this->reviewStatsItemSlug = $reviewStatsItemSlug;
         $this->reviewStatsItemName = $reviewStatsItemName;
 
-        $this->prepareWFClient();
+//        $this->prepareWFClient();
     }
 
     /**
