@@ -19,7 +19,8 @@
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0",
         "yiisoft/yii2-httpclient": "^2.0",
-        "google/apiclient": "^2.7"
+        "google/apiclient": "^2.7",
+        "bronhy/google-my-business-php-client": "^4.9"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

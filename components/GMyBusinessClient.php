@@ -32,7 +32,7 @@ class GMyBusinessClient extends Component
 
     protected $myBusinessService;
 
-    protected $scope = "https://www.googleapis.com/auth/plus.business.manage";
+    protected $scope = "https://www.googleapis.com/auth/business.manage"; //"https://www.googleapis.com/auth/plus.business.manage";
 
     protected $reviews;
 
@@ -48,7 +48,9 @@ class GMyBusinessClient extends Component
     {
         parent::__construct();
 
-        $this->client = new \Google_Client();
+        $this->client = new \Google_Client([
+            'api_format_v2' => true // To enable more detailed error messages in responses, such as absent required fields
+        ]);
         $this->client->setClientId($clientId);
         $this->client->setClientSecret($clientSecret);
         $this->client->addScope($this->scope);

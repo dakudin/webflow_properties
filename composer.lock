@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "53aa844b8e0bc7a5d9bddf1e5b2e78d7",
+    "content-hash": "c45396e8e10e291e6f9c1ae9194281e1",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -101,6 +101,53 @@
             "license": [
                 "MIT"
             ]
+        },
+        {
+            "name": "bronhy/google-my-business-php-client",
+            "version": "v4.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bronhy/google-my-business-php-client.git",
+                "reference": "1db7bb0e2f29ec223bcf2026dcfad9e2f480ab25"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bronhy/google-my-business-php-client/zipball/1db7bb0e2f29ec223bcf2026dcfad9e2f480ab25",
+                "reference": "1db7bb0e2f29ec223bcf2026dcfad9e2f480ab25",
+                "shasum": ""
+            },
+            "require": {
+                "google/apiclient": ">=2.0",
+                "php": ">=5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "MyBusiness.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Google"
+                }
+            ],
+            "description": "Google My Business",
+            "homepage": "https://github.com/bronhy/google-my-business-php-client",
+            "keywords": [
+                "gmb",
+                "google my business",
+                "mybusiness"
+            ],
+            "support": {
+                "docs": "https://developers.google.com/my-business/content/support",
+                "issues": "https://github.com/bronhy/google-my-business-php-client/issues",
+                "source": "https://github.com/bronhy/google-my-business-php-client/tree/v4.9"
+            },
+            "time": "2021-03-12T18:43:40+00:00"
         },
         {
             "name": "cebe/markdown",
