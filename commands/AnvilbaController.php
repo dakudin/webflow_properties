@@ -63,14 +63,15 @@ die();
     }
 
     /*
-     *  get reviews by via web client authentication
+     *  get reviews via web client authentication
      */
     private function refreshReviews()
     {
         // $gmb = Yii::$app->params['anvilba']['GMB_API']['web_client'];
         $gmbClient = new GMBServiceAccount(
             Yii::getAlias('@app') . '/components/anvilba/' . Yii::$app->params['anvilba']['GMB_API']['credential'],
-            Yii::$app->params['anvilba']['domain_name']
+            Yii::$app->params['anvilba']['domain_name'],
+            false
         );
 
         $gmbClient->refreshAllReviews();

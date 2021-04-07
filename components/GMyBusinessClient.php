@@ -28,6 +28,11 @@ use yii\base\Component;
  */
 class GMyBusinessClient extends Component
 {
+    /*
+     * The Google API Client
+     *
+     * @var \Google_Client $client
+     */
     protected $client;
 
     /*
@@ -44,7 +49,16 @@ class GMyBusinessClient extends Component
      */
     protected $myBusinessService;
 
-    protected $scope = "https://www.googleapis.com/auth/business.manage"; //"https://www.googleapis.com/auth/plus.business.manage";
+    protected $scope = "https://www.googleapis.com/auth/business.manage";
+
+    protected $oldScope = "https://www.googleapis.com/auth/plus.business.manage";
+
+    /*
+     * If true than use old version API where GMB get accounts method hasn't deprecated yet
+     *
+     * @var boolean
+     */
+    protected $isOldVersion;
 
     protected $reviews;
 
@@ -56,24 +70,19 @@ class GMyBusinessClient extends Component
 
     protected $totalReviewCount;
 
-    public function __construct($clientId, $clientSecret, $clientEmail, $refreshToken, $locationDomain)
+    public function __construct($clientId, $clientSecret, $clientEmail, $refreshToken, $locationDomain, $isOldVersion = true)
     {
         parent::__construct();
 
-        $this->client = new \Google_Client([
-            'api_format_v2' => true // To enable more detailed error messages in responses, such as absent required fields
-        ]);
+        $this->isOldVersion = $isOldVersion;
+        $this->setGoogleClient();
+
         $this->client->setClientId($clientId);
         $this->client->setClientSecret($clientSecret);
-        $this->client->addScope($this->scope);
         $this->client->setSubject($clientEmail);
         $this->client->refreshToken($refreshToken);
-        $this->locationDomain = $locationDomain;
-        $this->averageRating = 5;
-        $this->totalReviewCount = 0;
 
-        $this->myBusinessService = new \Google_Service_MyBusiness($this->client);
-        $this->myBusinessAccount = new \Google_Service_MyBusinessAccountManagement($this->client);
+        $this->prepareClient($locationDomain);
     }
 
     /*
@@ -97,9 +106,32 @@ class GMyBusinessClient extends Component
         return $this->totalReviewCount;
     }
 
+    protected function setGoogleClient()
+    {
+        $this->client = new \Google_Client([
+            'api_format_v2' => true // To enable more detailed error messages in responses, such as absent required fields
+        ]);
+    }
+
+    protected function prepareClient($locationDomain)
+    {
+        $this->addScope();
+        $this->locationDomain = $locationDomain;
+        $this->averageRating = 5;
+        $this->totalReviewCount = 0;
+
+        $this->myBusinessService = new \Google_Service_MyBusiness($this->client);
+        $this->myBusinessAccount = new \Google_Service_MyBusinessAccountManagement($this->client);
+    }
+
+    protected function addScope()
+    {
+        $this->client->addScope($this->isOldVersion ? $this->oldScope : $this->scope);
+    }
+
     protected function refreshAccounts()
     {
-        $accounts = $this->myBusinessAccount->accounts;
+        $accounts = $this->isOldVersion ? $this->myBusinessService->accounts : $this->myBusinessAccount->accounts;
         $accountsList = $accounts->listAccounts()->getAccounts();
 
         foreach ($accountsList as $accKey => $account) {
