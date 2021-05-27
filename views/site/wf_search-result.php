@@ -15,7 +15,6 @@
 //<script src="https://dl.dropboxusercontent.com/s/sjmoui7gw650948/mixitup-pagination.js" ></script>
 
 $js = <<< JS
-
 var getUrlParameter = function getUrlParameter(sParam) {
     var sPageURL = window.location.search.substring(1),
         sURLVariables = sPageURL.split('&'),
@@ -117,6 +116,8 @@ var mixerConfig = {
     },
     callbacks: {
         onMixEnd: function(state) {
+            $('#preloader-img').hide();
+            $('#mix-container').show();
             $('.blog-count').text(state.totalMatching);
 
             if (state.activePagination.limit === activeLimit && state.activePagination.page === activePage) return;
@@ -130,6 +131,7 @@ var mixerConfig = {
         }
     }
 };
+
 
 function getRange() {
     var min = Number(minPriceRangeInput.value);
@@ -178,8 +180,10 @@ function changeFltrOptions(id, selectValues, isFirstSelected){
         $('#'+id).val($('#'+id+' option:last').val());
 }
 
+
 $(document).ready(function(){
     $('.w-condition-invisible.w-slide').remove();
+
     var mixerObj = mixitup('#mix-container', mixerConfig);
 
     function handleRangeInputChange() {
@@ -225,13 +229,12 @@ $(document).ready(function(){
     excludeSoldInput.addEventListener('change', handleRangeInputChange);
     marketTypeInput.addEventListener('change', handleMarketTypeInputChange);
 
-
     selectSort.addEventListener('change', function() {
         var order = selectSort.value;
         mixerObj.sort(order);
     });
 
-    mixitup.Mixer.registerFilter('testResultEvaluateHideShow', 'range', filterTestResult);
+		mixitup.Mixer.registerFilter('testResultEvaluateHideShow', 'range', filterTestResult);
 
     handleMarketTypeInputChange();
 });

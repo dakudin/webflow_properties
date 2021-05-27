@@ -90,6 +90,8 @@ class GMyBusinessClient extends Component
      */
     public function refreshAllReviews()
     {
+        $this->reviews = [];
+
         $this->refreshAccounts();
     }
 
@@ -143,7 +145,6 @@ class GMyBusinessClient extends Component
     protected function refreshLocations($account)
     {
         $this->locations = [];
-        $this->reviews = [];
         $locations = $this->myBusinessService->accounts_locations;
         $locationsList = $locations->listAccountsLocations($account->name)->getLocations();
             var_dump('$locationsList', $locationsList);
