@@ -137,7 +137,7 @@ class GMyBusinessClient extends Component
         $accountsList = $accounts->listAccounts()->getAccounts();
 
         foreach ($accountsList as $accKey => $account) {
-            var_dump('$account->name', $account->name);
+            var_dump('$account', $account);
             $this->refreshLocations($account);
         }
     }
