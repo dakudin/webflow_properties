@@ -46,6 +46,6 @@ return [
             'stat_item_name' => 'Google Reviews',
         ],
         'webflow_published_to_live' => false,
-        'domain_name' => '', //anvilba.co.uk
+        'domain_name' => 'anvilba.co.uk', //anvilba.co.uk
     ],
 ];

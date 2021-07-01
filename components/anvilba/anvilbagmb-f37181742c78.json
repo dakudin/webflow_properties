@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "anvilbagmb",
+  "private_key_id": "f37181742c7837ada8ae16f37dec3db8bd1a48d2",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDdw/bCwuTZYWaG\nsOWcLas4I4Aop69HxLOWYWWZTtotRGkaBYxW1K6FY1At6G1nPJ3ZMvnJ8hlfVzUr\nzmltemxI+YtTh72CsMLiS42obKb/zA6mVUERI/s13xepyml1Qnkphll5Deq4gF8l\nQZJOs2ai5P0lExolJgkikCaByf3JtYEybVzKerC8LZAq/cyEZnAGDurmlR+Pm2ur\niNKQfR8FECwDE1ZU87tyArQ1LsBX2EEdB/Z9NdikwfMBhFP8puwTtj8QgT4oKck3\n0Flri3GjEiwgC/cks0VW1z5QRe9XB7zEyKmn3Wj4eVFlepTQTw4R+HfjRkc2eiSn\nQUMN6vcrAgMBAAECggEAJjEF8aOr0s4F4KNdX6izyH7Apv+93X/AJ+FNJHpic5JJ\nAWy8LwYAqkMgv088bB+R1aKERyWU/gjgRNOO74Y6WNT1DCUf236CiYNWeY+AsSPc\n0AN1qbSHIk9x3VFZGRMiF6cmCIV/i1e8SwfAYSJfRiVmfTiNc6FZyGSH5Sk6tj5k\nWFXqSJWJ17Vc6lFyLOrwc1nB/Eyt5myBb+KWalabbzZZdpEcXh1jWNbI0cfXGCD5\n2LKDYVK04pI1OZrhyV1FDqIQIkdNl/BqFAw3yzL24ezzs9roTCyUuRIhT3V5IzLy\nxzUI4CkDXj2VLUDqsO2vNaM3tKabEjDb9F8ym3lGEQKBgQDveYeMuB+nDWp2bYmG\nZ3YwF2Yihz0em+ZffYI70kwo0SfuLBo1QWvy1nqqdMffMJljJzJCQksXSclHBs0I\n8AmAtTwsgYPdTs0f9HUZFPV19S3WLty0jx3anC5bI8ljcsI59Wm9DExu1ZJgG9BB\n1zbpPSOrYeK6HyXn1vrjXIuCkQKBgQDtEZbx4/mb7i0c/aW1mRXqhzDYHMeg5Dqa\nJhBV1C5QJvXv/0QYNr/sH1Js+Ov1GlC0+zx8T7yx4UTpFry0jIGC0wxO8+/xMQzd\nmkRbg1qt5NqlyXoypfxILlo3uulWm5ufoqKGpdgBSWfnGI6HU5Y601jkDWLggjgq\nUpFn/ZZD+wKBgQC5e48C7oYNtPV1/webI73GKAmCyu8LK0N3SNY7kXpNzxq3fk9a\nWm7LK1bdehBpjdHwm6Zw7boNsqgErH7Y4lrp5vZRnotNOcDldEnSgIpSr/GtyKRH\n8eX0si2xh/lvXq6Th8M7mzAEVMXITSK0LIaqhyF+mBWthXytorS2r7KbEQKBgQC7\njRbl934aJqv6K5FVwe7cxGeYEey9FNJn8YUq4dph/vDDFihBH89mdsE3BRdnqZIA\nHGMV1d9qutVRsnNIQ4CSh3VNYR+KqUuMZed+nsS2nj98uZC7USXt1P366RyBMEpG\nWNxLuhjRq8lPwtW/qhlIILxKb2yyQVM96GSw6KZg0QKBgQDZplWqylVN4q9bfRl6\nFgfNmN4UZY6NsVUORzeu5ddcdA+HxQUkdSEjvUYGFGkhRgMBQO02mea5iij8pkFO\nPwf4ePl7fgvnCpSm4MAReElPSnMos7Zn/XPG+eZ9c5nCHBSUvnZipk8vePdmT6kF\nR+JM4/0jpHHHzpiXYpNcaHdOxA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "anvilba-reviews@anvilbagmb.iam.gserviceaccount.com",
+  "client_id": "115068172284420676701",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/anvilba-reviews%40anvilbagmb.iam.gserviceaccount.com"
+}
