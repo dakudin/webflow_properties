@@ -50,11 +50,11 @@ class AnvilbaController extends Controller
         );
 
         //load all old reviews
-//        $this->WFReviewWorker->loadAllReviews();
+        $this->WFReviewWorker->loadAllReviews();
 
         // update reviews and insert new ones
         $this->refreshReviews();
-die();
+
         //delete not exists reviews from WebFlow collection
         $this->WFReviewWorker->deleteOldReviews();
 
@@ -86,8 +86,7 @@ die();
         );
 */
         $gmbClient->refreshAllReviews();
-return ExitCode::OK;
-die();
+
         $this->storeReviewStatsIntoWebFlow($gmbClient->getTotalReviewCount(), $gmbClient->getAverageRating());
 
         $this->storeReviewsIntoWebFlow($gmbClient->getReviews());
