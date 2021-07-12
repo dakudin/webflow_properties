@@ -14,9 +14,9 @@ use yii\helpers\StringHelper;
 
 class WFReviewWorker extends WFReviewWorkerBase
 {
-    protected static $reviewDesktopLength = 295;
+    protected static $reviewDesktopLength = 290;
 
-    protected static $reviewMobileLength = 137;
+    protected static $reviewMobileLength = 135;
 
     /**
      * @param array $apiKey
